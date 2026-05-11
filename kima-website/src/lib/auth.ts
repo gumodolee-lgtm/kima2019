@@ -6,15 +6,13 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import type { UserRole } from '@prisma/client'
 import { checkRateLimit } from '@/lib/rateLimit'
+import { authConfig } from '@/auth.config'
 import '@/types'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
-  pages: {
-    signIn: '/auth/login',
-    error: '/auth/login',
-  },
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
       ? [Google({

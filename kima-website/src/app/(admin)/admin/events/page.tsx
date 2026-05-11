@@ -1,14 +1,10 @@
 import { prisma } from '@/lib/prisma'
 import { EventForm } from '@/components/admin/EventForm'
 import { DeleteButton } from '@/components/admin/DeleteButton'
+import { getEventType } from '@/lib/eventTypes'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: '일정 관리 | KIMA 관리자' }
-
-const TYPE_LABELS: Record<string, string> = {
-  LISTENING_CALL: '리스닝콜',
-  FORUM: '포럼',
-}
 
 export default async function AdminEventsPage() {
   const events = await prisma.event.findMany({
@@ -45,10 +41,8 @@ export default async function AdminEventsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        event.type === 'FORUM' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {TYPE_LABELS[event.type] ?? event.type}
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getEventType(event.type).color}`}>
+                        {getEventType(event.type).label}
                       </span>
                       {isPast && (
                         <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-400">
@@ -73,6 +67,9 @@ export default async function AdminEventsPage() {
                           minute: '2-digit',
                         })}
                       </span>
+                      {event.location && (
+                        <span>📍 {event.location}</span>
+                      )}
                       <span>
                         👥 참석 신청: {event._count.attendees}명
                         {event.maxAttendees && ` / ${event.maxAttendees}명`}

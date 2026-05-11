@@ -1,3 +1,5 @@
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
 import type { Metadata } from 'next'
@@ -9,6 +11,9 @@ interface PageProps {
 }
 
 export default async function AdminOrganizationsPage({ searchParams }: PageProps) {
+  const session = await auth()
+  if (session?.user?.role !== 'ADMIN') redirect('/')
+
   const { tab } = await searchParams
   const showAll = tab === 'all'
 

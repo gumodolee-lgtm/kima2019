@@ -24,6 +24,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+  stories       Story[]
 }
 
 enum UserRole {
@@ -146,6 +147,7 @@ model Event {
   type         String
   scheduledAt  DateTime
   zoomUrl      String?
+  location     String?
   maxAttendees Int?
   createdAt    DateTime @default(now())
 
@@ -162,4 +164,23 @@ model EventAttendee {
   createdAt DateTime @default(now())
 
   @@unique([eventId, email])
+}
+
+model Story {
+  id          String    @id @default(cuid())
+  title       String
+  content     String
+  type        StoryType @default(TEXT)
+  videoUrl    String?
+  thumbnail   String?
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  isPublished Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum StoryType {
+  TEXT
+  VIDEO
 }

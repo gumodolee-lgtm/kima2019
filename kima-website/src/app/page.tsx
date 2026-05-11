@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { auth } from '@/lib/auth'
+import { HeroCarousel } from '@/components/home/HeroCarousel'
 
 const STATS = [
   { label: '가입 단체', value: '120+', unit: '개' },
@@ -79,48 +80,8 @@ export default async function HomePage() {
   const session = await auth()
   return (
     <>
-      {/* 1. 히어로 */}
-      <section className="relative bg-[#1B3A6B] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(circle_at_20%_50%,#C8922A_0%,transparent_50%),radial-gradient(circle_at_80%_20%,#fff_0%,transparent_40%)]" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
-          <div className="max-w-2xl">
-            <p className="text-[#C8922A] font-semibold text-sm uppercase tracking-widest mb-4">
-              Korean Immigrant Mission Association
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-              이주민과 함께,<br />
-              한국 교회가 하나로
-            </h1>
-            <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-xl">
-              전국 다문화 사역 단체를 연결하고, 현장을 기록하며, 후원이 필요한 곳으로
-              자원이 흐르게 하는 플랫폼입니다.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              {session ? (
-                <Link
-                  href="/community"
-                  className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
-                >
-                  커뮤니티 바로가기
-                </Link>
-              ) : (
-                <Link
-                  href="/auth/register"
-                  className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
-                >
-                  회원가입 하기
-                </Link>
-              )}
-              <Link
-                href="/directory"
-                className="inline-flex items-center px-7 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition-colors"
-              >
-                단체 디렉토리 보기
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 1. 히어로 슬라이드 */}
+      <HeroCarousel isLoggedIn={!!session} />
 
       {/* 2. 숫자 카운터 */}
       <section className="bg-white border-b border-gray-100">

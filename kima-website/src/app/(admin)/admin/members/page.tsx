@@ -1,3 +1,5 @@
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { MemberRoleForm } from '@/components/admin/MemberRoleForm'
 import type { Metadata } from 'next'
@@ -23,6 +25,9 @@ interface PageProps {
 }
 
 export default async function AdminMembersPage({ searchParams }: PageProps) {
+  const session = await auth()
+  if (session?.user?.role !== 'ADMIN') redirect('/')
+
   const { tab } = await searchParams
   const isPendingTab = tab === 'pending'
 
