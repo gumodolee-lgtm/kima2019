@@ -2,16 +2,39 @@ name = "kima-website"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
+# Cloudflare Pages 빌드 출력 디렉토리
 pages_build_output_dir = ".vercel/output/static"
 
-# Cloudflare Workers Cron Triggers
-# KST 09:00 = UTC 00:00
-[[triggers.crons]]
-cron = "0 0 * * *"
+# ─────────────────────────────────────────────
+# Cloudflare Workers Cron (별도 워커로 배포)
+# 배포 명령: npx wrangler deploy src/workers/cron.ts --name kima-cron
+# ─────────────────────────────────────────────
 
-# 환경변수는 Cloudflare 대시보드에서 설정:
-# Workers & Pages → kima-website → Settings → Variables and Secrets
-# 필요한 변수: DATABASE_URL, NEXTAUTH_SECRET, SMTP_HOST, SMTP_PORT,
-#              SMTP_USER, SMTP_PASSWORD, ADMIN_EMAIL, CRON_SECRET,
-#              NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
-#              NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+# ─────────────────────────────────────────────
+# 환경변수 설정 위치
+# Cloudflare 대시보드 → Workers & Pages → kima-website
+#   → Settings → Variables and Secrets
+#
+# 필수 환경변수:
+#   DATABASE_URL             (Supabase PostgreSQL 연결 문자열)
+#   NEXTAUTH_SECRET          (openssl rand -base64 32)
+#   NEXTAUTH_URL             https://kima2019.org
+#   NEXT_PUBLIC_SITE_URL     https://kima2019.org
+#   SMTP_HOST                smtp.gmail.com
+#   SMTP_PORT                587
+#   SMTP_USER                admin@kima2019.org
+#   SMTP_PASSWORD            (Gmail 앱 비밀번호)
+#   ADMIN_EMAIL              admin@kima2019.org
+#   CRON_SECRET              (랜덤 문자열, cron 워커와 동일하게)
+#   NEXT_PUBLIC_SUPABASE_URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY
+#   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+#
+# 소셜 로그인 추가 시 (STEP 13):
+#   GOOGLE_CLIENT_ID
+#   GOOGLE_CLIENT_SECRET
+#   KAKAO_CLIENT_ID
+#   KAKAO_CLIENT_SECRET
+#   NAVER_CLIENT_ID
+#   NAVER_CLIENT_SECRET
+# ─────────────────────────────────────────────

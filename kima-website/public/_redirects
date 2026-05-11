@@ -1,0 +1,6 @@
+# www → non-www 영구 리디렉트
+https://www.kima2019.org/* https://kima2019.org/:splat 301
+
+# http → https (Cloudflare가 자동 처리하지만 명시적 선언)
+http://kima2019.org/* https://kima2019.org/:splat 301
+http://www.kima2019.org/* https://kima2019.org/:splat 301
