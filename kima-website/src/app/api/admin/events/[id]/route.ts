@@ -1,0 +1,20 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+
+export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await auth()
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    }
+
+    const { id } = await params
+    // cascade: EventAttendee FK → delete attendees first
+    await prisma.eventAttendee.deleteMany({ where: { eventId: id } })
+    await prisma.event.delete({ where: { id } })
+    return NextResponse.json({ message: '삭제되었습니다.' })
+  } catch {
+    return NextResponse.json({ error: '일정 삭제 중 오류가 발생했습니다.' }, { status: 500 })
+  }
+}
