@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendEmail, premiumApprovedEmailHtml } from '@/lib/email'
 import { z } from 'zod/v4'
 import type { UserRole } from '@prisma/client'
 
@@ -38,6 +39,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     const user = await prisma.user.update({ where: { id }, data: updateData })
+
+    // 정회원 승급 시 승인 이메일 발송
+    if (parsed.data.role === 'PREMIUM' && user.email) {
+      sendEmail(
+        user.email,
+        '[KIMA] 정회원 승인이 완료되었습니다',
+        premiumApprovedEmailHtml(user.name ?? '회원')
+      ).catch(() => {})
+    }
+
     return NextResponse.json({ user })
   } catch {
     return NextResponse.json({ error: '회원 정보 수정 중 오류가 발생했습니다.' }, { status: 500 })

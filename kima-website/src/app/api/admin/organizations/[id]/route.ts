@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendEmail, organizationApprovedEmailHtml } from '@/lib/email'
 import { z } from 'zod/v4'
 
 const patchSchema = z.object({
@@ -27,6 +28,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         where: { id },
         data: { isPublic: true },
       })
+
+      // 단체 이메일이 있으면 승인 알림 발송
+      if (org.email) {
+        sendEmail(
+          org.email,
+          '[KIMA] 단체 등록이 완료되었습니다',
+          organizationApprovedEmailHtml(org.name)
+        ).catch(() => {})
+      }
+
       return NextResponse.json({ org })
     }
 
