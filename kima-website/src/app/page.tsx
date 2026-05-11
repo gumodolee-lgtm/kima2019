@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import { auth } from '@/lib/auth'
 
 const STATS = [
   { label: '가입 단체', value: '120+', unit: '개' },
@@ -74,7 +75,8 @@ const PARTNER_LOGOS = [
   '이주민복지연합', '글로벌케어', '다일공동체',
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth()
   return (
     <>
       {/* 1. 히어로 */}
@@ -94,14 +96,23 @@ export default function HomePage() {
               자원이 흐르게 하는 플랫폼입니다.
             </p>
             <div className="flex flex-wrap gap-4">
+              {session ? (
+                <Link
+                  href="/community"
+                  className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
+                >
+                  커뮤니티 바로가기
+                </Link>
+              ) : (
+                <Link
+                  href="/auth/register"
+                  className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
+                >
+                  회원가입 하기
+                </Link>
+              )}
               <Link
-                href="/auth/register"
-                className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
-              >
-                회원가입 하기
-              </Link>
-              <Link
-                href="/network"
+                href="/directory"
                 className="inline-flex items-center px-7 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition-colors"
               >
                 단체 디렉토리 보기

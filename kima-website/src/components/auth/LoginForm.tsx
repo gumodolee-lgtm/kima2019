@@ -43,7 +43,7 @@ export function LoginForm() {
         <input
           type="email"
           {...register('email')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="example@email.com"
         />
         <FieldError message={errors.email?.message} />
@@ -54,7 +54,7 @@ export function LoginForm() {
         <input
           type="password"
           {...register('password')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="8자 이상"
         />
         <FieldError message={errors.password?.message} />

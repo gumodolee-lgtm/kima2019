@@ -40,7 +40,7 @@ export function RegisterForm() {
         <input
           type="text"
           {...register('name')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="홍길동"
         />
         <FieldError message={errors.name?.message} />
@@ -51,7 +51,7 @@ export function RegisterForm() {
         <input
           type="email"
           {...register('email')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="example@email.com"
         />
         <FieldError message={errors.email?.message} />
@@ -62,7 +62,7 @@ export function RegisterForm() {
         <input
           type="password"
           {...register('password')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="영문+숫자 8자 이상"
         />
         <FieldError message={errors.password?.message} />
@@ -73,7 +73,7 @@ export function RegisterForm() {
         <input
           type="password"
           {...register('passwordConfirm')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="비밀번호 재입력"
         />
         <FieldError message={errors.passwordConfirm?.message} />
@@ -86,7 +86,7 @@ export function RegisterForm() {
         <input
           type="text"
           {...register('organization')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] text-gray-900 bg-white"
           placeholder="소속 단체명"
         />
         <FieldError message={errors.organization?.message} />
