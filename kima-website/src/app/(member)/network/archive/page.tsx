@@ -55,7 +55,7 @@ export default async function NetworkArchivePage() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-400 mt-3 italic">
-                  발표 자료 문의: admin@kima2019.org
+                  발표 자료 문의: kima20191227@gmail.com
                 </p>
               </div>
             ))}

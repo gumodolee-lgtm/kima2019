@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 const SITE_URL = process.env.NEXTAUTH_URL ?? 'https://kima2019.org'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@kima2019.org'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'kima20191227@gmail.com'
 
 function createTransporter() {
   return nodemailer.createTransport({

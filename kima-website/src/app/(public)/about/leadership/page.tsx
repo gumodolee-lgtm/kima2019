@@ -44,7 +44,7 @@ export default function LeadershipPage() {
         </div>
 
         <p className="text-center text-sm text-gray-400 mt-12">
-          임원단 정보는 순차적으로 업데이트됩니다. 문의: admin@kima2019.org
+          임원단 정보는 순차적으로 업데이트됩니다. 문의: kima20191227@gmail.com
         </p>
       </div>
     </div>

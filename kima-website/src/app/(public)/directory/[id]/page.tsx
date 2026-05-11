@@ -184,7 +184,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                 협력 문의는 KIMA 사무국을 통해 해당 단체로 연결해 드립니다.
               </p>
               <a
-                href="mailto:info@kima2019.org"
+                href="mailto:kima20191227@gmail.com"
                 className="inline-block mt-2 text-sm text-[#1B3A6B] font-medium hover:underline"
               >
                 사무국 문의하기

@@ -82,7 +82,7 @@ export default function PrivacyPage() {
             <div className="bg-gray-50 rounded-lg p-4 text-sm">
               <p><strong>성명:</strong> 이창호</p>
               <p><strong>직책:</strong> 한국이주민선교연합회 대표</p>
-              <p><strong>이메일:</strong> admin@kima2019.org</p>
+              <p><strong>이메일:</strong> kima20191227@gmail.com</p>
             </div>
           </section>
 

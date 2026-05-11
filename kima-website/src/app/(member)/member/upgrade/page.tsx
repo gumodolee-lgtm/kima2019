@@ -140,7 +140,7 @@ export default async function UpgradePage() {
               <h2 className="font-semibold text-[#1B3A6B] mb-4">사무국 연락처</h2>
               <div className="space-y-3 text-sm">
                 <a
-                  href="mailto:admin@kima2019.org"
+                  href="mailto:kima20191227@gmail.com"
                   className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
                 >
                   <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -150,21 +150,10 @@ export default async function UpgradePage() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">이메일</p>
-                    <p className="font-medium text-gray-700 group-hover:text-[#1B3A6B]">admin@kima2019.org</p>
+                    <p className="font-medium text-gray-700 group-hover:text-[#1B3A6B]">kima20191227@gmail.com</p>
                   </div>
                 </a>
 
-                <div className="flex items-center gap-3 p-3 rounded-lg">
-                  <div className="w-9 h-9 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.02 2 11c0 2.67 1.18 5.07 3.07 6.76L4 22l4.45-1.16C9.57 21.57 10.76 21.8 12 21.8c5.52 0 10-4.02 10-9S17.52 2 12 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">카카오톡 채널</p>
-                    <p className="font-medium text-gray-700">KIMA 사무국 채널 검색</p>
-                  </div>
-                </div>
               </div>
             </div>
 
