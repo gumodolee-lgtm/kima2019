@@ -1,65 +1,247 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { Button } from '@/components/ui/Button'
+import { Card, CardContent } from '@/components/ui/Card'
 
-export default function Home() {
+const STATS = [
+  { label: '가입 단체', value: '120+', unit: '개' },
+  { label: '이주민 대상국', value: '30+', unit: '개국' },
+  { label: '활동 회원', value: '500+', unit: '명' },
+  { label: '등록 자료', value: '1,200+', unit: '건' },
+]
+
+const VISIONS = [
+  {
+    icon: '🔗',
+    title: '연결',
+    desc: '전국 다문화 사역 단체를 하나의 네트워크로 연결합니다.',
+  },
+  {
+    icon: '📝',
+    title: '기록',
+    desc: '현장의 이야기와 데이터를 체계적으로 기록하고 보존합니다.',
+  },
+  {
+    icon: '👁',
+    title: '가시화',
+    desc: '이주민 선교 현장을 세상에 보이게 합니다.',
+  },
+  {
+    icon: '🤝',
+    title: '후원 연결',
+    desc: '필요한 곳에 자원이 흐르도록 후원자와 사역자를 잇습니다.',
+  },
+]
+
+const STORIES = [
+  {
+    id: 1,
+    category: '현장 이야기',
+    title: '네팔 이주민 공동체와 함께한 추석 행사',
+    excerpt: '영등포구 다문화 센터에서 진행된 추석 나눔 행사에 네팔 이주민 가정 50여 가정이 참여했습니다.',
+    date: '2025-09-15',
+  },
+  {
+    id: 2,
+    category: '교육 자료',
+    title: '이주민 한국어 교육 가이드북 2025 배포',
+    excerpt: '전국 300여 교육 현장에서 활용 가능한 이주민 맞춤형 한국어 교재가 무료 배포됩니다.',
+    date: '2025-08-20',
+  },
+  {
+    id: 3,
+    category: '단체 소식',
+    title: '2025 KIMA 전국 연합 세미나 개최',
+    excerpt: '오는 11월, 전국 이주민 선교 단체 대표자 200여 명이 참여하는 연합 세미나가 개최됩니다.',
+    date: '2025-07-30',
+  },
+]
+
+const UPCOMING_EVENTS = [
+  {
+    date: { month: '11월', day: '22' },
+    title: '2025 KIMA 전국 연합 세미나',
+    location: '서울 여의도순복음교회 대강당',
+  },
+  {
+    date: { month: '12월', day: '07' },
+    title: '이주민 크리스마스 축제',
+    location: '수원 중앙침례교회',
+  },
+]
+
+const PARTNER_LOGOS = [
+  '한국선교연구원', '한국이주민건강협회', '다문화교육진흥원',
+  '이주민복지연합', '글로벌케어', '다일공동체',
+]
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      {/* 1. 히어로 */}
+      <section className="relative bg-[#1B3A6B] text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(circle_at_20%_50%,#C8922A_0%,transparent_50%),radial-gradient(circle_at_80%_20%,#fff_0%,transparent_40%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
+          <div className="max-w-2xl">
+            <p className="text-[#C8922A] font-semibold text-sm uppercase tracking-widest mb-4">
+              Korean Immigrant Mission Association
+            </p>
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+              이주민과 함께,<br />
+              한국 교회가 하나로
+            </h1>
+            <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-xl">
+              전국 다문화 사역 단체를 연결하고, 현장을 기록하며, 후원이 필요한 곳으로
+              자원이 흐르게 하는 플랫폼입니다.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center px-7 py-3 rounded-lg bg-[#C8922A] text-white font-semibold hover:bg-[#b07e24] transition-colors"
+              >
+                회원가입 하기
+              </Link>
+              <Link
+                href="/network"
+                className="inline-flex items-center px-7 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition-colors"
+              >
+                단체 디렉토리 보기
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. 숫자 카운터 */}
+      <section className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {STATS.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <p className="text-4xl font-bold text-[#1B3A6B]">
+                  {stat.value}
+                  <span className="text-xl font-medium text-[#C8922A] ml-1">{stat.unit}</span>
+                </p>
+                <p className="mt-2 text-sm text-gray-500">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. 4대 비전 */}
+      <section className="bg-[#F8F9FA] py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-[#1B3A6B]">KIMA의 4대 비전</h2>
+            <p className="mt-3 text-gray-500 text-sm">연결·기록·가시화·후원 연결을 통해 이주민 선교를 섬깁니다</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {VISIONS.map((v) => (
+              <Card key={v.title} className="text-center p-6">
+                <div className="text-4xl mb-4">{v.icon}</div>
+                <h3 className="text-lg font-bold text-[#1B3A6B] mb-2">{v.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. 최신 스토리 3개 */}
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-bold text-[#1B3A6B]">최신 스토리</h2>
+              <p className="mt-2 text-sm text-gray-500">현장의 이야기를 전합니다</p>
+            </div>
+            <Link href="/story" className="text-sm text-[#1B3A6B] font-medium hover:underline">
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {STORIES.map((story) => (
+              <Card key={story.id} hover className="overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-[#1B3A6B] to-[#C8922A]" />
+                <CardContent className="p-6">
+                  <span className="text-xs font-semibold text-[#C8922A] uppercase tracking-wide">
+                    {story.category}
+                  </span>
+                  <h3 className="mt-2 text-base font-bold text-[#1A1A1A] leading-snug line-clamp-2">
+                    {story.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-3">
+                    {story.excerpt}
+                  </p>
+                  <p className="mt-4 text-xs text-gray-400">{story.date}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. 다음 일정 */}
+      <section className="bg-[#F8F9FA] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-8">
+            <h2 className="text-2xl font-bold text-[#1B3A6B]">다가오는 일정</h2>
+            <Link href="/community" className="text-sm text-[#1B3A6B] font-medium hover:underline">
+              전체 일정 →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {UPCOMING_EVENTS.map((event) => (
+              <Card key={event.title} className="flex items-center gap-6 p-5">
+                <div className="shrink-0 w-14 text-center">
+                  <div className="text-xs font-semibold text-[#C8922A]">{event.date.month}</div>
+                  <div className="text-3xl font-bold text-[#1B3A6B] leading-none">{event.date.day}</div>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1A1A1A] text-sm">{event.title}</p>
+                  <p className="mt-1 text-xs text-gray-500">{event.location}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. 후원 배너 */}
+      <section className="bg-[#C8922A] py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">이주민 선교를 함께 후원해 주세요</h2>
+          <p className="text-amber-100 text-base mb-8 leading-relaxed">
+            여러분의 후원이 전국 이주민 사역 현장에 희망을 전달합니다.<br />
+            소액이라도 큰 변화를 만들어냅니다.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/donate"
+            className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-[#C8922A] font-bold hover:bg-amber-50 transition-colors shadow-sm"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            후원하기
+          </Link>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+
+      {/* 7. 협력 기관 로고 */}
+      <section className="bg-white py-16 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center text-sm font-semibold text-gray-400 uppercase tracking-widest mb-10">
+            협력 기관
+          </h2>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
+            {PARTNER_LOGOS.map((name) => (
+              <div
+                key={name}
+                className="flex items-center justify-center h-16 rounded-xl bg-gray-50 border border-gray-100 px-3"
+              >
+                <span className="text-xs text-gray-400 font-medium text-center leading-tight">{name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  )
 }

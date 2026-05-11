@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -37,7 +40,11 @@ export default function RootLayout({
       className={`${notoSansKr.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col font-[family-name:var(--font-noto-sans-kr)] antialiased">
-        {children}
+        <Providers>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
