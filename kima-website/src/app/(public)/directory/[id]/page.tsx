@@ -12,7 +12,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const org = await prisma.organization.findUnique({ where: { id, isPublic: true } })
   if (!org) return { title: '단체를 찾을 수 없습니다 | KIMA' }
-  return { title: `${org.name} | KIMA 단체 디렉토리` }
+
+  const description = org.description
+    ? org.description.slice(0, 120)
+    : `${org.region} 지역에서 ${org.languages.join(', ')} 언어권 이주민을 섬기는 단체입니다.`
+
+  return {
+    title: `${org.name} | KIMA 단체 디렉토리`,
+    description,
+    openGraph: {
+      title: org.name,
+      description,
+      type: 'website',
+    },
+  }
 }
 
 export default async function OrganizationDetailPage({ params }: Props) {

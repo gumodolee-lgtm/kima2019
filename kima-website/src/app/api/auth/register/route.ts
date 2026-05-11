@@ -3,8 +3,25 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { registerSchema } from '@/schemas/auth.schema'
 import { sendEmail, welcomeEmailHtml } from '@/lib/email'
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
 
 export async function POST(req: NextRequest) {
+  // IP당 10분에 5회 가입 시도 제한
+  const ip = getClientIp(req)
+  const { allowed, resetAt } = checkRateLimit(`register:${ip}`, {
+    limit: 5,
+    windowMs: 10 * 60 * 1000,
+  })
+  if (!allowed) {
+    return NextResponse.json(
+      { message: '너무 많은 요청입니다. 잠시 후 다시 시도해 주세요.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil((resetAt - Date.now()) / 1000)) },
+      }
+    )
+  }
+
   try {
     const body = await req.json()
     const parsed = registerSchema.safeParse(body)

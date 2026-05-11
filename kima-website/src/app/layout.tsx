@@ -17,8 +17,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "KIMA | 한국이주민선교연합회",
+  title: {
+    default: "KIMA | 한국이주민선교연합회",
+    template: "%s | KIMA",
+  },
   description: "연결하고 기록하고 보이게 하고 후원으로 이어주는 전국 다문화사역 연합 플랫폼",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://kima2019.org"),
   openGraph: {
     title: "KIMA | 한국이주민선교연합회",
     description: "연결하고 기록하고 보이게 하고 후원으로 이어주는 전국 다문화사역 연합 플랫폼",
@@ -26,6 +30,24 @@ export const metadata: Metadata = {
     siteName: "KIMA",
     locale: "ko_KR",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "KIMA 한국이주민선교연합회",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KIMA | 한국이주민선교연합회",
+    description: "연결하고 기록하고 보이게 하고 후원으로 이어주는 전국 다문화사역 연합 플랫폼",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

@@ -4,6 +4,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import type { UserRole } from '@prisma/client'
+import { checkRateLimit } from '@/lib/rateLimit'
 import '@/types'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -21,6 +22,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       authorize: async (credentials) => {
         if (!credentials?.email || !credentials?.password) return null
+
+        // 이메일당 15분에 10회 로그인 시도 제한
+        const email = credentials.email as string
+        const { allowed } = checkRateLimit(`login:${email}`, {
+          limit: 10,
+          windowMs: 15 * 60 * 1000,
+        })
+        if (!allowed) return null
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
