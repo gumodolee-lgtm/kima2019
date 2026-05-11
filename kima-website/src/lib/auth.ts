@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
@@ -15,6 +16,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: '/auth/login',
   },
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // 같은 이메일로 credentials 계정이 있을 때 Google 계정을 연동
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       credentials: {
         email: { label: '이메일', type: 'email' },
@@ -57,14 +64,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.id = user.id as string
-        token.role = user.role as UserRole
+        // Google OAuth 사용자는 DB의 기본값(MEMBER)이 적용됨
+        token.role = (user.role ?? 'MEMBER') as UserRole
       }
       return token
     },
     session({ session, token }) {
       session.user.id = token.id as string
-      session.user.role = token.role as UserRole
+      session.user.role = (token.role ?? 'MEMBER') as UserRole
       return session
+    },
+  },
+  events: {
+    // 새 OAuth 사용자 생성 시 MEMBER 역할 보장
+    async createUser({ user }) {
+      if (!user.id) return
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { role: 'MEMBER' },
+      }).catch(() => {})
     },
   },
 })
