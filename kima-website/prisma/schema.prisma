@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  role          UserRole  @default(MEMBER)
+  organization  String?
+  region        String?
+  phone         String?
+  approvedAt    DateTime?
+  expiresAt     DateTime?
+  premiumNote   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+}
+
+enum UserRole {
+  MEMBER
+  PREMIUM
+  OFFICER
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Organization {
+  id           String   @id @default(cuid())
+  name         String
+  nameEn       String?
+  description  String?
+  region       String
+  languages    String[]
+  targets      String[]
+  type         String?
+  address      String?
+  lat          Float?
+  lng          Float?
+  phone        String?
+  email        String?
+  website      String?
+  isPublic     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  type        CategoryType
+  name        String
+  slug        String       @unique
+  order       Int          @default(0)
+  officerName String?
+  officerSns  String?
+  officerQr   String?
+  createdAt   DateTime     @default(now())
+
+  posts       Post[]
+  resources   Resource[]
+}
+
+enum CategoryType {
+  REGION
+  LANGUAGE
+  TARGET
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  content     String
+  type        PostType  @default(SHARE)
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  isPublished Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum PostType {
+  NOTICE
+  SHARE
+}
+
+model Resource {
+  id           String      @id @default(cuid())
+  title        String
+  description  String?
+  driveUrl     String
+  fileType     String?
+  accessLevel  AccessLevel @default(MEMBER)
+  categoryId   String?
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  uploadedById String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+enum AccessLevel {
+  PUBLIC
+  MEMBER
+  PREMIUM
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  type         String
+  scheduledAt  DateTime
+  zoomUrl      String?
+  maxAttendees Int?
+  createdAt    DateTime @default(now())
+
+  attendees    EventAttendee[]
+}
+
+model EventAttendee {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  name      String
+  email     String
+  phone     String?
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, email])
+}
