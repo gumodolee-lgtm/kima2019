@@ -42,29 +42,50 @@
 
 ```
 kima-website/
+├── AGENTS.md
 ├── CLAUDE.md                  ← 이 파일 (항상 참조)
-├── .env.local                 ← 환경변수 (git 제외)
-├── .env.example               ← 환경변수 템플릿 (git 포함)
-├── .gitignore
+├── DEPLOY_CHECKLIST.md
+├── README.md
+├── eslint.config.mjs
+├── kima_logo.png
 ├── next.config.ts
-├── tailwind.config.ts
-├── vitest.config.ts           ← 단위·컴포넌트 테스트 설정
-├── playwright.config.ts       ← E2E 테스트 설정
+├── package.json
+├── package-lock.json
+├── playwright.config.ts
+├── postcss.config.mjs
 ├── prisma/
 │   ├── schema.prisma          ← DB 스키마
 │   └── seed.ts                ← 초기 데이터
+├── prisma.config.ts
+├── public/
+│   ├── _headers
+│   ├── _redirects
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── images/
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
 ├── src/
 │   ├── app/                   ← Next.js App Router
 │   │   ├── layout.tsx         ← 루트 레이아웃
 │   │   ├── page.tsx           ← 홈
+│   │   ├── globals.css
+│   │   ├── robots.ts
+│   │   ├── sitemap.ts
+│   │   ├── favicon.ico
 │   │   ├── (public)/          ← 비회원 접근 가능
 │   │   │   ├── about/
 │   │   │   ├── directory/
 │   │   │   ├── story/
 │   │   │   ├── data/
-│   │   │   └── donate/
+│   │   │   ├── donate/
+│   │   │   ├── privacy/
+│   │   │   └── terms/
 │   │   ├── (member)/          ← 일반회원 이상
 │   │   │   ├── community/
+│   │   │   ├── directory/
+│   │   │   ├── member/
 │   │   │   └── network/
 │   │   ├── (premium)/         ← 정회원 이상
 │   │   │   └── resources/
@@ -72,36 +93,83 @@ kima-website/
 │   │   │   └── admin/
 │   │   ├── auth/
 │   │   │   ├── login/
-│   │   │   └── register/
+│   │   │   ├── register/
+│   │   │   └── complete-profile/
 │   │   └── api/
 │   │       ├── auth/          ← NextAuth 핸들러
-│   │       ├── members/
+│   │       ├── admin/
+│   │       ├── member/
 │   │       ├── organizations/
 │   │       ├── posts/
-│   │       └── resources/
+│   │       ├── resources/
+│   │       ├── cron/
+│   │       ├── events/
+│   │       ├── health/
+│   │       └── stories/
+│   ├── auth.config.ts
+│   ├── proxy.ts
 │   ├── components/
 │   │   ├── ui/                ← 공통 UI 컴포넌트
+│   │   │   └── Badge.tsx
 │   │   ├── layout/            ← 헤더, 푸터, 사이드바
+│   │   │   ├── Header.tsx
+│   │   │   └── Footer.tsx
 │   │   ├── auth/              ← 로그인, 가입 폼
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   ├── AuthGuard.tsx
+│   │   │   └── FieldError.tsx
 │   │   ├── directory/         ← 단체 지도, 카드
+│   │   │   ├── OrganizationCard.tsx
+│   │   │   ├── MapComponent.tsx
+│   │   │   ├── FilterBar.tsx
+│   │   │   └── OrganizationRegisterForm.tsx
 │   │   ├── community/         ← 게시판 컴포넌트
-│   │   └── admin/             ← 관리자 컴포넌트
+│   │   │   ├── CommunityTabs.tsx
+│   │   │   ├── PostCard.tsx
+│   │   │   └── WritePostForm.tsx
+│   │   ├── resources/         ← 자료실 컴포넌트
+│   │   │   └── ResourceList.tsx
+│   │   ├── admin/             ← 관리자 컴포넌트
+│   │   │   ├── AdminSidebar.tsx
+│   │   │   ├── MemberRoleForm.tsx
+│   │   │   ├── OrgApproveForm.tsx
+│   │   │   ├── CategoryOfficerForm.tsx
+│   │   │   ├── ResourceAdminForm.tsx
+│   │   │   ├── EventForm.tsx
+│   │   │   ├── StoryForm.tsx
+│   │   │   └── DeleteButton.tsx
+│   │   ├── home/              ← 홈페이지 컴포넌트
+│   │   │   └── HeroCarousel.tsx
+│   │   ├── story/             ← 스토리 컴포넌트
+│   │   │   ├── StoryCard.tsx
+│   │   │   └── VideoEmbed.tsx
+│   │   └── Providers.tsx
 │   ├── lib/
 │   │   ├── supabase.ts        ← Supabase 클라이언트
 │   │   ├── prisma.ts          ← Prisma 클라이언트
 │   │   ├── auth.ts            ← NextAuth 설정
 │   │   ├── email.ts           ← 이메일 발송
-│   │   └── utils.ts           ← 공통 유틸
+│   │   ├── env.ts             ← 환경변수 검증
+│   │   ├── utils.ts           ← 공통 유틸
+│   │   ├── eventTypes.ts      ← 이벤트 타입 정의
+│   │   ├── rateLimit.ts       ← API 속도 제한
+│   │   └── videoUtils.ts      ← 비디오 유틸리티
 │   ├── schemas/               ← Zod 스키마 (검증 규칙)
 │   │   ├── auth.schema.ts     ← 로그인·가입 검증
+│   │   ├── env.schema.ts      ← 환경변수 검증
 │   │   ├── member.schema.ts   ← 회원 정보 검증
 │   │   ├── organization.schema.ts ← 단체 등록 검증
 │   │   ├── post.schema.ts     ← 게시글 검증
 │   │   └── resource.schema.ts ← 자료 등록 검증
 │   ├── types/
 │   │   └── index.ts           ← 전역 TypeScript 타입
-│   └── middleware.ts           ← 라우트 보호 미들웨어
+│   ├── workers/               ← Cloudflare Workers
+│   │   ├── cron.ts            ← 크론 작업
+│   │   └── tsconfig.json
+│   └── kima_logo.png
 ├── tests/
+│   ├── setup.ts               ← 테스트 설정
 │   ├── unit/                  ← Vitest 단위 테스트
 │   │   ├── schemas/           ← Zod 스키마 테스트
 │   │   └── utils/             ← 유틸 함수 테스트
@@ -111,10 +179,12 @@ kima-website/
 │   └── e2e/                   ← Playwright E2E 테스트
 │       ├── auth.spec.ts       ← 로그인·가입 시나리오
 │       ├── member.spec.ts     ← 회원 등급 접근 제어
-│       └── admin.spec.ts      ← 관리자 승인 시나리오
-└── public/
-    ├── images/
-    └── icons/
+│       ├── admin.spec.ts      ← 관리자 승인 시나리오
+│       ├── fixtures.ts        ← 테스트 픽스처
+│       └── helpers.ts         ← 테스트 헬퍼
+├── tsconfig.json
+├── vitest.config.ts           ← 단위·컴포넌트 테스트 설정
+└── wrangler.toml             ← Cloudflare Workers 설정
 ```
 
 ---
