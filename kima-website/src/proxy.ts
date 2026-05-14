@@ -43,9 +43,15 @@ export default auth((req) => {
     }
   }
 
+  if (pathname.startsWith('/member')) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(new URL(`/auth/login?callbackUrl=${pathname}`, req.url))
+    }
+  }
+
   return NextResponse.next()
 })
 
 export const config = {
-  matcher: ['/admin/:path*', '/community/:path*', '/network/:path*', '/resources/:path*'],
+  matcher: ['/admin/:path*', '/community/:path*', '/network/:path*', '/resources/:path*', '/member/:path*'],
 }

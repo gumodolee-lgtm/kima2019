@@ -100,10 +100,8 @@ export default async function NetworkArchivePage() {
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          event.type === 'FORUM' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'
-                        }`}>
-                          {TYPE_LABELS[event.type] ?? event.type}
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getEventType(event.type).color}`}>
+                          {getEventType(event.type).label}
                         </span>
                         <span className="text-xs text-gray-400">
                           {event.scheduledAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -133,12 +131,8 @@ export default async function NetworkArchivePage() {
               <div key={record.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      record.type === 'FORUM'
-                        ? 'bg-purple-50 text-purple-600'
-                        : 'bg-blue-50 text-blue-600'
-                    }`}>
-                      {TYPE_LABELS[record.type]}
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getEventType(record.type).color}`}>
+                      {getEventType(record.type).label}
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
