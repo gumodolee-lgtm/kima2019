@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { auth } from '@/lib/auth'
 import { HeroCarousel } from '@/components/home/HeroCarousel'
+import { prisma } from '@/lib/prisma'
 
 const STATS = [
   { label: '가입 단체', value: '120+', unit: '개' },
@@ -34,43 +35,6 @@ const VISIONS = [
   },
 ]
 
-const STORIES = [
-  {
-    id: 1,
-    category: '현장 이야기',
-    title: '네팔 이주민 공동체와 함께한 추석 행사',
-    excerpt: '영등포구 다문화 센터에서 진행된 추석 나눔 행사에 네팔 이주민 가정 50여 가정이 참여했습니다.',
-    date: '2025-09-15',
-  },
-  {
-    id: 2,
-    category: '교육 자료',
-    title: '이주민 한국어 교육 가이드북 2025 배포',
-    excerpt: '전국 300여 교육 현장에서 활용 가능한 이주민 맞춤형 한국어 교재가 무료 배포됩니다.',
-    date: '2025-08-20',
-  },
-  {
-    id: 3,
-    category: '단체 소식',
-    title: '2025 KIMA 전국 연합 세미나 개최',
-    excerpt: '오는 11월, 전국 이주민 선교 단체 대표자 200여 명이 참여하는 연합 세미나가 개최됩니다.',
-    date: '2025-07-30',
-  },
-]
-
-const UPCOMING_EVENTS = [
-  {
-    date: { month: '11월', day: '22' },
-    title: '2025 KIMA 전국 연합 세미나',
-    location: '서울 여의도순복음교회 대강당',
-  },
-  {
-    date: { month: '12월', day: '07' },
-    title: '이주민 크리스마스 축제',
-    location: '수원 중앙침례교회',
-  },
-]
-
 const PARTNER_LOGOS = [
   '한국선교연구원', '한국이주민건강협회', '다문화교육진흥원',
   '이주민복지연합', '글로벌케어', '다일공동체',
@@ -78,6 +42,20 @@ const PARTNER_LOGOS = [
 
 export default async function HomePage() {
   const session = await auth()
+
+  const [dbStories, dbEvents] = await Promise.all([
+    prisma.story.findMany({
+      where: { isPublished: true },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    }).catch(() => []),
+    prisma.event.findMany({
+      where: { scheduledAt: { gte: new Date() } },
+      orderBy: { scheduledAt: 'asc' },
+      take: 4,
+    }).catch(() => []),
+  ])
+
   return (
     <>
       {/* 1. 히어로 슬라이드 */}
@@ -132,23 +110,29 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {STORIES.map((story) => (
-              <Card key={story.id} hover className="overflow-hidden">
-                <div className="h-2 bg-gradient-to-r from-[#1B3A6B] to-[#C8922A]" />
-                <CardContent className="p-6">
-                  <span className="text-xs font-semibold text-[#C8922A] uppercase tracking-wide">
-                    {story.category}
-                  </span>
-                  <h3 className="mt-2 text-base font-bold text-[#1A1A1A] leading-snug line-clamp-2">
-                    {story.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-3">
-                    {story.excerpt}
-                  </p>
-                  <p className="mt-4 text-xs text-gray-400">{story.date}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {dbStories.length > 0 ? dbStories.map((story) => (
+              <Link key={story.id} href={`/story/${story.id}`}>
+                <Card hover className="overflow-hidden h-full">
+                  <div className="h-2 bg-gradient-to-r from-[#1B3A6B] to-[#C8922A]" />
+                  <CardContent className="p-6">
+                    <span className="text-xs font-semibold text-[#C8922A] uppercase tracking-wide">
+                      {story.category}
+                    </span>
+                    <h3 className="mt-2 text-base font-bold text-[#1A1A1A] leading-snug line-clamp-2">
+                      {story.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-3">
+                      {story.excerpt ?? ''}
+                    </p>
+                    <p className="mt-4 text-xs text-gray-400">
+                      {story.createdAt.toLocaleDateString('ko-KR')}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            )) : (
+              <p className="col-span-3 text-center text-gray-400 py-10">등록된 스토리가 없습니다.</p>
+            )}
           </div>
         </div>
       </section>
@@ -163,18 +147,26 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {UPCOMING_EVENTS.map((event) => (
-              <Card key={event.title} className="flex items-center gap-6 p-5">
+            {dbEvents.length > 0 ? dbEvents.map((event) => (
+              <Card key={event.id} className="flex items-center gap-6 p-5">
                 <div className="shrink-0 w-14 text-center">
-                  <div className="text-xs font-semibold text-[#C8922A]">{event.date.month}</div>
-                  <div className="text-3xl font-bold text-[#1B3A6B] leading-none">{event.date.day}</div>
+                  <div className="text-xs font-semibold text-[#C8922A]">
+                    {event.scheduledAt.toLocaleDateString('ko-KR', { month: 'long' })}
+                  </div>
+                  <div className="text-3xl font-bold text-[#1B3A6B] leading-none">
+                    {event.scheduledAt.getDate()}
+                  </div>
                 </div>
                 <div>
                   <p className="font-semibold text-[#1A1A1A] text-sm">{event.title}</p>
-                  <p className="mt-1 text-xs text-gray-500">{event.location}</p>
+                  {event.description && (
+                    <p className="mt-1 text-xs text-gray-500 line-clamp-1">{event.description}</p>
+                  )}
                 </div>
               </Card>
-            ))}
+            )) : (
+              <p className="col-span-2 text-center text-gray-400 py-10">예정된 일정이 없습니다.</p>
+            )}
           </div>
         </div>
       </section>
