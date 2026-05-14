@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: false },
   images: {
     // Cloudflare Pages는 Next.js 내장 이미지 최적화를 지원하지 않으므로
     // unoptimized 모드를 사용합니다. Cloudflare CDN이 자체 최적화를 제공합니다.

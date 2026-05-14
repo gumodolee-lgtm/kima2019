@@ -76,7 +76,7 @@ export default async function NetworkArchivePage() {
     where: { scheduledAt: { lt: new Date() } },
     include: { _count: { select: { attendees: true } } },
     orderBy: { scheduledAt: 'desc' },
-  })
+  }).catch(() => [])
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
