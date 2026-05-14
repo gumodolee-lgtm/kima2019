@@ -3,12 +3,23 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
+type StoryType = 'NEWS' | 'EVENT_MEDIA'
+
 const EMPTY = {
+  type: 'NEWS' as StoryType,
   title: '',
   content: '',
-  type: 'TEXT' as 'TEXT' | 'VIDEO',
-  videoUrl: '',
-  thumbnail: '',
+  excerpt: '',
+  linkUrl: '',
+  source: '',
+  publishedAt: '',
+  videoUrls: '',
+  tags: '',
+}
+
+const TYPE_LABELS: Record<StoryType, string> = {
+  NEWS:        '📰 KIMA 뉴스',
+  EVENT_MEDIA: '📸 행사 사진&영상',
 }
 
 export function StoryForm() {
@@ -24,7 +35,7 @@ export function StoryForm() {
   const handleSubmit = () => {
     if (!form.title.trim()) { setError('제목을 입력해주세요.'); return }
     if (!form.content.trim()) { setError('내용을 입력해주세요.'); return }
-    if (form.type === 'VIDEO' && !form.videoUrl.trim()) { setError('영상자료는 영상 URL이 필요합니다.'); return }
+    if (form.type === 'NEWS' && !form.linkUrl.trim()) { setError('뉴스 링크 URL을 입력해주세요.'); return }
     setError('')
 
     startTransition(async () => {
@@ -32,11 +43,17 @@ export function StoryForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title:    form.title,
-          content:  form.content,
-          type:     form.type,
-          videoUrl: form.videoUrl || undefined,
-          thumbnail: form.thumbnail || undefined,
+          type:        form.type,
+          title:       form.title,
+          content:     form.content,
+          excerpt:     form.excerpt || undefined,
+          linkUrl:     form.linkUrl || undefined,
+          source:      form.source || undefined,
+          publishedAt: form.publishedAt ? new Date(form.publishedAt).toISOString() : undefined,
+          videoUrls:   form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
+          tags:        form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+          status:      'APPROVED',
+          isPublished: true,
         }),
       })
       if (!res.ok) {
@@ -68,27 +85,23 @@ export function StoryForm() {
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6 space-y-4">
       <h3 className="font-semibold text-gray-800">새 스토리 등록</h3>
 
-      {/* 유형 선택 */}
       <div className="flex gap-3">
-        {(['TEXT', 'VIDEO'] as const).map((t) => (
+        {(Object.keys(TYPE_LABELS) as StoryType[]).map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => set('type', t)}
             className={`flex-1 py-2.5 rounded-lg border text-sm font-semibold transition-colors ${
               form.type === t
-                ? t === 'VIDEO'
-                  ? 'bg-red-500 text-white border-red-500'
-                  : 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
+                ? 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
                 : 'border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >
-            {t === 'TEXT' ? '📝 일반자료' : '▶ 영상자료'}
+            {TYPE_LABELS[t]}
           </button>
         ))}
       </div>
 
-      {/* 제목 */}
       <div>
         <label className="block text-xs text-gray-500 mb-1">제목 *</label>
         <input
@@ -101,47 +114,96 @@ export function StoryForm() {
         />
       </div>
 
-      {/* 영상 URL (VIDEO 전용) */}
-      {form.type === 'VIDEO' && (
+      {form.type === 'NEWS' && (
+        <>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">뉴스 링크 URL *</label>
+            <input
+              title="뉴스 링크 URL"
+              type="url"
+              value={form.linkUrl}
+              onChange={(e) => set('linkUrl', e.target.value)}
+              placeholder="https://..."
+              className={inputClass}
+              disabled={isPending}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">출처 (선택)</label>
+              <input
+                title="출처"
+                type="text"
+                value={form.source}
+                onChange={(e) => set('source', e.target.value)}
+                placeholder="예: 기독일보"
+                className={inputClass}
+                disabled={isPending}
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">발행일 (선택)</label>
+              <input
+                title="발행일"
+                type="date"
+                value={form.publishedAt}
+                onChange={(e) => set('publishedAt', e.target.value)}
+                className={inputClass}
+                disabled={isPending}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {form.type === 'EVENT_MEDIA' && (
         <div>
-          <label className="block text-xs text-gray-500 mb-1">영상 URL * <span className="text-gray-400 font-normal">(YouTube / Vimeo)</span></label>
-          <input
-            title="영상 URL"
-            type="url"
-            value={form.videoUrl}
-            onChange={(e) => set('videoUrl', e.target.value)}
-            placeholder="https://www.youtube.com/watch?v=..."
-            className={inputClass}
+          <label className="block text-xs text-gray-500 mb-1">동영상 링크 (선택, 줄바꿈으로 구분)</label>
+          <textarea
+            title="동영상 링크"
+            value={form.videoUrls}
+            onChange={(e) => set('videoUrls', e.target.value)}
+            rows={3}
+            placeholder="https://youtube.com/..."
+            className={`${inputClass} resize-none`}
             disabled={isPending}
           />
         </div>
       )}
 
-      {/* 내용 */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">내용 *</label>
+        <label className="block text-xs text-gray-500 mb-1">내용 / 설명 *</label>
         <textarea
           title="내용"
           value={form.content}
           onChange={(e) => set('content', e.target.value)}
-          rows={6}
+          rows={5}
           className={`${inputClass} resize-y`}
           disabled={isPending}
-          placeholder={form.type === 'VIDEO' ? '영상에 대한 설명을 입력해주세요.' : '스토리 내용을 입력해주세요.'}
         />
       </div>
 
-      {/* 썸네일 URL (선택) */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">
-          썸네일 이미지 URL <span className="text-gray-400 font-normal">(선택 — YouTube는 자동 추출)</span>
-        </label>
+        <label className="block text-xs text-gray-500 mb-1">한줄 요약 (선택)</label>
         <input
-          title="썸네일 URL"
-          type="url"
-          value={form.thumbnail}
-          onChange={(e) => set('thumbnail', e.target.value)}
-          placeholder="https://..."
+          title="한줄 요약"
+          type="text"
+          value={form.excerpt}
+          onChange={(e) => set('excerpt', e.target.value)}
+          placeholder="목록에 표시될 짧은 설명"
+          className={inputClass}
+          disabled={isPending}
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">태그 (선택, 쉼표로 구분)</label>
+        <input
+          title="태그"
+          type="text"
+          value={form.tags}
+          onChange={(e) => set('tags', e.target.value)}
+          placeholder="예: 이주민, 선교, 2024"
           className={inputClass}
           disabled={isPending}
         />

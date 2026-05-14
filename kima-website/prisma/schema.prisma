@@ -167,20 +167,57 @@ model EventAttendee {
 }
 
 model Story {
-  id          String    @id @default(cuid())
-  title       String
-  content     String
-  type        StoryType @default(TEXT)
-  videoUrl    String?
-  thumbnail   String?
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
-  isPublished Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id               String          @id @default(cuid())
+  title            String
+  content          String
+  type             StoryType       @default(FIELD_STORY)
+  status           StoryStatus     @default(APPROVED)
+  // 공통
+  excerpt          String?
+  thumbnail        String?
+  images           String[]
+  videoUrls        String[]
+  tags             String[]
+  isPublished      Boolean         @default(true)
+  // NEWS 전용
+  linkUrl          String?
+  source           String?
+  publishedAt      DateTime?
+  // FIELD_STORY 전용
+  authorName       String?
+  ministryLocation String?
+  // PRAYER_REQUEST 전용
+  urgency          PrayerUrgency?
+  visibility       StoryVisibility @default(PUBLIC)
+  requesterName    String?
+  isAnswered       Boolean         @default(false)
+  // 작성자 (로그인 회원)
+  authorId         String?
+  author           User?           @relation(fields: [authorId], references: [id])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 enum StoryType {
-  TEXT
-  VIDEO
+  NEWS
+  FIELD_STORY
+  EVENT_MEDIA
+  PRAYER_REQUEST
+}
+
+enum StoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PrayerUrgency {
+  URGENT
+  NORMAL
+}
+
+enum StoryVisibility {
+  PUBLIC
+  MEMBER
+  PRAYER_TEAM
 }

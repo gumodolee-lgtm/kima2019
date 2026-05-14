@@ -1,11 +1,24 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { VideoEmbed } from '@/components/story/VideoEmbed'
 import type { Metadata } from 'next'
 
 interface PageProps {
   params: Promise<{ id: string }>
+}
+
+const TYPE_LABELS: Record<string, string> = {
+  NEWS:           '📰 KIMA 뉴스',
+  FIELD_STORY:    '✍️ 현장 이야기',
+  EVENT_MEDIA:    '📸 행사 사진&영상',
+  PRAYER_REQUEST: '🙏 중보기도',
+}
+
+const TYPE_BACK: Record<string, string> = {
+  NEWS:           '/story/news',
+  FIELD_STORY:    '/story/field',
+  EVENT_MEDIA:    '/story/media',
+  PRAYER_REQUEST: '/story/prayer',
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -24,65 +37,107 @@ export default async function StoryDetailPage({ params }: PageProps) {
 
   if (!story) notFound()
 
-  const date = story.createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const date    = story.createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const backUrl = TYPE_BACK[story.type] ?? '/story/field'
+
+  const displayName = story.authorName ?? story.author?.name ?? 'KIMA'
+  const displayOrg  = story.ministryLocation ?? story.author?.organization
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Link
-          href={`/story${story.type === 'VIDEO' ? '?type=VIDEO' : ''}`}
+          href={backUrl}
           className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#1B3A6B] mb-6 transition-colors"
         >
           ← 목록으로
         </Link>
 
         <article className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-          {/* 영상 임베드 */}
-          {story.type === 'VIDEO' && story.videoUrl && (
-            <div className="p-5 pb-0">
-              <VideoEmbed url={story.videoUrl} title={story.title} />
-            </div>
+          {/* 썸네일 */}
+          {story.thumbnail && (
+            <img src={story.thumbnail} alt={story.title} className="w-full h-56 object-cover" />
           )}
 
           <div className="p-6 sm:p-8">
-            {/* 유형 뱃지 + 날짜 */}
             <div className="flex items-center gap-2 mb-4">
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                story.type === 'VIDEO'
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-blue-100 text-blue-700'
-              }`}>
-                {story.type === 'VIDEO' ? '▶ 영상자료' : '📝 일반자료'}
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                {TYPE_LABELS[story.type] ?? story.type}
               </span>
               <span className="text-xs text-gray-400">{date}</span>
             </div>
 
-            {/* 제목 */}
             <h1 className="text-2xl font-bold text-gray-900 leading-tight mb-6">{story.title}</h1>
 
-            {/* 작성자 */}
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
               <div className="w-10 h-10 rounded-full bg-[#1B3A6B] flex items-center justify-center text-white font-bold shrink-0">
-                {(story.author.name ?? 'K')[0]}
+                {displayName[0]}
               </div>
               <div>
-                <p className="font-medium text-gray-800 text-sm">{story.author.name ?? 'KIMA'}</p>
-                {story.author.organization && (
-                  <p className="text-xs text-gray-400">{story.author.organization}</p>
-                )}
+                <p className="font-medium text-gray-800 text-sm">{displayName}</p>
+                {displayOrg && <p className="text-xs text-gray-400">{displayOrg}</p>}
               </div>
             </div>
+
+            {/* NEWS: 외부 링크 */}
+            {story.type === 'NEWS' && story.linkUrl && (
+              <a
+                href={story.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-[#1B3A6B] text-white text-sm font-semibold rounded-lg hover:bg-[#15305a] transition-colors"
+              >
+                기사 보기 →
+              </a>
+            )}
 
             {/* 본문 */}
             <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
               {story.content}
             </div>
+
+            {/* 이미지 그리드 (EVENT_MEDIA) */}
+            {story.images.length > 0 && (
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-2">
+                {story.images.map((img, i) => (
+                  <img key={i} src={img} alt={`${story.title} ${i + 1}`} className="w-full h-32 object-cover rounded-lg" />
+                ))}
+              </div>
+            )}
+
+            {/* 동영상 링크 */}
+            {story.videoUrls.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {story.videoUrls.map((url, i) => (
+                  <a
+                    key={i}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                  >
+                    ▶ 영상 보기 {story.videoUrls.length > 1 ? i + 1 : ''}
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {/* 태그 */}
+            {story.tags.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {story.tags.map((tag) => (
+                  <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full text-xs">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </article>
 
         <div className="mt-8 text-center">
           <Link
-            href={`/story${story.type === 'VIDEO' ? '?type=VIDEO' : ''}`}
+            href={backUrl}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-white hover:border-[#1B3A6B] hover:text-[#1B3A6B] transition-all text-sm"
           >
             ← 목록으로 돌아가기

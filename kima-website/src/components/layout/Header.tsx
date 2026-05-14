@@ -44,7 +44,10 @@ const NAV_ITEMS: NavItem[] = [
     href: '/story',
     label: '현장스토리',
     children: [
-      { href: '/story',  label: '스토리 목록',  desc: '현장 사역자들의 이야기' },
+      { href: '/story/news',    label: 'KIMA 뉴스',        desc: '외부 언론 기사·뉴스 링크 모음' },
+      { href: '/story/field',   label: '사역현장 이야기',   desc: '회원들이 올리는 현장 스토리' },
+      { href: '/story/media',   label: '행사 사진&영상',    desc: 'KIMA 행사 갤러리' },
+      { href: '/story/prayer',  label: '중보기도 요청',     desc: '긴급·일반 기도 제목 나눔' },
     ],
   },
   {
@@ -184,7 +187,7 @@ export function Header() {
                     onMouseLeave={() => setProfileOpen(false)}
                   >
                     <Link
-                      href="/member/profile"
+                      href="/member/mypage"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       onClick={() => setProfileOpen(false)}
                     >
