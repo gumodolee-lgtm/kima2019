@@ -158,7 +158,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
             <h2 className="text-2xl font-bold text-[#1B3A6B]">다가오는 일정</h2>
-            <Link href="/community" className="text-sm text-[#1B3A6B] font-medium hover:underline">
+            <Link href="/network/schedule" className="text-sm text-[#1B3A6B] font-medium hover:underline">
               전체 일정 →
             </Link>
           </div>
