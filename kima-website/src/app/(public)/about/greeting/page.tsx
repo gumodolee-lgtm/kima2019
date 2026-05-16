@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -21,9 +22,16 @@ export default function GreetingPage() {
         {/* 인사말 */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 md:p-10">
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            {/* 프로필 사진 자리 */}
-            <div className="shrink-0 w-36 h-44 rounded-xl bg-gray-100 flex items-center justify-center text-gray-300 text-4xl border border-gray-200">
-              👤
+            {/* 프로필 사진 */}
+            <div className="shrink-0 w-36 h-44 rounded-xl overflow-hidden border border-gray-200">
+              <Image
+                src="/images/nam-yang-gyu.jpg.png"
+                alt="남양규 상임대표"
+                width={144}
+                height={176}
+                className="w-full h-full object-cover object-top"
+                priority
+              />
             </div>
             <div className="flex-1">
               <p className="text-[#C8922A] text-sm font-semibold mb-1">상임대표</p>
