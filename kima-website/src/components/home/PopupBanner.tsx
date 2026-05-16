@@ -7,6 +7,7 @@ interface Popup {
   title: string
   body: string | null
   imageUrl: string | null
+  imageWidth: string | null
   youtubeId: string | null
   linkUrl: string | null
   linkLabel: string | null
@@ -116,14 +117,27 @@ export function PopupBanner() {
           </div>
         )}
 
-        {/* 이미지 — 패딩 없이 팝업 전체 너비 */}
+        {/* 이미지 — imageWidth 미설정 시 팝업 전체 너비, 설정 시 중앙 정렬 */}
         {!popup.youtubeId && popup.imageUrl && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={popup.imageUrl}
-            alt={popup.title}
-            className={`w-full object-contain ${popups.length > 1 ? '' : 'rounded-t-2xl'}`}
-          />
+          popup.imageWidth ? (
+            <div className={`flex justify-center ${popups.length > 1 ? '' : 'rounded-t-2xl overflow-hidden'}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* eslint-disable-next-line react/forbid-dom-props */}
+              <img
+                src={popup.imageUrl}
+                alt={popup.title}
+                style={{ width: popup.imageWidth, maxWidth: '100%' }}
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={popup.imageUrl}
+              alt={popup.title}
+              className={`w-full object-contain ${popups.length > 1 ? '' : 'rounded-t-2xl'}`}
+            />
+          )
         )}
 
         {/* 유튜브 */}

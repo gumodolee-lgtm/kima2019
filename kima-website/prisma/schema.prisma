@@ -237,6 +237,7 @@ model Popup {
   title       String
   body        String?
   imageUrl    String?
+  imageWidth  String?  // CSS 너비값: "100%", "75%", "600px" 등. null = 100%
   youtubeId   String?
   linkUrl     String?
   linkLabel   String?

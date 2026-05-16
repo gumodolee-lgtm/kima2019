@@ -7,6 +7,7 @@ const popupSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요').max(100),
   body: z.string().max(2000).optional().nullable(),
   imageUrl: z.string().url().optional().nullable().or(z.literal('')),
+  imageWidth: z.string().max(20).optional().nullable(),
   youtubeId: z.string().max(20).optional().nullable(),
   linkUrl: z.string().url().optional().nullable().or(z.literal('')),
   linkLabel: z.string().max(50).optional().nullable(),

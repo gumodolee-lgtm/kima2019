@@ -8,6 +8,7 @@ interface PopupData {
   title: string
   body: string
   imageUrl: string
+  imageWidth: string   // "100%", "75%", "50%", "25%", "600px" 등. 빈 문자열 = 100%
   youtubeId: string
   linkUrl: string
   linkLabel: string
@@ -29,6 +30,13 @@ function toIso(local: string) {
 const INPUT = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]'
 const LABEL = 'block text-xs font-medium text-gray-600 mb-1'
 
+const SIZE_PRESETS = [
+  { label: '100%', value: '100%' },
+  { label: '75%',  value: '75%'  },
+  { label: '50%',  value: '50%'  },
+  { label: '25%',  value: '25%'  },
+]
+
 export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: () => void }) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -41,6 +49,7 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
       title: '',
       body: '',
       imageUrl: '',
+      imageWidth: '',
       youtubeId: '',
       linkUrl: '',
       linkLabel: '',
@@ -53,9 +62,17 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [imageTab, setImageTab] = useState<'url' | 'upload'>('upload')
+  const [customPx, setCustomPx] = useState(() => {
+    if (initial?.imageWidth && !initial.imageWidth.endsWith('%')) {
+      return initial.imageWidth.replace('px', '')
+    }
+    return ''
+  })
 
   const set = (key: keyof PopupData, val: string | boolean) =>
     setForm((f) => ({ ...f, [key]: val }))
+
+  const switchChecked: 'true' | 'false' = form.isActive ? 'true' : 'false'
 
   const handleFileUpload = async (file: File) => {
     setUploading(true)
@@ -82,15 +99,16 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
     try {
       const payload = {
         ...form,
-        imageUrl: form.imageUrl || null,
-        youtubeId: form.youtubeId || null,
-        linkUrl: form.linkUrl || null,
-        linkLabel: form.linkLabel || null,
-        body: form.body || null,
+        imageUrl:   form.imageUrl   || null,
+        imageWidth: form.imageWidth || null,
+        youtubeId:  form.youtubeId  || null,
+        linkUrl:    form.linkUrl    || null,
+        linkLabel:  form.linkLabel  || null,
+        body:       form.body       || null,
         startAt: toIso(form.startAt),
-        endAt: toIso(form.endAt),
+        endAt:   toIso(form.endAt),
       }
-      const url = form.id ? `/api/admin/popups/${form.id}` : '/api/admin/popups'
+      const url    = form.id ? `/api/admin/popups/${form.id}` : '/api/admin/popups'
       const method = form.id ? 'PATCH' : 'POST'
       const res = await fetch(url, {
         method,
@@ -109,12 +127,16 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
     }
   }
 
+  const currentWidth = form.imageWidth || '100%'
+  const isPreset = SIZE_PRESETS.some((p) => p.value === currentWidth)
+
   return (
     <div className="space-y-5">
       {/* 제목 */}
       <div>
-        <label className={LABEL}>팝업 제목 *</label>
+        <label htmlFor="popup-title" className={LABEL}>팝업 제목 *</label>
         <input
+          id="popup-title"
           type="text"
           value={form.title}
           onChange={(e) => set('title', e.target.value)}
@@ -125,8 +147,9 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
 
       {/* 본문 텍스트 */}
       <div>
-        <label className={LABEL}>본문 텍스트</label>
+        <label htmlFor="popup-body" className={LABEL}>본문 텍스트</label>
         <textarea
+          id="popup-body"
           value={form.body}
           onChange={(e) => set('body', e.target.value)}
           className={`${INPUT} h-24 resize-none`}
@@ -155,9 +178,9 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
         </div>
 
         {imageTab === 'upload' ? (
-          <div
-            className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-[#1B3A6B] transition-colors"
-            onClick={() => fileRef.current?.click()}
+          <label
+            htmlFor="popup-image-file"
+            className="block border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-[#1B3A6B] transition-colors"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault()
@@ -167,9 +190,11 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
           >
             <input
               ref={fileRef}
+              id="popup-image-file"
               type="file"
               accept="image/*"
-              className="hidden"
+              title="이미지 파일 선택"
+              className="sr-only"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileUpload(f) }}
             />
             {uploading ? (
@@ -177,7 +202,7 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
             ) : form.imageUrl ? (
               <div className="space-y-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={form.imageUrl} alt="preview" className="w-full max-h-96 rounded-lg object-contain" />
+                <img src={form.imageUrl} alt="미리보기" className="w-full max-h-96 rounded-lg object-contain" />
                 <p className="text-xs text-green-600">업로드 완료 — 클릭하여 교체</p>
               </div>
             ) : (
@@ -186,10 +211,11 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
                 <p className="text-xs text-gray-400 mt-1">JPG, PNG, WebP, GIF · 최대 5MB</p>
               </div>
             )}
-          </div>
+          </label>
         ) : (
           <input
             type="url"
+            title="이미지 URL"
             value={form.imageUrl}
             onChange={(e) => set('imageUrl', e.target.value)}
             className={INPUT}
@@ -198,10 +224,79 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
         )}
       </div>
 
+      {/* 이미지 크기 조절 (이미지가 있을 때만 표시) */}
+      {form.imageUrl && !form.youtubeId && (
+        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-3">
+          <p className={LABEL}>이미지 표시 크기</p>
+
+          {/* 프리셋 버튼 */}
+          <div className="flex gap-2 flex-wrap">
+            {SIZE_PRESETS.map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                onClick={() => { set('imageWidth', p.value); setCustomPx('') }}
+                className={`px-3 py-1.5 text-xs rounded-lg border font-medium transition-colors ${
+                  form.imageWidth === p.value || (p.value === '100%' && !form.imageWidth)
+                    ? 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
+                    : 'text-gray-600 border-gray-300 hover:bg-gray-100'
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 직접 입력 (px / cm) */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 shrink-0">직접 입력:</span>
+            <input
+              type="number"
+              id="popup-image-width-px"
+              title="이미지 너비 (픽셀)"
+              min={50}
+              max={1200}
+              value={customPx}
+              onChange={(e) => {
+                const v = e.target.value
+                setCustomPx(v)
+                if (v) {
+                  set('imageWidth', `${v}px`)
+                }
+              }}
+              className="w-24 px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
+              placeholder="예) 480"
+            />
+            <span className="text-xs text-gray-500">px</span>
+            {customPx && (
+              <span className="text-xs text-gray-400">
+                ≈ {(Number(customPx) / 37.8).toFixed(1)} cm
+              </span>
+            )}
+          </div>
+
+          {/* 미리보기 */}
+          <div className="overflow-hidden rounded-lg bg-white border border-gray-100 p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* eslint-disable-next-line react/forbid-dom-props */}
+            <img
+              src={form.imageUrl}
+              alt="크기 미리보기"
+              style={{ width: currentWidth, maxWidth: '100%' }}
+              className="mx-auto block object-contain rounded"
+            />
+            <p className="text-center text-xs text-gray-400 mt-1">
+              미리보기 · 현재 크기: {currentWidth}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* 유튜브 */}
       <div>
-        <label className={LABEL}>유튜브 영상 ID</label>
+        <label htmlFor="popup-youtube" className={LABEL}>유튜브 영상 ID</label>
         <input
+          id="popup-youtube"
           type="text"
           value={form.youtubeId}
           onChange={(e) => set('youtubeId', e.target.value)}
@@ -214,8 +309,9 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
       {/* 외부 링크 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className={LABEL}>외부 링크 URL</label>
+          <label htmlFor="popup-link-url" className={LABEL}>외부 링크 URL</label>
           <input
+            id="popup-link-url"
             type="url"
             value={form.linkUrl}
             onChange={(e) => set('linkUrl', e.target.value)}
@@ -224,8 +320,9 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
           />
         </div>
         <div>
-          <label className={LABEL}>링크 버튼 텍스트</label>
+          <label htmlFor="popup-link-label" className={LABEL}>링크 버튼 텍스트</label>
           <input
+            id="popup-link-label"
             type="text"
             value={form.linkLabel}
             onChange={(e) => set('linkLabel', e.target.value)}
@@ -238,18 +335,22 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
       {/* 게시 기간 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className={LABEL}>게시 시작일시 *</label>
+          <label htmlFor="popup-start" className={LABEL}>게시 시작일시 *</label>
           <input
+            id="popup-start"
             type="datetime-local"
+            title="게시 시작일시"
             value={form.startAt}
             onChange={(e) => set('startAt', e.target.value)}
             className={INPUT}
           />
         </div>
         <div>
-          <label className={LABEL}>게시 종료일시 *</label>
+          <label htmlFor="popup-end" className={LABEL}>게시 종료일시 *</label>
           <input
+            id="popup-end"
             type="datetime-local"
+            title="게시 종료일시"
             value={form.endAt}
             onChange={(e) => set('endAt', e.target.value)}
             className={INPUT}
@@ -261,6 +362,9 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
       <div className="flex items-center gap-3">
         <button
           type="button"
+          role="switch"
+          aria-checked={switchChecked}
+          aria-label="팝업 활성 여부"
           onClick={() => set('isActive', !form.isActive)}
           className={`relative w-11 h-6 rounded-full transition-colors ${form.isActive ? 'bg-[#1B3A6B]' : 'bg-gray-300'}`}
         >

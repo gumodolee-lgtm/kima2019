@@ -8,6 +8,7 @@ interface Popup {
   title: string
   body: string | null
   imageUrl: string | null
+  imageWidth: string | null
   youtubeId: string | null
   linkUrl: string | null
   linkLabel: string | null
@@ -97,6 +98,7 @@ export default function AdminPopupsPage() {
               title: editing.title,
               body: editing.body ?? '',
               imageUrl: editing.imageUrl ?? '',
+              imageWidth: editing.imageWidth ?? '',
               youtubeId: editing.youtubeId ?? '',
               linkUrl: editing.linkUrl ?? '',
               linkLabel: editing.linkLabel ?? '',

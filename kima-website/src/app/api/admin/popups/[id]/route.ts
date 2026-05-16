@@ -7,6 +7,7 @@ const patchSchema = z.object({
   title: z.string().min(1).max(100).optional(),
   body: z.string().max(2000).nullable().optional(),
   imageUrl: z.string().nullable().optional(),
+  imageWidth: z.string().max(20).nullable().optional(),
   youtubeId: z.string().max(20).nullable().optional(),
   linkUrl: z.string().nullable().optional(),
   linkLabel: z.string().max(50).nullable().optional(),
