@@ -12,7 +12,7 @@ export function SeedCeremonyButton() {
     startTransition(async () => {
       const res = await fetch('/api/admin/seed-ceremony', { method: 'POST' })
       const data = await res.json()
-      setMsg(data.message ?? (res.ok ? '완료' : '오류 발생'))
+      setMsg(data.message ?? data.error ?? (res.ok ? '완료' : '오류 발생'))
       if (res.ok) router.refresh()
     })
   }

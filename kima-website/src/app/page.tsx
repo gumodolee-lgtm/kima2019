@@ -5,13 +5,6 @@ import { auth } from '@/lib/auth'
 import { HeroCarousel } from '@/components/home/HeroCarousel'
 import { prisma } from '@/lib/prisma'
 
-const STATS = [
-  { label: '가입 단체', value: '120+', unit: '개' },
-  { label: '이주민 대상국', value: '30+', unit: '개국' },
-  { label: '활동 회원', value: '500+', unit: '명' },
-  { label: '등록 자료', value: '1,200+', unit: '건' },
-]
-
 const VISIONS = [
   {
     icon: '🔗',
@@ -43,9 +36,9 @@ const PARTNER_LOGOS = [
 export default async function HomePage() {
   const session = await auth()
 
-  const [dbStories, dbEvents] = await Promise.all([
+  const [dbStories, dbEvents, orgCount, memberCount, resourceCount] = await Promise.all([
     prisma.story.findMany({
-      where: { isPublished: true },
+      where: { isPublished: true, status: 'APPROVED' },
       orderBy: { createdAt: 'desc' },
       take: 3,
     }).catch(() => []),
@@ -54,7 +47,17 @@ export default async function HomePage() {
       orderBy: { scheduledAt: 'asc' },
       take: 4,
     }).catch(() => []),
+    prisma.organization.count({ where: { isPublic: true } }).catch(() => 0),
+    prisma.user.count().catch(() => 0),
+    prisma.resource.count().catch(() => 0),
   ])
+
+  const stats = [
+    { label: '가입 단체', value: orgCount > 0 ? `${orgCount}+` : '120+', unit: '개' },
+    { label: '이주민 대상국', value: '30+', unit: '개국' },
+    { label: '활동 회원', value: memberCount > 0 ? `${memberCount}+` : '500+', unit: '명' },
+    { label: '등록 자료', value: resourceCount > 0 ? `${resourceCount}+` : '1,200+', unit: '건' },
+  ]
 
   return (
     <>
@@ -65,7 +68,7 @@ export default async function HomePage() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {STATS.map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="text-4xl font-bold text-[#1B3A6B]">
                   {stat.value}
