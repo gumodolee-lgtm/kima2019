@@ -28,10 +28,6 @@ const VISIONS = [
   },
 ]
 
-const PARTNER_LOGOS = [
-  '한국선교연구원', '한국이주민건강협회', '다문화교육진흥원',
-  '이주민복지연합', '글로벌케어', '다일공동체',
-]
 
 export default async function HomePage() {
   const session = await auth()
@@ -195,24 +191,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 7. 협력 기관 로고 */}
-      <section className="bg-white py-16 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-sm font-semibold text-gray-400 uppercase tracking-widest mb-10">
-            협력 기관
-          </h2>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
-            {PARTNER_LOGOS.map((name) => (
-              <div
-                key={name}
-                className="flex items-center justify-center h-16 rounded-xl bg-gray-50 border border-gray-100 px-3"
-              >
-                <span className="text-xs text-gray-400 font-medium text-center leading-tight">{name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   )
 }

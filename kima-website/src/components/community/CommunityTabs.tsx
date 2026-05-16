@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import type { Category, CategoryType } from '@prisma/client'
 import { cn } from '@/lib/utils'
@@ -19,13 +19,24 @@ const TYPE_EMOJI: Record<CategoryType, string> = {
 
 interface CommunityTabsProps {
   categories: Category[]
-  defaultTab?: CategoryType
 }
 
-export function CommunityTabs({ categories, defaultTab = 'REGION' }: CommunityTabsProps) {
-  const [activeTab, setActiveTab] = useState<CategoryType>(defaultTab)
+export function CommunityTabs({ categories }: CommunityTabsProps) {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const tabParam = searchParams.get('tab') as CategoryType | null
+  const activeTab: CategoryType =
+    tabParam && TAB_CONFIG.some((t) => t.key === tabParam) ? tabParam : 'REGION'
 
   const filtered = categories.filter((c) => c.type === activeTab)
+
+  const handleTabClick = (key: CategoryType) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', key)
+    router.replace(`${pathname}?${params.toString()}`)
+  }
 
   return (
     <div>
@@ -34,7 +45,7 @@ export function CommunityTabs({ categories, defaultTab = 'REGION' }: CommunityTa
         {TAB_CONFIG.map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => handleTabClick(tab.key)}
             className={cn(
               'px-5 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
               activeTab === tab.key

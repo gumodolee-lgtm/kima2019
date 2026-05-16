@@ -62,7 +62,7 @@ export default async function CategoryBoardPage({ params }: Props) {
   const userRole = session?.user?.role
   const ROLE_WEIGHT = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 } as const
   const roleWeight = userRole ? (ROLE_WEIGHT[userRole] ?? 1) : 0
-  const canWrite = roleWeight >= 3
+  const canWrite = roleWeight >= 2
   const isPremium = roleWeight >= 2
 
   const notices = category.posts.filter((p) => p.type === 'NOTICE')
@@ -192,7 +192,7 @@ export default async function CategoryBoardPage({ params }: Props) {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-20">
               <h2 className="text-base font-bold text-[#1B3A6B] flex items-center gap-2 mb-4">
                 <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-                관련 자료
+                사역자료
               </h2>
 
               {category.resources.length === 0 ? (

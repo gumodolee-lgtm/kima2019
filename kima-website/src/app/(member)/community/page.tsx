@@ -1,32 +1,14 @@
-import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { CommunityTabs } from '@/components/community/CommunityTabs'
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import type { CategoryType } from '@prisma/client'
 
 export const metadata: Metadata = { title: '사역별 커뮤니티 | KIMA' }
 
-const TAB_MAP: Record<string, CategoryType> = {
-  region:   'REGION',
-  language: 'LANGUAGE',
-  target:   'TARGET',
-  REGION:   'REGION',
-  LANGUAGE: 'LANGUAGE',
-  TARGET:   'TARGET',
-}
-
-interface PageProps {
-  searchParams: Promise<{ tab?: string }>
-}
-
-export default async function CommunityPage({ searchParams }: PageProps) {
-  const { tab } = await searchParams
-  const defaultTab: CategoryType = (tab && TAB_MAP[tab]) ? TAB_MAP[tab] : 'REGION'
-
-  const [categories] = await Promise.all([
-    prisma.category.findMany({ orderBy: [{ type: 'asc' }, { order: 'asc' }] }),
-    auth(),
-  ])
+export default async function CommunityPage() {
+  const categories = await prisma.category.findMany({
+    orderBy: [{ type: 'asc' }, { order: 'asc' }],
+  })
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
@@ -38,7 +20,9 @@ export default async function CommunityPage({ searchParams }: PageProps) {
           </p>
         </div>
 
-        <CommunityTabs categories={categories} defaultTab={defaultTab} />
+        <Suspense fallback={<div className="text-center py-12 text-gray-400">로딩 중...</div>}>
+          <CommunityTabs categories={categories} />
+        </Suspense>
       </div>
     </div>
   )

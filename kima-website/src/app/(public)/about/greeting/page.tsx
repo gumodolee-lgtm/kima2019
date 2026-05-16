@@ -36,7 +36,13 @@ export default function GreetingPage() {
             <div className="flex-1">
               <p className="text-[#C8922A] text-sm font-semibold mb-1">상임대표</p>
               <h2 className="text-2xl font-bold text-[#1B3A6B] mb-0.5">남양규 목사</h2>
-              <p className="text-sm text-gray-400 mb-6">한국이주민선교연합회 (KIMA)</p>
+              <p className="text-sm text-gray-500 mb-0.5">한국이주민선교연합회 (KIMA)</p>
+              <p className="text-xs text-gray-400 mb-1">사역 단체 — 서울네이션즈교회 담임목사 (예장합동)</p>
+              <p className="text-xs text-gray-400 mb-6">
+                <a href="mailto:namnamadfc@hanmail.net" className="hover:text-[#1B3A6B] transition-colors">
+                  namnamadfc@hanmail.net
+                </a>
+              </p>
               <div className="space-y-4 text-gray-700 leading-relaxed text-[15px]">
                 <p>
                   한국이주민선교연합회(KIMA) 홈페이지를 방문해 주신 모든 분들을 주님의 이름으로
