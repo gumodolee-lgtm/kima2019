@@ -28,9 +28,10 @@ export default auth((req) => {
   const { pathname } = req.nextUrl
 
   // kima2019.vercel.app → kima2019.org 리다이렉트
+  // NEXTAUTH_URL이 vercel.app이 아닌 경우에만 리디렉트 (루프 방지)
   const host = req.headers.get('host') ?? req.nextUrl.hostname
-  if (host.endsWith('.vercel.app') && process.env.NEXTAUTH_URL) {
-    const canonical = process.env.NEXTAUTH_URL.replace(/\/$/, '')
+  const canonical = process.env.NEXTAUTH_URL?.replace(/\/$/, '') ?? ''
+  if (host.endsWith('.vercel.app') && canonical && !canonical.includes('.vercel.app')) {
     return NextResponse.redirect(`${canonical}${pathname}${req.nextUrl.search}`, { status: 301 })
   }
 
