@@ -6,6 +6,14 @@ export const metadata: Metadata = { title: '지난 포럼 아카이브 | KIMA' }
 
 const STATIC_RECORDS = [
   {
+    id: 'forum-2025',
+    seq: '4회 포럼',
+    type: 'FORUM',
+    date: '2025년 12월 8~10일',
+    title: '제4회 KIMA 이주민 선교 포럼',
+    description: '"Together We Walk On" — 협력과 네트워크를 통한 한국교회 이주민선교 강화 | 사랑교회 안성수양관',
+  },
+  {
     id: 'lc-16',
     seq: '16차',
     type: 'LISTENING_CALL',
