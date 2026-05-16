@@ -58,7 +58,7 @@ export default async function CategoryBoardPage({ params }: Props) {
     }[]
     resources: {
       id: string; title: string; description: string | null; driveUrl: string
-      fileType: string | null; accessLevel: string; categoryId: string | null
+      fileType: string | null; accessLevel: AccessLevel; categoryId: string | null
       uploadedById: string | null; createdAt: Date; updatedAt: Date
     }[]
   } | null
