@@ -61,11 +61,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
+        // 최초 로그인 시 역할 저장
         token.id = user.id as string
-        // Google OAuth 사용자는 DB의 기본값(MEMBER)이 적용됨
         token.role = (user.role ?? 'MEMBER') as UserRole
+        token.roleRefreshedAt = Math.floor(Date.now() / 1000)
+      } else if (token.id) {
+        // 5분마다 DB에서 역할을 다시 조회 (관리자 등급 변경 즉시 반영)
+        const now = Math.floor(Date.now() / 1000)
+        const lastRefresh = (token.roleRefreshedAt as number) ?? 0
+        if (now - lastRefresh > 300) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { role: true },
+          }).catch(() => null)
+          if (dbUser) {
+            token.role = dbUser.role as UserRole
+            token.roleRefreshedAt = now
+          }
+        }
       }
       return token
     },
