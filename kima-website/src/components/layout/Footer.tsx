@@ -13,8 +13,6 @@ export function Footer() {
               Korean Immigrant Mission Association
             </p>
             <div className="mt-4 space-y-1 text-sm text-blue-200">
-              <p>서울특별시 영등포구 여의대방로65길 23</p>
-              <p>전화: 02-000-0000</p>
               <p>이메일: kima20191227@gmail.com</p>
             </div>
           </div>
