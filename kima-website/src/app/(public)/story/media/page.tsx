@@ -26,11 +26,14 @@ export default async function MediaPage() {
           <div className="space-y-8">
             {events.map((event) => (
               <div key={event.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center flex-wrap gap-2 mb-3">
                   {event.publishedAt && (
                     <span className="text-xs text-gray-400">
                       {event.publishedAt.toLocaleDateString('ko-KR')}
                     </span>
+                  )}
+                  {event.eventLocation && (
+                    <span className="text-xs text-gray-500">📍 {event.eventLocation}</span>
                   )}
                   {event.tags.map((tag) => (
                     <span key={tag} className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-xs">

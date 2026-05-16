@@ -13,6 +13,7 @@ const EMPTY = {
   linkUrl: '',
   source: '',
   publishedAt: '',
+  eventLocation: '',
   videoUrls: '',
   tags: '',
 }
@@ -47,10 +48,11 @@ export function StoryForm() {
           title:       form.title,
           content:     form.content,
           excerpt:     form.excerpt || undefined,
-          linkUrl:     form.linkUrl || undefined,
-          source:      form.source || undefined,
-          publishedAt: form.publishedAt ? new Date(form.publishedAt).toISOString() : undefined,
-          videoUrls:   form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
+          linkUrl:       form.linkUrl || undefined,
+          source:        form.source || undefined,
+          publishedAt:   form.publishedAt ? new Date(form.publishedAt).toISOString() : undefined,
+          eventLocation: form.eventLocation || undefined,
+          videoUrls:     form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
           tags:        form.tags.split(',').map((t) => t.trim()).filter(Boolean),
           status:      'APPROVED',
           isPublished: true,
@@ -157,18 +159,32 @@ export function StoryForm() {
       )}
 
       {form.type === 'EVENT_MEDIA' && (
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">동영상 링크 (선택, 줄바꿈으로 구분)</label>
-          <textarea
-            title="동영상 링크"
-            value={form.videoUrls}
-            onChange={(e) => set('videoUrls', e.target.value)}
-            rows={3}
-            placeholder="https://youtube.com/..."
-            className={`${inputClass} resize-none`}
-            disabled={isPending}
-          />
-        </div>
+        <>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">장소 (선택)</label>
+            <input
+              title="장소"
+              type="text"
+              value={form.eventLocation}
+              onChange={(e) => set('eventLocation', e.target.value)}
+              placeholder="예: 서울 강남구 OO교회"
+              className={inputClass}
+              disabled={isPending}
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">동영상 링크 (선택, 줄바꿈으로 구분)</label>
+            <textarea
+              title="동영상 링크"
+              value={form.videoUrls}
+              onChange={(e) => set('videoUrls', e.target.value)}
+              rows={3}
+              placeholder="https://youtube.com/..."
+              className={`${inputClass} resize-none`}
+              disabled={isPending}
+            />
+          </div>
+        </>
       )}
 
       <div>

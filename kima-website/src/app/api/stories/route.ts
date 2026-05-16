@@ -25,6 +25,8 @@ const storySchema = z.object({
   // FIELD_STORY
   authorName:       z.string().max(50).optional().nullable(),
   ministryLocation: z.string().max(100).optional().nullable(),
+  // EVENT_MEDIA
+  eventLocation:    z.string().max(100).optional().nullable(),
   // PRAYER_REQUEST
   urgency:          z.enum(['URGENT', 'NORMAL']).optional().nullable(),
   visibility:       z.enum(['PUBLIC', 'MEMBER', 'PRAYER_TEAM']).optional(),
@@ -101,6 +103,7 @@ export async function POST(request: NextRequest) {
         publishedAt:      parsed.data.publishedAt ? new Date(parsed.data.publishedAt) : null,
         authorName:       parsed.data.authorName ?? null,
         ministryLocation: parsed.data.ministryLocation ?? null,
+        eventLocation:    parsed.data.eventLocation ?? null,
         urgency:          parsed.data.urgency ?? null,
         visibility:       parsed.data.visibility ?? 'PUBLIC',
         requesterName:    parsed.data.requesterName ?? null,

@@ -186,6 +186,8 @@ model Story {
   // FIELD_STORY 전용
   authorName       String?
   ministryLocation String?
+  // EVENT_MEDIA 전용
+  eventLocation    String?
   // PRAYER_REQUEST 전용
   urgency          PrayerUrgency?
   visibility       StoryVisibility @default(PUBLIC)

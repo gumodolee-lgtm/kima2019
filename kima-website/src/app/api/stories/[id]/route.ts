@@ -10,6 +10,7 @@ function canWrite(role?: string) {
 const patchSchema = z.object({
   status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional(),
   isPublished: z.boolean().optional(),
+  isAnswered: z.boolean().optional(),
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -29,6 +30,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       data: {
         ...(parsed.data.status !== undefined ? { status: parsed.data.status } : {}),
         ...(parsed.data.isPublished !== undefined ? { isPublished: parsed.data.isPublished } : {}),
+        ...(parsed.data.isAnswered !== undefined ? { isAnswered: parsed.data.isAnswered } : {}),
       },
     })
     return NextResponse.json({ story })

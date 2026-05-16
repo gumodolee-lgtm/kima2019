@@ -16,6 +16,9 @@ export default async function PrayerPage() {
       OR: [
         { visibility: 'PUBLIC' },
         ...(session ? [{ visibility: 'MEMBER' as const }] : []),
+        ...(session?.user?.role === 'ADMIN' || session?.user?.role === 'OFFICER'
+          ? [{ visibility: 'PRAYER_TEAM' as const }]
+          : []),
       ],
     },
     orderBy: [

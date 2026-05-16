@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { StoryForm } from '@/components/admin/StoryForm'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StoryApproveButton } from '@/components/admin/StoryApproveButton'
+import { PrayerAnsweredButton } from '@/components/admin/PrayerAnsweredButton'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: '현장스토리 관리 | KIMA 관리자' }
@@ -122,6 +123,12 @@ function StoryCard({ story, showActions }: { story: Story; showActions?: boolean
             <div className="flex gap-2 mt-3">
               <StoryApproveButton storyId={story.id} action="approve" />
               <StoryApproveButton storyId={story.id} action="reject" />
+            </div>
+          )}
+
+          {story.type === 'PRAYER_REQUEST' && !showActions && (
+            <div className="mt-3">
+              <PrayerAnsweredButton storyId={story.id} isAnswered={story.isAnswered} />
             </div>
           )}
         </div>

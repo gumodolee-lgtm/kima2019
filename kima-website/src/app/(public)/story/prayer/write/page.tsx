@@ -107,6 +107,7 @@ export default function PrayerWritePage() {
               >
                 <option value="PUBLIC">전체 공개</option>
                 <option value="MEMBER">로그인 회원만</option>
+                <option value="PRAYER_TEAM">기도팀만</option>
               </select>
             </div>
           </div>
