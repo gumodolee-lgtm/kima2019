@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { StoryForm } from '@/components/admin/StoryForm'
+import { SeedCeremonyButton } from '@/components/admin/SeedCeremonyButton'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StoryApproveButton } from '@/components/admin/StoryApproveButton'
 import { PrayerAnsweredButton } from '@/components/admin/PrayerAnsweredButton'
@@ -41,9 +42,12 @@ export default async function AdminStoriesPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#1B3A6B]">현장스토리 관리</h1>
-        <p className="text-sm text-gray-500 mt-1">뉴스·현장 이야기·행사 사진영상·중보기도를 관리합니다.</p>
+      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-xl font-bold text-[#1B3A6B]">현장스토리 관리</h1>
+          <p className="text-sm text-gray-500 mt-1">뉴스·현장 이야기·행사 사진영상·중보기도를 관리합니다.</p>
+        </div>
+        <SeedCeremonyButton />
       </div>
 
       <StoryForm />
