@@ -17,7 +17,13 @@ const ACCESS_COLORS: Record<AccessLevel, string> = {
   PREMIUM: 'bg-amber-100 text-amber-700',
 }
 
-export default async function AdminResourcesPage() {
+interface PageProps {
+  searchParams: Promise<{ category?: string }>
+}
+
+export default async function AdminResourcesPage({ searchParams }: PageProps) {
+  const { category: preselectedSlug } = await searchParams
+
   const [resources, categories] = await Promise.all([
     prisma.resource.findMany({
       include: { category: { select: { id: true, name: true, slug: true } } },
@@ -26,18 +32,26 @@ export default async function AdminResourcesPage() {
     prisma.category.findMany({ orderBy: [{ type: 'asc' }, { order: 'asc' }] }),
   ])
 
-  const catForForm = categories.map((c) => ({ id: c.id, name: c.name, type: c.type }))
+  const catForForm = categories.map((c) => ({ id: c.id, name: c.name, type: c.type, slug: c.slug }))
+  const preselectedCatId = preselectedSlug
+    ? (categories.find((c) => c.slug === preselectedSlug)?.id ?? '')
+    : ''
 
   return (
     <div>
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold text-[#1B3A6B]">자료 관리</h1>
-          <p className="text-sm text-gray-500 mt-1">구글 드라이브 자료 링크를 등록·삭제합니다.</p>
+          <p className="text-sm text-gray-500 mt-1">
+            구글 드라이브 자료 링크를 등록·삭제합니다.
+            <span className="ml-2 text-xs text-gray-400">
+              📌 커뮤니티 카테고리에서 자료를 등록하려면 해당 카테고리를 선택하세요.
+            </span>
+          </p>
         </div>
       </div>
 
-      <ResourceAdminForm categories={catForForm} />
+      <ResourceAdminForm categories={catForForm} preselectedCategoryId={preselectedCatId} />
 
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
         {resources.length === 0 ? (

@@ -7,18 +7,20 @@ interface Category {
   id: string
   name: string
   type: string
+  slug?: string
 }
 
 interface ResourceAdminFormProps {
   categories: Category[]
+  preselectedCategoryId?: string
 }
 
 const FILE_TYPES = ['PDF', 'PPT', 'DOC', 'XLS', 'ETC'] as const
 
-export function ResourceAdminForm({ categories }: ResourceAdminFormProps) {
+export function ResourceAdminForm({ categories, preselectedCategoryId = '' }: ResourceAdminFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(!!preselectedCategoryId)
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
@@ -27,7 +29,7 @@ export function ResourceAdminForm({ categories }: ResourceAdminFormProps) {
     driveUrl: '',
     fileType: 'PDF' as string,
     accessLevel: 'MEMBER' as string,
-    categoryId: '',
+    categoryId: preselectedCategoryId,
   })
 
   const set = (k: keyof typeof form, v: string) => setForm((prev) => ({ ...prev, [k]: v }))

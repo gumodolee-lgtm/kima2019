@@ -190,10 +190,20 @@ export default async function CategoryBoardPage({ params }: Props) {
           {/* 자료 목록 (1/3) */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-20">
-              <h2 className="text-base font-bold text-[#1B3A6B] flex items-center gap-2 mb-4">
-                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-                사역자료
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-[#1B3A6B] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
+                  사역자료
+                </h2>
+                {roleWeight >= 3 && (
+                  <Link
+                    href={`/admin/resources?category=${category.slug}`}
+                    className="text-xs text-[#1B3A6B] font-medium hover:underline"
+                  >
+                    + 자료 등록
+                  </Link>
+                )}
+              </div>
 
               {category.resources.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center py-4">등록된 자료가 없습니다.</p>

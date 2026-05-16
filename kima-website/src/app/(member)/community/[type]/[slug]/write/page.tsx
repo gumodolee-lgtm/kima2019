@@ -38,7 +38,8 @@ export default async function WritePostPage({ params }: Props) {
   }
 
   const role = session.user.role
-  if (role !== 'OFFICER' && role !== 'ADMIN') {
+  const ROLE_WEIGHT: Record<string, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
+  if ((ROLE_WEIGHT[role] ?? 0) < 2) {
     redirect(`/community/${type}/${slug}`)
   }
 

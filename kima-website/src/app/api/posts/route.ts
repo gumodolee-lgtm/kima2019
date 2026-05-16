@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { postSchema } from '@/schemas/post.schema'
 import type { UserRole } from '@prisma/client'
 
-const CAN_WRITE: UserRole[] = ['OFFICER', 'ADMIN']
+const CAN_WRITE: UserRole[] = ['PREMIUM', 'OFFICER', 'ADMIN']
 
 export async function GET(request: NextRequest) {
   try {
