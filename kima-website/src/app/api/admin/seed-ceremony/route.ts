@@ -37,6 +37,11 @@ const IMAGES_4TH = [
 ]
 
 export async function POST() {
+  // 환경변수 SEED_CEREMONY_ENABLED=true 일 때만 활성화 (일회성 데이터 주입 엔드포인트)
+  if (process.env.SEED_CEREMONY_ENABLED !== 'true') {
+    return NextResponse.json({ error: '비활성화된 엔드포인트입니다.' }, { status: 404 })
+  }
+
   const session = await auth()
   if (session?.user?.role !== 'ADMIN') {
     return NextResponse.json({ error: '관리자만 실행할 수 있습니다.' }, { status: 403 })

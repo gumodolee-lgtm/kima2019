@@ -9,13 +9,16 @@ function hasRole(userRole: string | undefined, required: keyof typeof ROLE_HIERA
   return (ROLE_HIERARCHY[userRole as keyof typeof ROLE_HIERARCHY] ?? 0) >= ROLE_HIERARCHY[required]
 }
 
-// Vercel Edge Runtime에서 req.url 도메인이 *.vercel.app으로 처리되는 문제 방지
-// x-forwarded-host 헤더(실제 사용자가 접속한 도메인)를 우선 사용
+// Vercel Edge Runtime에서 req.url이 *.vercel.app 내부 도메인으로 처리되는 문제 방지.
+// NEXTAUTH_URL이 설정된 프로덕션 환경에서는 해당 값을 우선 사용하고,
+// 개발 환경에서는 x-forwarded-host를 NEXTAUTH_URL 호스트와 대조 후 사용.
 function getOrigin(req: NextRequest): string {
+  if (process.env.NEXTAUTH_URL) return process.env.NEXTAUTH_URL.replace(/\/$/, '')
+
   const forwardedHost = req.headers.get('x-forwarded-host')
   const forwardedProto = req.headers.get('x-forwarded-proto') ?? 'https'
   if (forwardedHost) return `${forwardedProto}://${forwardedHost}`
-  if (process.env.NEXTAUTH_URL) return process.env.NEXTAUTH_URL.replace(/\/$/, '')
+
   return req.nextUrl.origin
 }
 
@@ -60,9 +63,22 @@ export default auth((req) => {
     }
   }
 
+  if (pathname === '/directory/register') {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
+  }
+
   return NextResponse.next()
 })
 
 export const config = {
-  matcher: ['/admin/:path*', '/community/:path*', '/network/:path*', '/resources/:path*', '/member/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/community/:path*',
+    '/network/:path*',
+    '/resources/:path*',
+    '/member/:path*',
+    '/directory/register',
+  ],
 }

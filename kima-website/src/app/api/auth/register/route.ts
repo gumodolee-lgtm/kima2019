@@ -45,19 +45,21 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const user = await prisma.user.create({
-      data: { name, email, organization, role: 'MEMBER' },
-    })
-
-    // credentials provider용 Account에 해시된 비밀번호 저장
-    await prisma.account.create({
-      data: {
-        userId: user.id,
-        type: 'credentials',
-        provider: 'credentials',
-        providerAccountId: user.id,
-        access_token: hashedPassword,
-      },
+    // User와 Account를 트랜잭션으로 생성 — 어느 한쪽 실패 시 전체 롤백
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: { name, email, password: hashedPassword, organization, role: 'MEMBER' },
+      })
+      // NextAuth PrismaAdapter 호환성을 위해 Account 레코드도 유지
+      await tx.account.create({
+        data: {
+          userId: user.id,
+          type: 'credentials',
+          provider: 'credentials',
+          providerAccountId: user.id,
+          access_token: hashedPassword, // 레거시 폴백용 (auth.ts에서 user.password 우선 사용)
+        },
+      })
     })
 
     // 환영 이메일 (실패해도 가입은 완료)

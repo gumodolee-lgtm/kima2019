@@ -43,16 +43,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!user || !user.email) return null
 
-        const account = await prisma.account.findFirst({
-          where: { userId: user.id, provider: 'credentials' },
-        })
+        // password 컬럼 우선 사용, 없으면 레거시 account.access_token 폴백
+        let hash = user.password
+        if (!hash) {
+          const account = await prisma.account.findFirst({
+            where: { userId: user.id, provider: 'credentials' },
+          })
+          hash = account?.access_token ?? null
+        }
+        if (!hash) return null
 
-        if (!account?.access_token) return null
-
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          account.access_token
-        )
+        const isValid = await bcrypt.compare(credentials.password as string, hash)
         if (!isValid) return null
 
         return { id: user.id, email: user.email, name: user.name, role: user.role }

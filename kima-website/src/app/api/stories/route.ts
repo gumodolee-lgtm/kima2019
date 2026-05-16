@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod/v4'
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
 
 const OFFICER_TYPES = ['NEWS', 'EVENT_MEDIA'] as const
 const MEMBER_TYPES  = ['FIELD_STORY', 'PRAYER_REQUEST'] as const
@@ -16,8 +17,7 @@ const storySchema = z.object({
   images:           z.array(z.string()).optional(),
   videoUrls:        z.array(z.string()).optional(),
   tags:             z.array(z.string()).optional(),
-  isPublished:      z.boolean().optional(),
-  status:           z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional(),
+  // status와 isPublished는 클라이언트 입력 무시 → 서버에서 역할 기반으로 결정
   // NEWS
   linkUrl:          z.string().url().optional().nullable(),
   source:           z.string().max(100).optional().nullable(),
@@ -79,12 +79,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '임원 이상만 작성할 수 있습니다.' }, { status: 403 })
     }
 
-    // FIELD_STORY requires login (prayer requests allow anonymous)
+    // FIELD_STORY requires login
     if (type === 'FIELD_STORY' && !session?.user?.id) {
       return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
     }
 
+    // 익명 PRAYER_REQUEST: IP당 1시간 5회 제한
+    if (type === 'PRAYER_REQUEST' && !session?.user?.id) {
+      const ip = getClientIp(request)
+      const { allowed, resetAt } = checkRateLimit(`prayer:${ip}`, {
+        limit: 5,
+        windowMs: 60 * 60 * 1000,
+      })
+      if (!allowed) {
+        return NextResponse.json(
+          { error: '너무 많은 요청입니다. 잠시 후 다시 시도해 주세요.' },
+          { status: 429, headers: { 'Retry-After': String(Math.ceil((resetAt - Date.now()) / 1000)) } }
+        )
+      }
+    }
+
     const isOfficerUser = isOfficer(session?.user?.role)
+
+    // status와 isPublished는 서버에서 역할 기반으로 결정 (클라이언트 값 무시)
+    const resolvedStatus   = isOfficerUser ? 'APPROVED' : 'PENDING'
+    const resolvedPublished = isOfficerUser
 
     const story = await prisma.story.create({
       data: {
@@ -96,8 +115,8 @@ export async function POST(request: NextRequest) {
         images:           parsed.data.images ?? [],
         videoUrls:        parsed.data.videoUrls ?? [],
         tags:             parsed.data.tags ?? [],
-        isPublished:      parsed.data.isPublished ?? (isOfficerUser ? true : false),
-        status:           parsed.data.status ?? (isOfficerUser ? 'APPROVED' : 'PENDING'),
+        isPublished:      resolvedPublished,
+        status:           resolvedStatus,
         linkUrl:          parsed.data.linkUrl ?? null,
         source:           parsed.data.source ?? null,
         publishedAt:      parsed.data.publishedAt ? new Date(parsed.data.publishedAt) : null,

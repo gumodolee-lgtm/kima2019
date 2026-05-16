@@ -7,7 +7,8 @@ import { sendEmail, premiumExpiringEmailHtml } from '@/lib/email'
 // Authorization 헤더로 CRON_SECRET 검증
 export async function GET(request: NextRequest) {
   const secret = request.headers.get('authorization')?.replace('Bearer ', '')
-  if (process.env.CRON_SECRET && secret !== process.env.CRON_SECRET) {
+  // CRON_SECRET 미설정 시 누구나 호출 가능한 버그 방지 — 환경변수 필수
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: '인증 실패' }, { status: 401 })
   }
 

@@ -11,6 +11,7 @@ model User {
   email         String    @unique
   name          String?
   image         String?
+  password      String?   // credentials 로그인용 bcrypt 해시 (OAuth 사용자는 null)
   role          UserRole  @default(MEMBER)
   organization  String?
   region        String?
