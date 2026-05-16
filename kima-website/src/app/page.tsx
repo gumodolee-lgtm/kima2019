@@ -3,13 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { auth } from '@/lib/auth'
 import { HeroCarousel } from '@/components/home/HeroCarousel'
-
-const STATS = [
-  { label: '가입 단체', value: '120+', unit: '개' },
-  { label: '이주민 대상국', value: '30+', unit: '개국' },
-  { label: '활동 회원', value: '500+', unit: '명' },
-  { label: '등록 자료', value: '1,200+', unit: '건' },
-]
+import { CounterSection } from '@/components/home/CounterSection'
 
 const VISIONS = [
   {
@@ -71,9 +65,15 @@ const UPCOMING_EVENTS = [
   },
 ]
 
-const PARTNER_LOGOS = [
-  '한국선교연구원', '한국이주민건강협회', '다문화교육진흥원',
-  '이주민복지연합', '글로벌케어', '다일공동체',
+// 협력 기관 목록 — 로고 이미지 준비 시 logoSrc 경로를 추가하면 자동으로 이미지로 전환됨
+// 예: { name: '한국선교연구원', logoSrc: '/images/partners/krim.png' }
+const PARTNER_LOGOS: { name: string; logoSrc?: string }[] = [
+  { name: '한국선교연구원' },
+  { name: '한국이주민건강협회' },
+  { name: '다문화교육진흥원' },
+  { name: '이주민복지연합' },
+  { name: '글로벌케어' },
+  { name: '다일공동체' },
 ]
 
 export default async function HomePage() {
@@ -83,22 +83,8 @@ export default async function HomePage() {
       {/* 1. 히어로 슬라이드 */}
       <HeroCarousel isLoggedIn={!!session} />
 
-      {/* 2. 숫자 카운터 */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-4xl font-bold text-[#1B3A6B]">
-                  {stat.value}
-                  <span className="text-xl font-medium text-[#C8922A] ml-1">{stat.unit}</span>
-                </p>
-                <p className="mt-2 text-sm text-gray-500">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 2. 숫자 카운터 (뷰포트 진입 시 애니메이션) */}
+      <CounterSection />
 
       {/* 3. 4대 비전 */}
       <section className="bg-[#F8F9FA] py-20">
@@ -203,12 +189,23 @@ export default async function HomePage() {
             협력 기관
           </h2>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
-            {PARTNER_LOGOS.map((name) => (
+            {PARTNER_LOGOS.map((partner) => (
               <div
-                key={name}
-                className="flex items-center justify-center h-16 rounded-xl bg-gray-50 border border-gray-100 px-3"
+                key={partner.name}
+                className="flex items-center justify-center h-16 rounded-xl bg-gray-50 border border-gray-100 px-3 hover:border-gray-200 transition-colors"
               >
-                <span className="text-xs text-gray-400 font-medium text-center leading-tight">{name}</span>
+                {partner.logoSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={partner.logoSrc}
+                    alt={partner.name}
+                    className="max-h-10 max-w-full object-contain"
+                  />
+                ) : (
+                  <span className="text-xs text-gray-400 font-medium text-center leading-tight">
+                    {partner.name}
+                  </span>
+                )}
               </div>
             ))}
           </div>

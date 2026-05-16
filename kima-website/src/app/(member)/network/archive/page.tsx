@@ -4,6 +4,11 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: '지난 포럼 아카이브 | KIMA' }
 
+const TYPE_LABELS: Record<string, string> = {
+  LISTENING_CALL: '리스닝콜',
+  FORUM: '포럼',
+}
+
 const STATIC_RECORDS = [
   {
     id: 'lc-16',

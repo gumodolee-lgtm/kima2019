@@ -60,17 +60,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id as string
         // Google OAuth 사용자는 DB의 기본값(MEMBER)이 적용됨
         token.role = (user.role ?? 'MEMBER') as UserRole
+        // 로그인 시점에 DB에서 expiresAt 조회 — 만료 체크에 사용
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id as string },
+          select: { expiresAt: true },
+        })
+        token.expiresAt = dbUser?.expiresAt?.toISOString() ?? null
       }
       return token
     },
     session({ session, token }) {
       session.user.id = token.id as string
       session.user.role = (token.role ?? 'MEMBER') as UserRole
+      session.user.expiresAt = (token.expiresAt as string | null | undefined) ?? null
       return session
     },
   },

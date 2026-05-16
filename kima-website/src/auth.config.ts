@@ -12,12 +12,14 @@ export const authConfig = {
       if (user) {
         token.id = user.id as string
         token.role = (user.role ?? 'MEMBER') as UserRole
+        // expiresAt은 lib/auth.ts의 jwt 콜백에서 DB 조회 후 저장됨
       }
       return token
     },
     session({ session, token }) {
       session.user.id = token.id as string
       session.user.role = (token.role ?? 'MEMBER') as UserRole
+      session.user.expiresAt = (token.expiresAt as string | null | undefined) ?? null
       return session
     },
   },

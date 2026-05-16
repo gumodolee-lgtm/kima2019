@@ -16,7 +16,23 @@ export async function GET(request: NextRequest) {
     const in30Days = new Date(now)
     in30Days.setDate(in30Days.getDate() + 30)
 
-    // 만료일이 오늘 ~ 30일 이내인 정회원 조회
+    // 1. 이미 만료된 정회원 → MEMBER로 다운그레이드
+    const expired = await prisma.user.findMany({
+      where: {
+        role: 'PREMIUM',
+        expiresAt: { lt: now },
+      },
+      select: { id: true },
+    })
+
+    if (expired.length > 0) {
+      await prisma.user.updateMany({
+        where: { id: { in: expired.map((u) => u.id) } },
+        data: { role: 'MEMBER' },
+      })
+    }
+
+    // 2. 만료일이 오늘 ~ 30일 이내인 정회원 → 갱신 안내 이메일
     const expiring = await prisma.user.findMany({
       where: {
         role: 'PREMIUM',
@@ -41,7 +57,12 @@ export async function GET(request: NextRequest) {
       })
     )
 
-    return NextResponse.json({ ok: true, checked: expiring.length, sent })
+    return NextResponse.json({
+      ok: true,
+      downgraded: expired.length,
+      checked: expiring.length,
+      sent,
+    })
   } catch (err) {
     console.error('[cron/expiring-members]', err)
     return NextResponse.json({ error: '처리 중 오류가 발생했습니다.' }, { status: 500 })

@@ -8,9 +8,15 @@ export const metadata: Metadata = { title: '자료실 | KIMA' }
 
 const ROLE_WEIGHT: Record<UserRole, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
 
-function getUserAccessLevel(role?: UserRole): 'none' | 'member' | 'premium' {
+function getUserAccessLevel(role?: UserRole, expiresAt?: string | null): 'none' | 'member' | 'premium' {
   const weight = role ? (ROLE_WEIGHT[role] ?? 0) : 0
-  if (weight >= 2) return 'premium'
+  // PREMIUM은 만료일도 함께 확인 — OFFICER·ADMIN은 만료 없음
+  if (weight >= 3) return 'premium'  // OFFICER, ADMIN
+  if (weight >= 2) {
+    // PREMIUM: expiresAt이 현재 시각 이후여야만 유효
+    if (expiresAt && new Date(expiresAt) > new Date()) return 'premium'
+    return 'member'  // 만료된 정회원 → 일반회원 수준으로 강등
+  }
   if (weight >= 1) return 'member'
   return 'none'
 }
@@ -23,7 +29,8 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
   const { categoryId } = await searchParams
   const session = await auth()
   const role = session?.user?.role as UserRole | undefined
-  const userAccessLevel = getUserAccessLevel(role)
+  const expiresAt = session?.user?.expiresAt
+  const userAccessLevel = getUserAccessLevel(role, expiresAt)
 
   const allowedLevels =
     userAccessLevel === 'premium'

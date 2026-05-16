@@ -46,3 +46,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 회원 개인정보 파일 (로컬 전용)
+public/members_data.json
+public/*.xlsx
+public/*.xls
