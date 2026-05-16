@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
     }
     const role = session.user.role as UserRole
-    if (ROLE_WEIGHT[role] < 3) {
-      return NextResponse.json({ error: '자료 등록 권한이 없습니다. (임원·위원장 이상)' }, { status: 403 })
+    if (ROLE_WEIGHT[role] < 2) {
+      return NextResponse.json({ error: '정회원 이상만 자료를 등록할 수 있습니다.' }, { status: 403 })
     }
 
     const body = await request.json()

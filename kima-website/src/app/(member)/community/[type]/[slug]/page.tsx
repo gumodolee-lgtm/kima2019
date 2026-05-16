@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { PostCard } from '@/components/community/PostCard'
+import { ResourceUploadForm } from '@/components/community/ResourceUploadForm'
 import type { Metadata } from 'next'
 import type { CategoryType, AccessLevel } from '@prisma/client'
 
@@ -195,13 +196,11 @@ export default async function CategoryBoardPage({ params }: Props) {
                   <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
                   사역자료
                 </h2>
-                {roleWeight >= 3 && (
-                  <Link
-                    href={`/admin/resources?category=${category.slug}`}
-                    className="text-xs text-[#1B3A6B] font-medium hover:underline"
-                  >
-                    + 자료 등록
-                  </Link>
+                {isPremium && (
+                  <ResourceUploadForm
+                    categoryId={category.id}
+                    categoryName={category.name}
+                  />
                 )}
               </div>
 
