@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 }
 
 const SECTIONS = [
+  { href: '/about/greeting', icon: '🙏', title: '상임대표 인사말', desc: '남양규 상임대표 인사 및 약력' },
   { href: '/about/history', icon: '📖', title: '설립 배경 & 연혁', desc: '1~3기 역사와 발자취' },
   { href: '/about/vision', icon: '🎯', title: '4기 비전 & 실행계획', desc: '2024년 새로운 도약의 방향' },
   { href: '/about/leadership', icon: '👤', title: '임원단 소개', desc: '전국 위원장·임원진 프로필' },

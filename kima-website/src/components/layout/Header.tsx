@@ -14,10 +14,11 @@ const NAV_ITEMS: NavItem[] = [
     href: '/about',
     label: '소개',
     children: [
-      { href: '/about',             label: 'KIMA 소개',    desc: '한국이주민선교연합회 소개' },
-      { href: '/about/history',     label: '설립 연혁',    desc: '창립부터 현재까지 걸어온 길' },
-      { href: '/about/vision',      label: '비전 & 사명',  desc: '4기 비전과 6대 실행계획' },
-      { href: '/about/leadership',  label: '임원단 소개',  desc: '4기 임원단 및 위원장' },
+      { href: '/about',             label: 'KIMA 소개',      desc: '한국이주민선교연합회 소개' },
+      { href: '/about/greeting',    label: '상임대표 인사말', desc: '남양규 상임대표 인사 및 약력' },
+      { href: '/about/history',     label: '설립 연혁',      desc: '창립부터 현재까지 걸어온 길' },
+      { href: '/about/vision',      label: '비전 & 사명',    desc: '4기 비전과 6대 실행계획' },
+      { href: '/about/leadership',  label: '임원단 소개',    desc: '4기 임원단 및 위원장' },
     ],
   },
   {

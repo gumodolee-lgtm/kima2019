@@ -80,8 +80,8 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-[#1B3A6B]">제7조 (개인정보 보호책임자)</h2>
             <div className="bg-gray-50 rounded-lg p-4 text-sm">
-              <p><strong>성명:</strong> 이창호</p>
-              <p><strong>직책:</strong> 한국이주민선교연합회 대표</p>
+              <p><strong>성명:</strong> 남양규</p>
+              <p><strong>직책:</strong> 한국이주민선교연합회 상임대표</p>
               <p><strong>이메일:</strong> kima20191227@gmail.com</p>
             </div>
           </section>
