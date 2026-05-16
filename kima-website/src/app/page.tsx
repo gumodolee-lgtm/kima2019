@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { auth } from '@/lib/auth'
 import { HeroCarousel } from '@/components/home/HeroCarousel'
+import { PopupBanner } from '@/components/home/PopupBanner'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
@@ -59,6 +60,9 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* 팝업 배너 (클라이언트 컴포넌트) */}
+      <PopupBanner />
+
       {/* 1. 히어로 슬라이드 */}
       <HeroCarousel isLoggedIn={!!session} />
 

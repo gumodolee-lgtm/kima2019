@@ -20,6 +20,7 @@ const NAV = [
   { href: '/admin/resources',     label: '자료 관리',    icon: '📄', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/events',        label: '일정 관리',    icon: '📅', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/stories',       label: '현장스토리',   icon: '📖', exact: false, minRole: 'OFFICER' as const },
+  { href: '/admin/popups',        label: '팝업 관리',    icon: '🪟', exact: false, minRole: 'ADMIN'   as const },
 ]
 
 interface Props {

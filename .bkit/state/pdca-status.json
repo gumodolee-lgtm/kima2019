@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-16T12:01:20.723Z",
+  "lastUpdated": "2026-05-16T12:04:03.785Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -62,7 +62,8 @@
     "member",
     "request-premium",
     "seed-category-officers",
-    "category"
+    "category",
+    "popups"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -75,9 +76,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-16T11:38:25.734Z"
+        "lastUpdated": "2026-05-16T12:04:03.785Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\lib\\auth.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\page.tsx"
     },
     "tests": {
       "phase": "do",
@@ -205,9 +206,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:30.906Z",
-        "lastUpdated": "2026-05-16T11:43:29.937Z"
+        "lastUpdated": "2026-05-16T12:01:48.433Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\posts\\[id]\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\popups\\[id]\\route.ts"
     },
     "directory": {
       "phase": "do",
@@ -322,9 +323,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-16T11:02:01.844Z"
+        "lastUpdated": "2026-05-16T12:03:44.766Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\SeedCategoryOfficersButton.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\AdminSidebar.tsx"
     },
     "members": {
       "phase": "do",
@@ -660,9 +661,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T10:52:11.111Z",
-        "lastUpdated": "2026-05-11T10:55:16.486Z"
+        "lastUpdated": "2026-05-16T12:03:35.953Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\home\\HeroCarousel.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\home\\PopupBanner.tsx"
     },
     "stories": {
       "phase": "do",
@@ -777,9 +778,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T08:18:08.857Z",
-        "lastUpdated": "2026-05-16T08:18:08.857Z"
+        "lastUpdated": "2026-05-16T12:01:59.465Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\upload\\route.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\popups\\upload\\route.ts"
     },
     "seed-ceremony": {
       "phase": "do",
@@ -858,6 +859,19 @@
         "lastUpdated": "2026-05-16T11:20:29.993Z"
       },
       "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\community\\category\\route.ts"
+    },
+    "popups": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-16T12:01:38.717Z",
+        "lastUpdated": "2026-05-16T12:03:12.555Z"
+      },
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\popups\\page.tsx"
     }
   },
   "pipeline": {
@@ -868,7 +882,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-16T12:01:20.723Z"
+    "lastActivity": "2026-05-16T12:04:03.785Z"
   },
   "history": [
     {
@@ -3202,6 +3216,66 @@
     {
       "timestamp": "2026-05-16T12:01:20.723Z",
       "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:01:38.717Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:01:48.433Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:01:59.465Z",
+      "feature": "upload",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:02:05.796Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:02:43.877Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:03:12.555Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:03:35.953Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:03:44.766Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:03:52.981Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:04:03.785Z",
+      "feature": "kima-website",
       "phase": "do",
       "action": "updated"
     }
