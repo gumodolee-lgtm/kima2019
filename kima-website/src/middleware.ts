@@ -1,60 +1,103 @@
 import NextAuth from 'next-auth'
 import { authConfig } from '@/auth.config'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
+
+const ROLE_HIERARCHY = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 } as const
+
+function hasRole(userRole: string | undefined, required: keyof typeof ROLE_HIERARCHY) {
+  if (!userRole) return false
+  return (ROLE_HIERARCHY[userRole as keyof typeof ROLE_HIERARCHY] ?? 0) >= ROLE_HIERARCHY[required]
+}
+
+function hasValidPremium(userRole: string | undefined, expiresAt?: string | null): boolean {
+  if (!userRole) return false
+  const weight = ROLE_HIERARCHY[userRole as keyof typeof ROLE_HIERARCHY] ?? 0
+  if (weight >= 3) return true  // OFFICER, ADMIN — no expiry check
+  if (weight >= 2) {
+    // PREMIUM must have a valid (non-expired) expiresAt
+    if (!expiresAt) return false
+    return new Date(expiresAt) > new Date()
+  }
+  return false
+}
+
+// Vercel Edge Runtime에서 req.url이 *.vercel.app 내부 도메인으로 처리되는 문제 방지.
+function getOrigin(req: NextRequest): string {
+  if (process.env.NEXTAUTH_URL) return process.env.NEXTAUTH_URL.replace(/\/$/, '')
+
+  const forwardedHost = req.headers.get('x-forwarded-host')
+  const forwardedProto = req.headers.get('x-forwarded-proto') ?? 'https'
+  if (forwardedHost) return `${forwardedProto}://${forwardedHost}`
+
+  return req.nextUrl.origin
+}
 
 const { auth } = NextAuth(authConfig)
 
-// 유효한 정회원 여부: ADMIN·OFFICER는 만료 없음, PREMIUM은 expiresAt 체크
-function hasValidPremium(role?: string | null, expiresAt?: string | null): boolean {
-  if (role === 'ADMIN' || role === 'OFFICER') return true
-  if (role !== 'PREMIUM') return false
-  if (!expiresAt) return false
-  return new Date(expiresAt) > new Date()
-}
+export default auth((req) => {
+  const { pathname } = req.nextUrl
 
-export default auth((req: NextRequest & { auth: { user?: { role?: string; expiresAt?: string | null } } | null }) => {
-  const { nextUrl } = req
-  const session = req.auth
-  const isLoggedIn = !!session?.user
-  const role = session?.user?.role
-  const expiresAt = session?.user?.expiresAt
-
-  // /admin/* — ADMIN 전용
-  if (nextUrl.pathname.startsWith('/admin')) {
-    if (!isLoggedIn || role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/', nextUrl))
-    }
-    return NextResponse.next()
+  // kima2019.vercel.app → kima2019.org 리다이렉트
+  const host = req.headers.get('host') ?? req.nextUrl.hostname
+  const canonical = process.env.NEXTAUTH_URL?.replace(/\/$/, '') ?? ''
+  if (host.endsWith('.vercel.app') && canonical && !canonical.includes('.vercel.app')) {
+    return NextResponse.redirect(`${canonical}${pathname}${req.nextUrl.search}`, { status: 301 })
   }
 
-  // /resources/* — 유효한 정회원(PREMIUM+미만료) 또는 OFFICER·ADMIN
-  if (nextUrl.pathname.startsWith('/resources')) {
-    if (!isLoggedIn) {
-      const loginUrl = new URL('/auth/login', nextUrl)
-      loginUrl.searchParams.set('callbackUrl', nextUrl.pathname)
-      return NextResponse.redirect(loginUrl)
+  const isLoggedIn = !!req.auth
+  const userRole = req.auth?.user?.role
+  const expiresAt = req.auth?.user?.expiresAt
+  const origin = getOrigin(req)
+
+  // 회원 관리 · 단체 승인 → ADMIN 전용
+  if (pathname.startsWith('/admin/members') || pathname.startsWith('/admin/organizations')) {
+    if (!hasRole(userRole, 'ADMIN')) {
+      return NextResponse.redirect(`${origin}/`)
     }
-    if (!hasValidPremium(role, expiresAt)) {
-      return NextResponse.redirect(new URL('/member/upgrade', nextUrl))
+  // 나머지 관리 메뉴(자료·일정·카테고리) → OFFICER 이상
+  } else if (pathname.startsWith('/admin')) {
+    if (!hasRole(userRole, 'OFFICER')) {
+      return NextResponse.redirect(`${origin}/`)
     }
-    return NextResponse.next()
   }
 
-  // /community/*, /network/*, /member/*, /directory/register — 로그인 필요
-  const memberPaths = ['/community', '/network', '/member', '/directory/register']
-  if (memberPaths.some((p) => nextUrl.pathname.startsWith(p))) {
+  if (pathname.startsWith('/resources')) {
     if (!isLoggedIn) {
-      const loginUrl = new URL('/auth/login', nextUrl)
-      loginUrl.searchParams.set('callbackUrl', nextUrl.pathname)
-      return NextResponse.redirect(loginUrl)
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}&notice=premium`)
     }
-    return NextResponse.next()
+    if (!hasValidPremium(userRole, expiresAt)) {
+      return NextResponse.redirect(`${origin}/member/upgrade`)
+    }
+  }
+
+  if (pathname.startsWith('/community') || pathname.startsWith('/network')) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
+  }
+
+  if (pathname.startsWith('/member')) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
+  }
+
+  if (pathname === '/directory/register') {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
   }
 
   return NextResponse.next()
 })
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon\\.ico|images/).*)'],
+  matcher: [
+    '/admin/:path*',
+    '/community/:path*',
+    '/network/:path*',
+    '/resources/:path*',
+    '/member/:path*',
+    '/directory/register',
+  ],
 }

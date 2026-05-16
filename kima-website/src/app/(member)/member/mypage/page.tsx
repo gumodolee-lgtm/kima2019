@@ -5,6 +5,8 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import type { UserRole } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '마이페이지 | KIMA' }
 
 const ROLE_LABELS: Record<UserRole, string> = {

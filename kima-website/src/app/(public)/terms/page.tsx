@@ -8,7 +8,7 @@ export default function TermsPage() {
       <div className="bg-[#1B3A6B] text-white py-10 px-4">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-2xl font-bold">이용약관</h1>
-          <p className="mt-2 text-blue-200 text-sm">최종 수정일: 2025년 1월 1일</p>
+          <p className="mt-2 text-blue-200 text-sm">최종 수정일: 2026년 5월 16일</p>
         </div>
       </div>
 
@@ -24,17 +24,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제2조 (용어의 정의)</h2>
-            <ul className="list-disc pl-5 space-y-2 text-sm">
-              <li><strong>회원:</strong> KIMA에 개인정보를 제공하여 가입한 개인</li>
-              <li><strong>일반회원:</strong> 무료 가입 후 기본 서비스를 이용하는 회원</li>
-              <li><strong>정회원:</strong> 연 회비 납부 후 추가 서비스를 이용하는 회원</li>
-              <li><strong>콘텐츠:</strong> 서비스 내 게시물, 자료, 정보 등 일체</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제3조 (회원가입)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제2조 (회원가입)</h2>
             <p>
               이용자는 KIMA가 정한 양식에 따라 회원정보를 기입하고 본 약관에 동의함으로써
               회원가입을 신청합니다. KIMA는 허위 정보를 기재한 가입 신청은 거절할 수 있습니다.
@@ -42,7 +32,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제4조 (정회원)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제3조 (정회원)</h2>
             <p>
               정회원 자격은 연 5만원 회비 납부 및 사무국 확인 후 부여됩니다.
               정회원 자격은 납부일로부터 1년간 유효하며, 갱신하지 않을 경우 일반회원으로 자동 전환됩니다.
@@ -50,7 +40,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제5조 (서비스 이용)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제4조 (서비스 이용)</h2>
             <ul className="list-disc pl-5 space-y-1 text-sm">
               <li>회원은 서비스를 선교·사역 목적에 맞게 이용해야 합니다.</li>
               <li>타인의 개인정보를 침해하거나 명예를 훼손하는 행위는 금지됩니다.</li>
@@ -60,7 +50,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제6조 (서비스 중단)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제5조 (서비스 중단)</h2>
             <p>
               KIMA는 시스템 점검, 서버 장애, 천재지변 등의 사유로 서비스 제공을 일시적으로
               중단할 수 있으며, 이에 대해 회원에게 미리 공지합니다.
@@ -68,7 +58,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제7조 (회원 탈퇴)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제6조 (회원 탈퇴)</h2>
             <p>
               회원은 언제든지 kima20191227@gmail.com에 탈퇴를 요청할 수 있으며,
               KIMA는 즉시 처리합니다. 단, 게시한 콘텐츠는 별도 요청이 없는 한 유지될 수 있습니다.
@@ -76,7 +66,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제8조 (면책조항)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제7조 (면책조항)</h2>
             <p>
               KIMA는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등 불가항력적 사유로 인한
               서비스 장애에 대해 책임을 지지 않습니다. 회원 간 분쟁에 대해서도 KIMA는 관여하지 않습니다.
@@ -84,7 +74,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#1B3A6B]">제9조 (준거법)</h2>
+            <h2 className="text-lg font-bold text-[#1B3A6B]">제8조 (준거법)</h2>
             <p>본 약관은 대한민국 법률에 따라 규율되며, 분쟁 발생 시 서울중앙지방법원을 관할법원으로 합니다.</p>
           </section>
         </div>

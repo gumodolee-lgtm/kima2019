@@ -24,6 +24,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: '입력값이 올바르지 않습니다.' }, { status: 400 })
     }
 
+    const current = await prisma.user.findUnique({ where: { id }, select: { premiumNote: true } })
+
     const updateData: Record<string, unknown> = {}
     if (parsed.data.role !== undefined) {
       updateData.role = parsed.data.role as UserRole
@@ -32,6 +34,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         const expires = new Date()
         expires.setFullYear(expires.getFullYear() + 1)
         updateData.expiresAt = expires
+        // [신청] 접수 내역을 [승인됨]으로 변경해 이력 보존
+        if (current?.premiumNote?.startsWith('[신청]')) {
+          updateData.premiumNote = current.premiumNote.replace('[신청]', '[승인됨]')
+        }
       }
     }
     if ('premiumNote' in parsed.data) {

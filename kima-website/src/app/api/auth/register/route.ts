@@ -33,7 +33,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { name, email, password, organization } = parsed.data
+    const {
+      name, email, password, organization,
+      position, phone, address, denomination,
+      ministryLanguages, ministryTargets,
+    } = parsed.data
 
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
@@ -45,19 +49,23 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const user = await prisma.user.create({
-      data: { name, email, organization, role: 'MEMBER' },
-    })
-
-    // credentials provider용 Account에 해시된 비밀번호 저장
-    await prisma.account.create({
-      data: {
-        userId: user.id,
-        type: 'credentials',
-        provider: 'credentials',
-        providerAccountId: user.id,
-        access_token: hashedPassword,
-      },
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          name, email, organization, role: 'MEMBER',
+          position, phone, address, denomination,
+          ministryLanguages, ministryTargets,
+        },
+      })
+      await tx.account.create({
+        data: {
+          userId: user.id,
+          type: 'credentials',
+          provider: 'credentials',
+          providerAccountId: user.id,
+          access_token: hashedPassword,
+        },
+      })
     })
 
     // 환영 이메일 (실패해도 가입은 완료)

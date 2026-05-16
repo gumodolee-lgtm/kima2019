@@ -6,10 +6,13 @@ import type { UserRole, AccessLevel } from '@prisma/client'
 
 const ROLE_WEIGHT: Record<UserRole, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
 
-function getAllowedLevels(role?: UserRole): AccessLevel[] {
+function getAllowedLevels(role?: UserRole, expiresAt?: Date | null): AccessLevel[] {
   const weight = role ? (ROLE_WEIGHT[role] ?? 0) : 0
-  if (weight >= 2) return ['PUBLIC', 'MEMBER', 'PREMIUM']
-  if (weight >= 1) return ['PUBLIC', 'MEMBER']
+  // PREMIUM 역할이어도 만료된 경우 MEMBER 수준으로 강등
+  const effectiveWeight =
+    role === 'PREMIUM' && expiresAt && expiresAt < new Date() ? 1 : weight
+  if (effectiveWeight >= 2) return ['PUBLIC', 'MEMBER', 'PREMIUM']
+  if (effectiveWeight >= 1) return ['PUBLIC', 'MEMBER']
   return ['PUBLIC']
 }
 
@@ -17,7 +20,18 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth()
     const role = session?.user?.role as UserRole | undefined
-    const allowedLevels = getAllowedLevels(role)
+
+    // PREMIUM 역할인 경우 만료 여부를 DB에서 확인
+    let expiresAt: Date | null = null
+    if (role === 'PREMIUM' && session?.user?.id) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { expiresAt: true },
+      })
+      expiresAt = user?.expiresAt ?? null
+    }
+
+    const allowedLevels = getAllowedLevels(role, expiresAt)
 
     const { searchParams } = new URL(request.url)
     const categoryId = searchParams.get('categoryId')
@@ -46,8 +60,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
     }
     const role = session.user.role as UserRole
-    if (ROLE_WEIGHT[role] < 3) {
-      return NextResponse.json({ error: '자료 등록 권한이 없습니다. (임원·위원장 이상)' }, { status: 403 })
+    if (ROLE_WEIGHT[role] < 2) {
+      return NextResponse.json({ error: '정회원 이상만 자료를 등록할 수 있습니다.' }, { status: 403 })
     }
 
     const body = await request.json()

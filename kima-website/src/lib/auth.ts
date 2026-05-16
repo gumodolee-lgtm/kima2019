@@ -12,7 +12,7 @@ import '@/types'
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', updateAge: 5 * 60 },
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
       ? [Google({
@@ -43,16 +43,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!user || !user.email) return null
 
-        const account = await prisma.account.findFirst({
-          where: { userId: user.id, provider: 'credentials' },
-        })
+        // password 컬럼 우선 사용, 없으면 레거시 account.access_token 폴백
+        let hash = user.password
+        if (!hash) {
+          const account = await prisma.account.findFirst({
+            where: { userId: user.id, provider: 'credentials' },
+          })
+          hash = account?.access_token ?? null
+        }
+        if (!hash) return null
 
-        if (!account?.access_token) return null
-
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          account.access_token
-        )
+        const isValid = await bcrypt.compare(credentials.password as string, hash)
         if (!isValid) return null
 
         return { id: user.id, email: user.email, name: user.name, role: user.role }
@@ -62,15 +63,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        // 최초 로그인 시: 역할·만료일 저장
         token.id = user.id as string
-        // Google OAuth 사용자는 DB의 기본값(MEMBER)이 적용됨
         token.role = (user.role ?? 'MEMBER') as UserRole
-        // 로그인 시점에 DB에서 expiresAt 조회 — 만료 체크에 사용
+        token.roleRefreshedAt = Math.floor(Date.now() / 1000)
+        // expiresAt 조회 — 정회원 만료 체크에 사용
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id as string },
           select: { expiresAt: true },
         })
         token.expiresAt = dbUser?.expiresAt?.toISOString() ?? null
+      } else if (token.id) {
+        // 5분마다 DB에서 역할·만료일 재조회 (관리자 등급 변경 즉시 반영)
+        const now = Math.floor(Date.now() / 1000)
+        const lastRefresh = (token.roleRefreshedAt as number) ?? 0
+        if (now - lastRefresh > 300) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { role: true, expiresAt: true },
+          }).catch(() => null)
+          if (dbUser) {
+            token.role = dbUser.role as UserRole
+            token.expiresAt = dbUser.expiresAt?.toISOString() ?? null
+            token.roleRefreshedAt = now
+          }
+        }
       }
       return token
     },

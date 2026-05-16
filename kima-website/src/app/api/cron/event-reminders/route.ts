@@ -6,7 +6,8 @@ import { sendEmail, eventReminderEmailHtml } from '@/lib/email'
 // 3일 후 예정된 행사의 신청자에게 리마인더 발송
 export async function GET(request: NextRequest) {
   const secret = request.headers.get('authorization')?.replace('Bearer ', '')
-  if (process.env.CRON_SECRET && secret !== process.env.CRON_SECRET) {
+  // CRON_SECRET 미설정 시 누구나 호출 가능한 버그 방지 — 환경변수 필수
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: '인증 실패' }, { status: 401 })
   }
 

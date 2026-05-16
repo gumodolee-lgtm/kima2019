@@ -4,6 +4,8 @@ import { DeleteButton } from '@/components/admin/DeleteButton'
 import { getEventType } from '@/lib/eventTypes'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '일정 관리 | KIMA 관리자' }
 
 export default async function AdminEventsPage() {

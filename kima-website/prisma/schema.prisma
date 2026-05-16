@@ -7,19 +7,25 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  image         String?
-  role          UserRole  @default(MEMBER)
-  organization  String?
-  region        String?
-  phone         String?
-  approvedAt    DateTime?
-  expiresAt     DateTime?
-  premiumNote   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String?
+  image             String?
+  password          String?
+  role              UserRole  @default(MEMBER)
+  position          String?   // 직분 (목사, 선교사, 전도사 등)
+  phone             String?   // 전화번호
+  address           String?   // 주소
+  denomination      String?   // 소속 교단
+  organization      String?   // 소속 단체
+  region            String?   // 지역
+  ministryLanguages String[]  // 사역언어
+  ministryTargets   String[]  // 사역대상
+  approvedAt        DateTime?
+  expiresAt         DateTime?
+  premiumNote       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   accounts      Account[]
   sessions      Session[]
@@ -81,18 +87,20 @@ model Organization {
 }
 
 model Category {
-  id          String       @id @default(cuid())
-  type        CategoryType
-  name        String
-  slug        String       @unique
-  order       Int          @default(0)
-  officerName String?
-  officerSns  String?
-  officerQr   String?
-  createdAt   DateTime     @default(now())
+  id           String       @id @default(cuid())
+  type         CategoryType
+  name         String
+  slug         String       @unique
+  order        Int          @default(0)
+  officerName  String?
+  officerPhone String?
+  officerEmail String?
+  officerSns   String?
+  officerQr    String?
+  createdAt    DateTime     @default(now())
 
-  posts       Post[]
-  resources   Resource[]
+  posts        Post[]
+  resources    Resource[]
 }
 
 enum CategoryType {
@@ -167,20 +175,75 @@ model EventAttendee {
 }
 
 model Story {
-  id          String    @id @default(cuid())
-  title       String
-  content     String
-  type        StoryType @default(TEXT)
-  videoUrl    String?
-  thumbnail   String?
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
-  isPublished Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id               String          @id @default(cuid())
+  title            String
+  content          String
+  type             StoryType       @default(FIELD_STORY)
+  status           StoryStatus     @default(APPROVED)
+  // 공통
+  excerpt          String?
+  thumbnail        String?
+  images           String[]
+  videoUrls        String[]
+  tags             String[]
+  isPublished      Boolean         @default(true)
+  // NEWS 전용
+  linkUrl          String?
+  source           String?
+  publishedAt      DateTime?
+  // FIELD_STORY 전용
+  authorName       String?
+  ministryLocation String?
+  // EVENT_MEDIA 전용
+  eventLocation    String?
+  // PRAYER_REQUEST 전용
+  urgency          PrayerUrgency?
+  visibility       StoryVisibility @default(PUBLIC)
+  requesterName    String?
+  isAnswered       Boolean         @default(false)
+  // 작성자 (로그인 회원)
+  authorId         String?
+  author           User?           @relation(fields: [authorId], references: [id])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 enum StoryType {
-  TEXT
-  VIDEO
+  NEWS
+  FIELD_STORY
+  EVENT_MEDIA
+  PRAYER_REQUEST
+}
+
+enum StoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PrayerUrgency {
+  URGENT
+  NORMAL
+}
+
+enum StoryVisibility {
+  PUBLIC
+  MEMBER
+  PRAYER_TEAM
+}
+
+model Popup {
+  id          String   @id @default(cuid())
+  title       String
+  body        String?
+  imageUrl    String?
+  imageWidth  String?  // CSS 너비값: "100%", "75%", "600px" 등. null = 100%
+  youtubeId   String?
+  linkUrl     String?
+  linkLabel   String?
+  startAt     DateTime
+  endAt       DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

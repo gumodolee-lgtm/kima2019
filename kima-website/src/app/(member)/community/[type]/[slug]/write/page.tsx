@@ -6,6 +6,8 @@ import { WritePostForm } from '@/components/community/WritePostForm'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 const URL_TO_DB: Record<string, CategoryType> = {
   region: 'REGION',
   language: 'LANGUAGE',
@@ -18,7 +20,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const category = await prisma.category.findUnique({ where: { slug } })
+  const category = await prisma.category.findUnique({ where: { slug }, select: { name: true } })
   if (!category) return { title: '글쓰기 | KIMA' }
   return { title: `${category.name} 글쓰기 | KIMA` }
 }
@@ -30,7 +32,7 @@ export default async function WritePostPage({ params }: Props) {
 
   const [session, category] = await Promise.all([
     auth(),
-    prisma.category.findUnique({ where: { slug } }),
+    prisma.category.findUnique({ where: { slug }, select: { id: true, type: true, name: true, slug: true } }),
   ])
 
   if (!session?.user) {
@@ -38,9 +40,12 @@ export default async function WritePostPage({ params }: Props) {
   }
 
   const role = session.user.role
-  if (role !== 'OFFICER' && role !== 'ADMIN') {
+  const ROLE_WEIGHT: Record<string, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
+  const roleWeight = ROLE_WEIGHT[role] ?? 0
+  if (roleWeight < 2) {
     redirect(`/community/${type}/${slug}`)
   }
+  const canWriteNotice = roleWeight >= 3
 
   if (!category || category.type !== dbType) notFound()
 
@@ -68,6 +73,7 @@ export default async function WritePostPage({ params }: Props) {
             categoryName={category.name}
             categoryType={type}
             categorySlug={slug}
+            canWriteNotice={canWriteNotice}
           />
         </div>
       </div>

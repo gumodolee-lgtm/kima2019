@@ -5,6 +5,8 @@ import { z } from 'zod/v4'
 
 const patchSchema = z.object({
   officerName: z.string().max(100).nullable().optional(),
+  officerPhone: z.string().max(20).nullable().optional(),
+  officerEmail: z.string().max(200).nullable().optional(),
   officerSns: z.string().max(200).nullable().optional(),
   officerQr: z.string().max(500).nullable().optional(),
 })

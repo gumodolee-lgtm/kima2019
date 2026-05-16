@@ -2,7 +2,10 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
+import { SeedMembersButton } from '@/components/admin/SeedMembersButton'
 import type { Metadata } from 'next'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = { title: '단체 승인 | KIMA 관리자' }
 
@@ -26,9 +29,12 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#1B3A6B]">단체 승인 관리</h1>
-        <p className="text-sm text-gray-500 mt-1">신청된 단체를 검토하고 승인 또는 반려합니다.</p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-[#1B3A6B]">단체 승인 관리</h1>
+          <p className="text-sm text-gray-500 mt-1">신청된 단체를 검토하고 승인 또는 반려합니다.</p>
+        </div>
+        <SeedMembersButton />
       </div>
 
       {/* 탭 */}
