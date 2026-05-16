@@ -35,7 +35,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
 
   const users = await prisma.user.findMany({
     where: isPendingTab
-      ? { role: 'MEMBER', premiumNote: { not: null } }
+      ? { role: 'MEMBER', premiumNote: { startsWith: '[신청]' } }
       : undefined,
     orderBy: { createdAt: 'desc' },
     select: {
@@ -52,7 +52,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
   })
 
   const pendingCount = await prisma.user.count({
-    where: { role: 'MEMBER', premiumNote: { not: null } },
+    where: { role: 'MEMBER', premiumNote: { startsWith: '[신청]' } },
   })
 
   return (
@@ -135,6 +135,11 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
                       <span className={`self-start px-2 py-0.5 rounded-full text-xs font-medium ${ROLE_COLORS[user.role]}`}>
                         {ROLE_LABELS[user.role]}
                       </span>
+                      {user.premiumNote?.startsWith('[신청]') && (
+                        <p className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-2 py-1.5 leading-relaxed">
+                          {user.premiumNote.replace('[신청] ', '')}
+                        </p>
+                      )}
                       <MemberRoleForm
                         userId={user.id}
                         currentRole={user.role}

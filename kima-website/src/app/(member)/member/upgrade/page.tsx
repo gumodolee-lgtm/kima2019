@@ -1,7 +1,10 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import { PremiumRequestForm } from '@/components/member/PremiumRequestForm'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: '정회원 가입 안내 | KIMA' }
 
 const CHECK = (
@@ -18,6 +21,13 @@ export default async function UpgradePage() {
 
   const role = session.user.role
   const isPremium = role === 'PREMIUM' || role === 'OFFICER' || role === 'ADMIN'
+
+  const dbUser = isPremium ? null : await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { premiumNote: true },
+  })
+  const premiumNote = dbUser?.premiumNote ?? null
+  const hasPendingRequest = !!premiumNote?.startsWith('[신청]')
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
@@ -157,6 +167,9 @@ export default async function UpgradePage() {
                 넓히고, 지역과 언어권과 사역 분야를 연결하는 데 중요한 역할을 합니다.
               </p>
             </div>
+
+            {/* 6. 입금 확인 신청 */}
+            <PremiumRequestForm hasPendingRequest={hasPendingRequest} pendingNote={premiumNote} />
 
             {/* 사무국 연락 */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
