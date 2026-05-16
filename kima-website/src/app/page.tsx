@@ -116,7 +116,11 @@ export default async function HomePage() {
                   <div className="h-2 bg-gradient-to-r from-[#1B3A6B] to-[#C8922A]" />
                   <CardContent className="p-6">
                     <span className="text-xs font-semibold text-[#C8922A] uppercase tracking-wide">
-                      사역현장 이야기
+                      {story.type === 'NEWS' ? 'KIMA 뉴스'
+                        : story.type === 'FIELD_STORY' ? '사역현장 이야기'
+                        : story.type === 'EVENT_MEDIA' ? '행사 사진영상'
+                        : story.type === 'PRAYER_REQUEST' ? '중보기도 요청'
+                        : '현장스토리'}
                     </span>
                     <h3 className="mt-2 text-base font-bold text-[#1A1A1A] leading-snug line-clamp-2">
                       {story.title}
