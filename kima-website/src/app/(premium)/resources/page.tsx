@@ -36,6 +36,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
 
   const [categories, resources] = await Promise.all([
     prisma.category.findMany({
+      select: { id: true, type: true, name: true, slug: true, order: true },
       orderBy: [{ type: 'asc' }, { order: 'asc' }],
     }),
     prisma.resource.findMany({

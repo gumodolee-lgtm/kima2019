@@ -15,9 +15,31 @@ const TYPE_LABELS: Record<CategoryType, string> = {
 }
 
 export default async function AdminCategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: [{ type: 'asc' }, { order: 'asc' }],
-  })
+  type CategoryRow = {
+    id: string; type: CategoryType; name: string; slug: string; order: number
+    officerName: string | null; officerPhone: string | null; officerEmail: string | null
+    officerSns: string | null; officerQr: string | null; createdAt: Date
+  }
+
+  let categories: CategoryRow[]
+  try {
+    const rows = await prisma.category.findMany({
+      orderBy: [{ type: 'asc' }, { order: 'asc' }],
+    })
+    categories = rows.map(r => ({
+      ...r,
+      officerPhone: (r as unknown as { officerPhone?: string | null }).officerPhone ?? null,
+      officerEmail: (r as unknown as { officerEmail?: string | null }).officerEmail ?? null,
+    }))
+  } catch {
+    // DB에 officerPhone/officerEmail 컬럼이 없을 때 fallback
+    const rows = await prisma.category.findMany({
+      select: { id: true, type: true, name: true, slug: true, order: true,
+        officerName: true, officerSns: true, officerQr: true, createdAt: true },
+      orderBy: [{ type: 'asc' }, { order: 'asc' }],
+    })
+    categories = rows.map(r => ({ ...r, officerPhone: null, officerEmail: null }))
+  }
 
   const grouped = categories.reduce<Record<CategoryType, typeof categories>>(
     (acc, cat) => {
@@ -56,8 +78,8 @@ export default async function AdminCategoriesPage() {
                       <CategoryOfficerForm
                         categoryId={cat.id}
                         officerName={cat.officerName}
-                        officerPhone={(cat as { officerPhone?: string | null }).officerPhone ?? null}
-                        officerEmail={(cat as { officerEmail?: string | null }).officerEmail ?? null}
+                        officerPhone={cat.officerPhone}
+                        officerEmail={cat.officerEmail}
                         officerSns={cat.officerSns}
                         officerQr={cat.officerQr}
                       />

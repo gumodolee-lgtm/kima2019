@@ -2,7 +2,19 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import type { Category, CategoryType } from '@prisma/client'
+import type { CategoryType } from '@prisma/client'
+
+type CategorySummary = {
+  id: string
+  type: CategoryType
+  name: string
+  slug: string
+  order: number
+  officerName: string | null
+  officerSns: string | null
+  officerQr: string | null
+  createdAt: Date
+}
 import { cn } from '@/lib/utils'
 
 const TAB_CONFIG: Array<{ key: CategoryType; label: string; urlKey: string }> = [
@@ -18,7 +30,7 @@ const TYPE_EMOJI: Record<CategoryType, string> = {
 }
 
 interface CommunityTabsProps {
-  categories: Category[]
+  categories: CategorySummary[]
 }
 
 export function CommunityTabs({ categories }: CommunityTabsProps) {

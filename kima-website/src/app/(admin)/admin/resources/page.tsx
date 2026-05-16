@@ -31,7 +31,7 @@ export default async function AdminResourcesPage({ searchParams }: PageProps) {
       include: { category: { select: { id: true, name: true, slug: true } } },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.category.findMany({ orderBy: [{ type: 'asc' }, { order: 'asc' }] }),
+    prisma.category.findMany({ select: { id: true, type: true, name: true, slug: true, order: true }, orderBy: [{ type: 'asc' }, { order: 'asc' }] }),
   ])
 
   const catForForm = categories.map((c) => ({ id: c.id, name: c.name, type: c.type, slug: c.slug }))

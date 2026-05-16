@@ -20,7 +20,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const category = await prisma.category.findUnique({ where: { slug } })
+  const category = await prisma.category.findUnique({ where: { slug }, select: { name: true } })
   if (!category) return { title: '글쓰기 | KIMA' }
   return { title: `${category.name} 글쓰기 | KIMA` }
 }
@@ -32,7 +32,7 @@ export default async function WritePostPage({ params }: Props) {
 
   const [session, category] = await Promise.all([
     auth(),
-    prisma.category.findUnique({ where: { slug } }),
+    prisma.category.findUnique({ where: { slug }, select: { id: true, type: true, name: true, slug: true } }),
   ])
 
   if (!session?.user) {

@@ -22,7 +22,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const category = await prisma.category.findUnique({ where: { slug } })
+  const category = await prisma.category.findUnique({ where: { slug }, select: { name: true } })
   if (!category) return { title: '카테고리를 찾을 수 없습니다 | KIMA' }
   return { title: `${category.name} | KIMA 커뮤니티` }
 }
@@ -42,23 +42,43 @@ export default async function CategoryBoardPage({ params }: Props) {
   const dbType = URL_TO_DB[type]
   if (!dbType) notFound()
 
-  const [category, session] = await Promise.all([
-    prisma.category.findUnique({
-      where: { slug },
+  const safeSelect = {
+    id: true, type: true, name: true, slug: true, order: true, createdAt: true,
+    officerName: true, officerSns: true, officerQr: true,
+    posts: {
+      where: { isPublished: true },
       include: {
-        posts: {
-          where: { isPublished: true },
-          include: { author: { select: { id: true, name: true } }, category: { select: { id: true, name: true, slug: true } } },
-          orderBy: { createdAt: 'desc' },
-          take: 30,
-        },
-        resources: {
-          orderBy: { createdAt: 'desc' },
-        },
+        author: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, slug: true } },
       },
-    }),
-    auth(),
-  ])
+      orderBy: { createdAt: 'desc' as const },
+      take: 30,
+    },
+    resources: { orderBy: { createdAt: 'desc' as const } },
+  }
+
+  let officerPhone: string | null = null
+  let officerEmail: string | null = null
+
+  const session = await auth()
+
+  let category: Awaited<ReturnType<typeof prisma.category.findUnique<{ select: typeof safeSelect }>>>
+
+  try {
+    // SQL 컬럼 추가 후 officerPhone/officerEmail도 자동으로 읽힘
+    const row = await prisma.category.findUnique({
+      where: { slug },
+      select: { ...safeSelect, officerPhone: true, officerEmail: true },
+    })
+    if (row) {
+      officerPhone = (row as unknown as { officerPhone: string | null }).officerPhone
+      officerEmail = (row as unknown as { officerEmail: string | null }).officerEmail
+    }
+    category = row as typeof category
+  } catch {
+    // DB에 officerPhone/officerEmail 컬럼이 없으면 기본 조회
+    category = await prisma.category.findUnique({ where: { slug }, select: safeSelect })
+  }
 
   if (!category || category.type !== dbType) notFound()
 
@@ -120,26 +140,26 @@ export default async function CategoryBoardPage({ params }: Props) {
                   <p className="text-xs text-gray-400 mb-1">담당 위원장</p>
                   <p className="text-sm font-bold text-[#1B3A6B]">{category.officerName}</p>
                   <div className="mt-1.5 space-y-1">
-                    {category.officerPhone && (
+                    {officerPhone && (
                       <a
-                        href={`tel:${category.officerPhone.replace(/-/g, '')}`}
+                        href={`tel:${officerPhone.replace(/-/g, '')}`}
                         className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-[#1B3A6B] transition-colors"
                       >
                         <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        {category.officerPhone}
+                        {officerPhone}
                       </a>
                     )}
-                    {category.officerEmail && (
+                    {officerEmail && (
                       <a
-                        href={`mailto:${category.officerEmail}`}
+                        href={`mailto:${officerEmail}`}
                         className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-[#1B3A6B] transition-colors"
                       >
                         <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        {category.officerEmail}
+                        {officerEmail}
                       </a>
                     )}
                     {category.officerSns && (

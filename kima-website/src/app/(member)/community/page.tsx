@@ -9,6 +9,17 @@ export const metadata: Metadata = { title: '사역별 커뮤니티 | KIMA' }
 
 export default async function CommunityPage() {
   const categories = await prisma.category.findMany({
+    select: {
+      id: true,
+      type: true,
+      name: true,
+      slug: true,
+      order: true,
+      officerName: true,
+      officerSns: true,
+      officerQr: true,
+      createdAt: true,
+    },
     orderBy: [{ type: 'asc' }, { order: 'asc' }],
   })
 
