@@ -82,18 +82,20 @@ model Organization {
 }
 
 model Category {
-  id          String       @id @default(cuid())
-  type        CategoryType
-  name        String
-  slug        String       @unique
-  order       Int          @default(0)
-  officerName String?
-  officerSns  String?
-  officerQr   String?
-  createdAt   DateTime     @default(now())
+  id           String       @id @default(cuid())
+  type         CategoryType
+  name         String
+  slug         String       @unique
+  order        Int          @default(0)
+  officerName  String?
+  officerPhone String?
+  officerEmail String?
+  officerSns   String?
+  officerQr    String?
+  createdAt    DateTime     @default(now())
 
-  posts       Post[]
-  resources   Resource[]
+  posts        Post[]
+  resources    Resource[]
 }
 
 enum CategoryType {

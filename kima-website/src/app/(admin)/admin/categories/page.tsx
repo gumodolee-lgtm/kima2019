@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { CategoryOfficerForm } from '@/components/admin/CategoryOfficerForm'
+import { SeedCategoryOfficersButton } from '@/components/admin/SeedCategoryOfficersButton'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
 
@@ -29,9 +30,12 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#1B3A6B]">카테고리 관리</h1>
-        <p className="text-sm text-gray-500 mt-1">각 카테고리의 담당 위원장 정보를 관리합니다.</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-[#1B3A6B]">카테고리 관리</h1>
+          <p className="text-sm text-gray-500 mt-1">각 카테고리의 담당 위원장 정보를 관리합니다.</p>
+        </div>
+        <SeedCategoryOfficersButton />
       </div>
 
       <div className="space-y-8">
@@ -52,6 +56,8 @@ export default async function AdminCategoriesPage() {
                       <CategoryOfficerForm
                         categoryId={cat.id}
                         officerName={cat.officerName}
+                        officerPhone={(cat as { officerPhone?: string | null }).officerPhone ?? null}
+                        officerEmail={(cat as { officerEmail?: string | null }).officerEmail ?? null}
                         officerSns={cat.officerSns}
                         officerQr={cat.officerQr}
                       />

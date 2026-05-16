@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 interface CategoryOfficerFormProps {
   categoryId: string
   officerName: string | null
+  officerPhone: string | null
+  officerEmail: string | null
   officerSns: string | null
   officerQr: string | null
 }
@@ -13,12 +15,16 @@ interface CategoryOfficerFormProps {
 export function CategoryOfficerForm({
   categoryId,
   officerName,
+  officerPhone,
+  officerEmail,
   officerSns,
   officerQr,
 }: CategoryOfficerFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [name, setName] = useState(officerName ?? '')
+  const [phone, setPhone] = useState(officerPhone ?? '')
+  const [email, setEmail] = useState(officerEmail ?? '')
   const [sns, setSns] = useState(officerSns ?? '')
   const [qr, setQr] = useState(officerQr ?? '')
   const [saved, setSaved] = useState(false)
@@ -32,7 +38,13 @@ export function CategoryOfficerForm({
       const res = await fetch(`/api/admin/categories/${categoryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ officerName: name || null, officerSns: sns || null, officerQr: qr || null }),
+        body: JSON.stringify({
+          officerName: name || null,
+          officerPhone: phone || null,
+          officerEmail: email || null,
+          officerSns: sns || null,
+          officerQr: qr || null,
+        }),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -54,7 +66,7 @@ export function CategoryOfficerForm({
           ) : (
             <span className="text-gray-400">담당자 미지정</span>
           )}
-          {officerSns && <span className="ml-2 text-xs text-gray-400">@{officerSns}</span>}
+          {officerPhone && <span className="ml-2 text-xs text-gray-400">{officerPhone}</span>}
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
@@ -72,7 +84,29 @@ export function CategoryOfficerForm({
               type="text"
               value={name}
               onChange={(e) => { setName(e.target.value); setSaved(false) }}
-              placeholder="예) 홍길동 위원장"
+              placeholder="예) 홍길동"
+              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
+              disabled={isPending}
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">핸드폰 번호</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => { setPhone(e.target.value); setSaved(false) }}
+              placeholder="010-0000-0000"
+              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
+              disabled={isPending}
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">이메일</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setSaved(false) }}
+              placeholder="example@email.com"
               className="w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
               disabled={isPending}
             />
