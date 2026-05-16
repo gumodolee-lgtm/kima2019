@@ -82,33 +82,6 @@ export default function DonatePage() {
             </div>
           </div>
         </div>
-
-        {/* 후원 용도 투명성 */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-7">
-          <h2 className="font-bold text-[#1B3A6B] text-lg mb-4">후원금 사용 내역</h2>
-          <div className="space-y-3">
-            {[
-              { label: '리스닝콜·포럼 운영', pct: 40 },
-              { label: '사무국 운영비', pct: 25 },
-              { label: '자료·백서 제작', pct: 20 },
-              { label: '긴급 사역 지원', pct: 15 },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-700">{item.label}</span>
-                  <span className="font-medium text-[#1B3A6B]">{item.pct}%</span>
-                </div>
-                <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-[#C8922A]"
-                    style={{ width: `${item.pct}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-gray-400 mt-4">※ 연간 결산 보고서는 매년 1월 공개됩니다.</p>
-        </div>
       </div>
     </div>
   )
