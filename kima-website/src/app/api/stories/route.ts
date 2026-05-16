@@ -99,11 +99,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const isOfficerUser = isOfficer(session?.user?.role)
+    const role = session?.user?.role
+    const isOfficerUser = isOfficer(role)
 
-    // status와 isPublished는 서버에서 역할 기반으로 결정 (클라이언트 값 무시)
-    const resolvedStatus   = isOfficerUser ? 'APPROVED' : 'PENDING'
-    const resolvedPublished = isOfficerUser
+    // FIELD_STORY는 로그인한 모든 회원이 즉시 승인 (관리자 검토 불필요)
+    const resolvedStatus = (isOfficerUser || type === 'FIELD_STORY')
+      ? 'APPROVED'
+      : 'PENDING'
+    const resolvedPublished = resolvedStatus === 'APPROVED'
 
     const story = await prisma.story.create({
       data: {

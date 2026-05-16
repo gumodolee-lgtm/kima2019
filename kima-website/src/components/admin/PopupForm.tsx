@@ -173,15 +173,15 @@ export function PopupForm({ initial, onClose }: { initial?: PopupData; onClose: 
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileUpload(f) }}
             />
             {uploading ? (
-              <p className="text-sm text-gray-500">업로드 중...</p>
+              <p className="text-sm text-gray-500 py-10">업로드 중...</p>
             ) : form.imageUrl ? (
               <div className="space-y-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={form.imageUrl} alt="preview" className="max-h-40 mx-auto rounded-lg object-contain" />
-                <p className="text-xs text-green-600">업로드 완료</p>
+                <img src={form.imageUrl} alt="preview" className="w-full max-h-96 rounded-lg object-contain" />
+                <p className="text-xs text-green-600">업로드 완료 — 클릭하여 교체</p>
               </div>
             ) : (
-              <div>
+              <div className="py-6">
                 <p className="text-sm text-gray-500">이미지를 드래그하거나 클릭하여 업로드</p>
                 <p className="text-xs text-gray-400 mt-1">JPG, PNG, WebP, GIF · 최대 5MB</p>
               </div>

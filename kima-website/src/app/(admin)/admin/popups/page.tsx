@@ -123,7 +123,7 @@ export default function AdminPopupsPage() {
               <div className="flex items-start gap-4">
                 {/* 썸네일 */}
                 {(popup.imageUrl || popup.youtubeId) && (
-                  <div className="w-16 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                  <div className="w-32 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                     {popup.youtubeId ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
@@ -133,7 +133,7 @@ export default function AdminPopupsPage() {
                       />
                     ) : popup.imageUrl ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={popup.imageUrl} alt="썸네일" className="w-full h-full object-cover" />
+                      <img src={popup.imageUrl} alt="썸네일" className="w-full h-full object-contain bg-white" />
                     ) : null}
                   </div>
                 )}

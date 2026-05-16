@@ -4,6 +4,7 @@ import { SeedCeremonyButton } from '@/components/admin/SeedCeremonyButton'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StoryApproveButton } from '@/components/admin/StoryApproveButton'
 import { PrayerAnsweredButton } from '@/components/admin/PrayerAnsweredButton'
+import { StoryEditButton } from '@/components/admin/StoryEditButton'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -141,6 +142,8 @@ function StoryCard({ story, showActions }: { story: Story; showActions?: boolean
 
         <DeleteButton url={`/api/stories/${story.id}`} />
       </div>
+
+      <StoryEditButton story={story} />
     </div>
   )
 }

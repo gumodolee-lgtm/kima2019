@@ -16,8 +16,8 @@ const variantClasses: Record<BadgeVariant, string> = {
 
 const variantLabels: Record<BadgeVariant, string> = {
   default: '',
-  member: '정회원',
-  premium: '프리미엄',
+  member: '일반회원',
+  premium: '정회원',
   officer: '임원',
   admin: '관리자',
 }

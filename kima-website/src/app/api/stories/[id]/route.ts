@@ -11,6 +11,16 @@ const patchSchema = z.object({
   status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional(),
   isPublished: z.boolean().optional(),
   isAnswered: z.boolean().optional(),
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().min(1).optional(),
+  excerpt: z.string().max(300).nullable().optional(),
+  linkUrl: z.string().nullable().optional(),
+  source: z.string().max(100).nullable().optional(),
+  publishedAt: z.string().nullable().optional(),
+  eventLocation: z.string().max(100).nullable().optional(),
+  ministryLocation: z.string().max(100).nullable().optional(),
+  videoUrls: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -25,12 +35,23 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (!parsed.success) {
       return NextResponse.json({ error: '입력값이 올바르지 않습니다.' }, { status: 400 })
     }
+    const d = parsed.data
     const story = await prisma.story.update({
       where: { id },
       data: {
-        ...(parsed.data.status !== undefined ? { status: parsed.data.status } : {}),
-        ...(parsed.data.isPublished !== undefined ? { isPublished: parsed.data.isPublished } : {}),
-        ...(parsed.data.isAnswered !== undefined ? { isAnswered: parsed.data.isAnswered } : {}),
+        ...(d.status !== undefined ? { status: d.status } : {}),
+        ...(d.isPublished !== undefined ? { isPublished: d.isPublished } : {}),
+        ...(d.isAnswered !== undefined ? { isAnswered: d.isAnswered } : {}),
+        ...(d.title !== undefined ? { title: d.title } : {}),
+        ...(d.content !== undefined ? { content: d.content } : {}),
+        ...(d.excerpt !== undefined ? { excerpt: d.excerpt } : {}),
+        ...(d.linkUrl !== undefined ? { linkUrl: d.linkUrl } : {}),
+        ...(d.source !== undefined ? { source: d.source } : {}),
+        ...(d.publishedAt !== undefined ? { publishedAt: d.publishedAt ? new Date(d.publishedAt) : null } : {}),
+        ...(d.eventLocation !== undefined ? { eventLocation: d.eventLocation } : {}),
+        ...(d.ministryLocation !== undefined ? { ministryLocation: d.ministryLocation } : {}),
+        ...(d.videoUrls !== undefined ? { videoUrls: d.videoUrls } : {}),
+        ...(d.tags !== undefined ? { tags: d.tags } : {}),
       },
     })
     return NextResponse.json({ story })
