@@ -94,11 +94,22 @@
       "Bash(node -e ' *)",
       "Bash(node -e \"require\\('xlsx'\\); console.log\\('xlsx ok'\\)\")",
       "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.dependencies, null, 2\\)\\)\")",
-      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(p.dependencies['xlsx']\\)\")"
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(p.dependencies['xlsx']\\)\")",
+      "Bash(dir \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\" /s /b)",
+      "WebFetch(domain:kima2019.org)",
+      "WebFetch(domain:kima2019.vercel.app)",
+      "Bash(dir \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\public\")",
+      "Bash(python -c ' *)",
+      "Bash(dir /s /b \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\")",
+      "Bash(findstr route.ts)",
+      "Bash(mkdir -p \"D:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/community/[type]/[slug]/write\")",
+      "Bash(mkdir -p \"D:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/community/[type]/[slug]/posts/[id]\")"
     ],
     "additionalDirectories": [
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth",
-      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\media"
+      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\media",
+      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write",
+      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\posts"
     ]
   },
   "_projectAccount": "kima20191227@gmail.com",

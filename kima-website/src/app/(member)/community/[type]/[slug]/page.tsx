@@ -42,42 +42,73 @@ export default async function CategoryBoardPage({ params }: Props) {
   const dbType = URL_TO_DB[type]
   if (!dbType) notFound()
 
-  const safeSelect = {
-    id: true, type: true, name: true, slug: true, order: true, createdAt: true,
-    officerName: true, officerSns: true, officerQr: true,
-    posts: {
-      where: { isPublished: true },
-      include: {
-        author: { select: { id: true, name: true } },
-        category: { select: { id: true, name: true, slug: true } },
-      },
-      orderBy: { createdAt: 'desc' as const },
-      take: 30,
-    },
-    resources: { orderBy: { createdAt: 'desc' as const } },
-  }
-
   let officerPhone: string | null = null
   let officerEmail: string | null = null
 
   const session = await auth()
 
-  let category: Awaited<ReturnType<typeof prisma.category.findUnique<{ select: typeof safeSelect }>>>
+  type CategoryResult = {
+    id: string; type: CategoryType; name: string; slug: string; order: number; createdAt: Date
+    officerName: string | null; officerSns: string | null; officerQr: string | null
+    posts: {
+      id: string; title: string; content: string; type: string; isPublished: boolean
+      categoryId: string; authorId: string; createdAt: Date; updatedAt: Date
+      author: { id: string; name: string | null }
+      category: { id: string; name: string; slug: string }
+    }[]
+    resources: {
+      id: string; title: string; description: string | null; driveUrl: string
+      fileType: string | null; accessLevel: string; categoryId: string | null
+      uploadedById: string | null; createdAt: Date; updatedAt: Date
+    }[]
+  } | null
+
+  let category: CategoryResult = null
 
   try {
-    // SQL 컬럼 추가 후 officerPhone/officerEmail도 자동으로 읽힘
     const row = await prisma.category.findUnique({
       where: { slug },
-      select: { ...safeSelect, officerPhone: true, officerEmail: true },
+      select: {
+        id: true, type: true, name: true, slug: true, order: true, createdAt: true,
+        officerName: true, officerSns: true, officerQr: true,
+        officerPhone: true, officerEmail: true,
+        posts: {
+          where: { isPublished: true },
+          include: {
+            author: { select: { id: true, name: true } },
+            category: { select: { id: true, name: true, slug: true } },
+          },
+          orderBy: { createdAt: 'desc' as const },
+          take: 30,
+        },
+        resources: { orderBy: { createdAt: 'desc' as const } },
+      },
     })
     if (row) {
-      officerPhone = (row as unknown as { officerPhone: string | null }).officerPhone
-      officerEmail = (row as unknown as { officerEmail: string | null }).officerEmail
+      officerPhone = (row as unknown as { officerPhone?: string | null }).officerPhone ?? null
+      officerEmail = (row as unknown as { officerEmail?: string | null }).officerEmail ?? null
+      category = row as unknown as CategoryResult
     }
-    category = row as typeof category
   } catch {
     // DB에 officerPhone/officerEmail 컬럼이 없으면 기본 조회
-    category = await prisma.category.findUnique({ where: { slug }, select: safeSelect })
+    const row = await prisma.category.findUnique({
+      where: { slug },
+      select: {
+        id: true, type: true, name: true, slug: true, order: true, createdAt: true,
+        officerName: true, officerSns: true, officerQr: true,
+        posts: {
+          where: { isPublished: true },
+          include: {
+            author: { select: { id: true, name: true } },
+            category: { select: { id: true, name: true, slug: true } },
+          },
+          orderBy: { createdAt: 'desc' as const },
+          take: 30,
+        },
+        resources: { orderBy: { createdAt: 'desc' as const } },
+      },
+    })
+    category = row as unknown as CategoryResult
   }
 
   if (!category || category.type !== dbType) notFound()
