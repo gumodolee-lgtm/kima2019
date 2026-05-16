@@ -13,9 +13,10 @@ interface WritePostFormProps {
   categoryName: string
   categoryType: string
   categorySlug: string
+  canWriteNotice: boolean
 }
 
-export function WritePostForm({ categoryId, categoryName, categoryType, categorySlug }: WritePostFormProps) {
+export function WritePostForm({ categoryId, categoryName, categoryType, categorySlug, canWriteNotice }: WritePostFormProps) {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -60,8 +61,8 @@ export function WritePostForm({ categoryId, categoryName, categoryType, category
         </label>
         <div className="flex gap-4">
           {[
-            { value: 'NOTICE', label: '공지사항' },
             { value: 'SHARE', label: '사역 나눔' },
+            ...(canWriteNotice ? [{ value: 'NOTICE', label: '공지사항' }] : []),
           ].map((opt) => (
             <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
               <input

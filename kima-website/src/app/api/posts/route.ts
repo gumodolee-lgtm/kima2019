@@ -50,6 +50,10 @@ export async function POST(request: NextRequest) {
 
     const { title, content, type, categoryId } = parsed.data
 
+    if (type === 'NOTICE' && !['OFFICER', 'ADMIN'].includes(session.user.role)) {
+      return NextResponse.json({ error: '공지사항은 임원·위원장 이상만 작성할 수 있습니다.' }, { status: 403 })
+    }
+
     const category = await prisma.category.findUnique({ where: { id: categoryId } })
     if (!category) {
       return NextResponse.json({ error: '존재하지 않는 카테고리입니다.' }, { status: 400 })

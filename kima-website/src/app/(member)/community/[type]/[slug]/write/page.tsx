@@ -41,9 +41,11 @@ export default async function WritePostPage({ params }: Props) {
 
   const role = session.user.role
   const ROLE_WEIGHT: Record<string, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
-  if ((ROLE_WEIGHT[role] ?? 0) < 2) {
+  const roleWeight = ROLE_WEIGHT[role] ?? 0
+  if (roleWeight < 2) {
     redirect(`/community/${type}/${slug}`)
   }
+  const canWriteNotice = roleWeight >= 3
 
   if (!category || category.type !== dbType) notFound()
 
@@ -71,6 +73,7 @@ export default async function WritePostPage({ params }: Props) {
             categoryName={category.name}
             categoryType={type}
             categorySlug={slug}
+            canWriteNotice={canWriteNotice}
           />
         </div>
       </div>
