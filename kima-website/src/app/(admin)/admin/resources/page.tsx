@@ -4,6 +4,8 @@ import { DeleteButton } from '@/components/admin/DeleteButton'
 import type { Metadata } from 'next'
 import type { AccessLevel } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '자료 관리 | KIMA 관리자' }
 
 const ACCESS_LABELS: Record<AccessLevel, string> = {

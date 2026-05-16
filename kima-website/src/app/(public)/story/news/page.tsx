@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: 'KIMA 뉴스 | KIMA' }
 
 export default async function NewsPage() {

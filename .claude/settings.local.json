@@ -84,7 +84,17 @@
       "Bash(dir /s /b)",
       "Bash(openssl rand *)",
       "Bash(dir \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\public\\\\images\\\\\")",
-      "Bash(mkdir -p \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\\\(public\\)\\\\story\\\\media\\\\[id]\")"
+      "Bash(mkdir -p \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\\\(public\\)\\\\story\\\\media\\\\[id]\")",
+      "Bash(gh run *)",
+      "Bash(npx vercel *)",
+      "Bash(Get-Content .env.local)",
+      "Bash(Select-String \"DATABASE_URL\")",
+      "Bash(powershell -Command \"[System.Convert]::ToBase64String\\([System.Security.Cryptography.RandomNumberGenerator]::GetBytes\\(32\\)\\)\")",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('base64'\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"require\\('xlsx'\\); console.log\\('xlsx ok'\\)\")",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.dependencies, null, 2\\)\\)\")",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(p.dependencies['xlsx']\\)\")"
     ],
     "additionalDirectories": [
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth",

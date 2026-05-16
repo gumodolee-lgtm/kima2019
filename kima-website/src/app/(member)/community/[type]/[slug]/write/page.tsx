@@ -6,6 +6,8 @@ import { WritePostForm } from '@/components/community/WritePostForm'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 const URL_TO_DB: Record<string, CategoryType> = {
   region: 'REGION',
   language: 'LANGUAGE',

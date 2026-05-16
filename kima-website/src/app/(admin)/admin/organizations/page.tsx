@@ -5,6 +5,8 @@ import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
 import { SeedMembersButton } from '@/components/admin/SeedMembersButton'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '단체 승인 | KIMA 관리자' }
 
 interface PageProps {

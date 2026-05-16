@@ -6,6 +6,8 @@ import { StoryApproveButton } from '@/components/admin/StoryApproveButton'
 import { PrayerAnsweredButton } from '@/components/admin/PrayerAnsweredButton'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '현장스토리 관리 | KIMA 관리자' }
 
 const TYPE_LABELS: Record<string, string> = {

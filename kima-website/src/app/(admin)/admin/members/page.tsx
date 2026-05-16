@@ -5,6 +5,8 @@ import { MemberRoleForm } from '@/components/admin/MemberRoleForm'
 import type { Metadata } from 'next'
 import type { UserRole } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '회원 관리 | KIMA 관리자' }
 
 const ROLE_LABELS: Record<UserRole, string> = {

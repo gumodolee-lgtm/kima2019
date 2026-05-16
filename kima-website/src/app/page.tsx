@@ -5,6 +5,8 @@ import { auth } from '@/lib/auth'
 import { HeroCarousel } from '@/components/home/HeroCarousel'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 const VISIONS = [
   {
     icon: '🔗',

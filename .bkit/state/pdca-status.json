@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-16T08:22:36.233Z",
+  "lastUpdated": "2026-05-16T10:04:35.075Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -57,7 +57,8 @@
     "listening",
     "forum",
     "upload",
-    "seed-ceremony"
+    "seed-ceremony",
+    "seed-members"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -70,9 +71,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-16T08:22:36.233Z"
+        "lastUpdated": "2026-05-16T10:04:35.075Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\next.config.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\middleware.ts"
     },
     "tests": {
       "phase": "do",
@@ -122,9 +123,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:03:34.043Z",
-        "lastUpdated": "2026-05-11T09:32:20.621Z"
+        "lastUpdated": "2026-05-16T09:44:02.049Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth\\register\\route.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth\\register\\route.ts"
     },
     "auth": {
       "phase": "do",
@@ -174,9 +175,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:28:03.747Z",
-        "lastUpdated": "2026-05-16T07:59:52.226Z"
+        "lastUpdated": "2026-05-16T09:15:49.652Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\layout\\Header.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\layout\\Header.tsx"
     },
     "organizations": {
       "phase": "do",
@@ -187,9 +188,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:28.586Z",
-        "lastUpdated": "2026-05-11T11:01:20.102Z"
+        "lastUpdated": "2026-05-16T09:18:36.262Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
     },
     "[id]": {
       "phase": "do",
@@ -239,9 +240,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:20:35.582Z",
-        "lastUpdated": "2026-05-11T05:20:35.582Z"
+        "lastUpdated": "2026-05-16T09:30:16.040Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\posts\\route.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\posts\\route.ts"
     },
     "community": {
       "phase": "do",
@@ -252,9 +253,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:20:51.328Z",
-        "lastUpdated": "2026-05-11T12:12:58.421Z"
+        "lastUpdated": "2026-05-16T09:40:33.505Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\community\\ResourceUploadForm.tsx"
     },
     "[slug]": {
       "phase": "do",
@@ -265,9 +266,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:22:12.871Z",
-        "lastUpdated": "2026-05-11T05:22:12.871Z"
+        "lastUpdated": "2026-05-16T09:40:51.039Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\page.tsx"
     },
     "write": {
       "phase": "do",
@@ -278,9 +279,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:22:36.089Z",
-        "lastUpdated": "2026-05-16T06:07:40.860Z"
+        "lastUpdated": "2026-05-16T09:30:06.417Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\prayer\\write\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write\\page.tsx"
     },
     "resources": {
       "phase": "do",
@@ -291,9 +292,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:53:08.485Z",
-        "lastUpdated": "2026-05-11T09:33:32.622Z"
+        "lastUpdated": "2026-05-16T09:40:10.125Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(premium)\\resources\\loading.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\resources\\route.ts"
     },
     "upgrade": {
       "phase": "do",
@@ -317,9 +318,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-16T08:22:14.911Z"
+        "lastUpdated": "2026-05-16T09:30:38.567Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\SeedCeremonyButton.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\ResourceAdminForm.tsx"
     },
     "members": {
       "phase": "do",
@@ -369,9 +370,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:27:00.854Z",
-        "lastUpdated": "2026-05-11T06:27:00.854Z"
+        "lastUpdated": "2026-05-16T08:39:26.856Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\cron\\expiring-members\\route.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\cron\\expiring-members\\route.ts"
     },
     "event-reminders": {
       "phase": "do",
@@ -382,9 +383,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:27:07.107Z",
-        "lastUpdated": "2026-05-11T06:27:07.107Z"
+        "lastUpdated": "2026-05-16T08:39:32.482Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\cron\\event-reminders\\route.ts"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\cron\\event-reminders\\route.ts"
     },
     "attend": {
       "phase": "do",
@@ -668,9 +669,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T12:10:00.781Z",
-        "lastUpdated": "2026-05-16T08:22:31.334Z"
+        "lastUpdated": "2026-05-16T08:36:42.233Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\stories\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\stories\\route.ts"
     },
     "news": {
       "phase": "do",
@@ -733,9 +734,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T07:35:18.144Z",
-        "lastUpdated": "2026-05-16T07:56:42.665Z"
+        "lastUpdated": "2026-05-16T09:11:29.334Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\about\\greeting\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\about\\greeting\\page.tsx"
     },
     "listening": {
       "phase": "do",
@@ -785,9 +786,22 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T08:21:50.316Z",
-        "lastUpdated": "2026-05-16T08:21:50.316Z"
+        "lastUpdated": "2026-05-16T08:37:46.692Z"
       },
       "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\seed-ceremony\\route.ts"
+    },
+    "seed-members": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-16T09:18:07.161Z",
+        "lastUpdated": "2026-05-16T09:18:07.161Z"
+      },
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\seed-members\\route.ts"
     }
   },
   "pipeline": {
@@ -798,7 +812,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-16T08:22:36.233Z"
+    "lastActivity": "2026-05-16T10:04:35.075Z"
   },
   "history": [
     {
@@ -2579,6 +2593,252 @@
     },
     {
       "timestamp": "2026-05-16T08:22:36.233Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:30:45.129Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:36:22.610Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:36:42.233Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:37:06.518Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:37:14.455Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:37:20.999Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:37:46.692Z",
+      "feature": "seed-ceremony",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:38:09.327Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:38:41.172Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:39:06.740Z",
+      "feature": "register",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:39:26.856Z",
+      "feature": "expiring-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:39:32.482Z",
+      "feature": "event-reminders",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:59:23.879Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:59:38.464Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T08:59:51.782Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:00:00.559Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:00:05.773Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:11:29.334Z",
+      "feature": "greeting",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:13:51.483Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:13:59.116Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:14:14.431Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:14:24.930Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:14:34.665Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:14:39.297Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:15:49.652Z",
+      "feature": "layout",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:18:07.161Z",
+      "feature": "seed-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:18:17.491Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:18:29.590Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:18:36.262Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:29:37.726Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:30:06.417Z",
+      "feature": "write",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:30:16.040Z",
+      "feature": "posts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:30:30.440Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:30:38.568Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:30:44.737Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:40:10.125Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:40:33.505Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:40:42.359Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:40:51.039Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T09:44:02.049Z",
+      "feature": "register",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T10:04:35.075Z",
       "feature": "kima-website",
       "phase": "do",
       "action": "updated"

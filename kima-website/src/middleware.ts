@@ -26,6 +26,14 @@ const { auth } = NextAuth(authConfig)
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
+
+  // kima2019.vercel.app → kima2019.org 리다이렉트
+  const host = req.headers.get('host') ?? req.nextUrl.hostname
+  if (host.endsWith('.vercel.app') && process.env.NEXTAUTH_URL) {
+    const canonical = process.env.NEXTAUTH_URL.replace(/\/$/, '')
+    return NextResponse.redirect(`${canonical}${pathname}${req.nextUrl.search}`, { status: 301 })
+  }
+
   const isLoggedIn = !!req.auth
   const userRole = req.auth?.user?.role
   const origin = getOrigin(req)

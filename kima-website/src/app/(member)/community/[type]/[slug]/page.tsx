@@ -8,6 +8,8 @@ import { ResourceUploadForm } from '@/components/community/ResourceUploadForm'
 import type { Metadata } from 'next'
 import type { CategoryType, AccessLevel } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 const URL_TO_DB: Record<string, CategoryType> = {
   region: 'REGION',
   language: 'LANGUAGE',

@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '사역현장 이야기 | KIMA' }
 
 export default async function FieldStoryPage() {

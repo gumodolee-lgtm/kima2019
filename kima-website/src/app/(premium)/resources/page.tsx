@@ -4,6 +4,8 @@ import { ResourceList } from '@/components/resources/ResourceList'
 import type { Metadata } from 'next'
 import type { UserRole } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '자료실 | KIMA' }
 
 const ROLE_WEIGHT: Record<UserRole, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }

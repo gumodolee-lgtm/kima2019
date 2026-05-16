@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '일정 & 참석 신청 | KIMA 리스닝콜' }
 
 const TYPE_LABELS: Record<string, string> = {

@@ -3,6 +3,8 @@ import { CommunityTabs } from '@/components/community/CommunityTabs'
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '사역별 커뮤니티 | KIMA' }
 
 export default async function CommunityPage() {

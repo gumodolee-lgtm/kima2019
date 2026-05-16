@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { MediaGallery } from '@/components/story/MediaGallery'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ id: string }>
 }

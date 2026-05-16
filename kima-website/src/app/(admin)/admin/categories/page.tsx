@@ -3,6 +3,8 @@ import { CategoryOfficerForm } from '@/components/admin/CategoryOfficerForm'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = { title: '카테고리 관리 | KIMA 관리자' }
 
 const TYPE_LABELS: Record<CategoryType, string> = {
