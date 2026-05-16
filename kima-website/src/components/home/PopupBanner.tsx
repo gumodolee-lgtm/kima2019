@@ -93,10 +93,10 @@ export function PopupBanner() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        {/* 닫기 버튼 */}
+        {/* 닫기 버튼 — 항상 이미지 위에 표시 */}
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -105,7 +105,7 @@ export function PopupBanner() {
 
         {/* 여러 팝업 인디케이터 */}
         {popups.length > 1 && (
-          <div className="flex justify-center gap-1.5 pt-4 px-4">
+          <div className="flex justify-center gap-1.5 pt-3 pb-1">
             {popups.map((_, i) => (
               <button
                 key={i}
@@ -116,35 +116,31 @@ export function PopupBanner() {
           </div>
         )}
 
-        <div className="p-6">
-          {/* 제목 */}
-          <h2 className="text-lg font-bold text-[#1B3A6B] mb-4 pr-8">{popup.title}</h2>
+        {/* 이미지 — 패딩 없이 팝업 전체 너비 */}
+        {!popup.youtubeId && popup.imageUrl && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={popup.imageUrl}
+            alt={popup.title}
+            className={`w-full object-contain ${popups.length > 1 ? '' : 'rounded-t-2xl'}`}
+          />
+        )}
 
-          {/* 유튜브 (우선) */}
-          {popup.youtubeId && (
-            <div className="mb-4">
-              <YouTubeEmbed videoId={popup.youtubeId} />
-            </div>
-          )}
+        {/* 유튜브 */}
+        {popup.youtubeId && (
+          <div className="px-5 pt-5">
+            <YouTubeEmbed videoId={popup.youtubeId} />
+          </div>
+        )}
 
-          {/* 이미지 (유튜브 없을 때) */}
-          {!popup.youtubeId && popup.imageUrl && (
-            <div className="mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={popup.imageUrl}
-                alt={popup.title}
-                className="w-full rounded-lg object-contain max-h-72"
-              />
-            </div>
-          )}
+        {/* 제목 + 본문 + 링크 + 하단 버튼 */}
+        <div className="p-5">
+          <h2 className="text-base font-bold text-[#1B3A6B] mb-3 pr-6">{popup.title}</h2>
 
-          {/* 본문 */}
           {popup.body && (
             <p className="text-sm text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">{popup.body}</p>
           )}
 
-          {/* 외부 링크 */}
           {popup.linkUrl && (
             <a
               href={popup.linkUrl}
@@ -156,7 +152,6 @@ export function PopupBanner() {
             </a>
           )}
 
-          {/* 하단 버튼 */}
           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
             <button
               onClick={handleHideToday}
