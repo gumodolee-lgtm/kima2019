@@ -22,7 +22,7 @@ export function Footer() {
             <h4 className="text-sm font-semibold text-blue-100 uppercase tracking-wider mb-3">바로가기</h4>
             <ul className="space-y-2 text-sm text-blue-200">
               <li><Link href="/about" className="hover:text-white transition-colors">단체 소개</Link></li>
-              <li><Link href="/network" className="hover:text-white transition-colors">단체 디렉토리</Link></li>
+              <li><Link href="/directory" className="hover:text-white transition-colors">국내 이주민 사역지도</Link></li>
               <li><Link href="/community" className="hover:text-white transition-colors">커뮤니티</Link></li>
               <li><Link href="/story" className="hover:text-white transition-colors">스토리</Link></li>
               <li><Link href="/donate" className="hover:text-white transition-colors">후원하기</Link></li>

@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
     href: '/network',
     label: '네트워크 사역',
     children: [
-      { href: '/directory',          label: '단체 디렉토리',      desc: '전국 이주민 사역 단체 지도' },
+      { href: '/directory',          label: '국내 이주민 사역지도', desc: '전국 이주민 사역 단체 지도' },
       { href: '/network',            label: '리스닝콜 안내',       desc: '전국 이주민 사역자 리스닝콜' },
       { href: '/network/schedule',   label: '일정 & 참석 신청',   desc: '다음 리스닝콜·포럼 일정 확인' },
       { href: '/network/archive',    label: '지난 포럼 아카이브',  desc: '지난 리스닝콜·포럼 기록' },
