@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { PostCard } from '@/components/community/PostCard'
 import { ResourceUploadForm } from '@/components/community/ResourceUploadForm'
 import type { Metadata } from 'next'
-import type { CategoryType, AccessLevel } from '@prisma/client'
+import type { CategoryType, AccessLevel, PostType } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,7 +51,7 @@ export default async function CategoryBoardPage({ params }: Props) {
     id: string; type: CategoryType; name: string; slug: string; order: number; createdAt: Date
     officerName: string | null; officerSns: string | null; officerQr: string | null
     posts: {
-      id: string; title: string; content: string; type: string; isPublished: boolean
+      id: string; title: string; content: string; type: PostType; isPublished: boolean
       categoryId: string; authorId: string; createdAt: Date; updatedAt: Date
       author: { id: string; name: string | null }
       category: { id: string; name: string; slug: string }

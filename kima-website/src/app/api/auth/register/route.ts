@@ -33,7 +33,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { name, email, password, organization } = parsed.data
+    const {
+      name, email, password, organization,
+      position, phone, address, denomination,
+      ministryLanguages, ministryTargets,
+    } = parsed.data
 
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
@@ -45,11 +49,13 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // User와 Account를 트랜잭션으로 생성 — 어느 한쪽 실패 시 전체 롤백
-    // password 컬럼이 DB에 없을 수 있으므로 account.access_token에만 저장
     await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
-        data: { name, email, organization, role: 'MEMBER' },
+        data: {
+          name, email, organization, role: 'MEMBER',
+          position, phone, address, denomination,
+          ministryLanguages, ministryTargets,
+        },
       })
       await tx.account.create({
         data: {

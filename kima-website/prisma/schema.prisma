@@ -7,20 +7,25 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  image         String?
-  password      String?   // credentials 로그인용 bcrypt 해시 (OAuth 사용자는 null)
-  role          UserRole  @default(MEMBER)
-  organization  String?
-  region        String?
-  phone         String?
-  approvedAt    DateTime?
-  expiresAt     DateTime?
-  premiumNote   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String?
+  image             String?
+  password          String?
+  role              UserRole  @default(MEMBER)
+  position          String?   // 직분 (목사, 선교사, 전도사 등)
+  phone             String?   // 전화번호
+  address           String?   // 주소
+  denomination      String?   // 소속 교단
+  organization      String?   // 소속 단체
+  region            String?   // 지역
+  ministryLanguages String[]  // 사역언어
+  ministryTargets   String[]  // 사역대상
+  approvedAt        DateTime?
+  expiresAt         DateTime?
+  premiumNote       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   accounts      Account[]
   sessions      Session[]
@@ -225,4 +230,19 @@ enum StoryVisibility {
   PUBLIC
   MEMBER
   PRAYER_TEAM
+}
+
+model Popup {
+  id          String   @id @default(cuid())
+  title       String
+  body        String?
+  imageUrl    String?
+  youtubeId   String?
+  linkUrl     String?
+  linkLabel   String?
+  startAt     DateTime
+  endAt       DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
