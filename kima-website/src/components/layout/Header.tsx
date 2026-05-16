@@ -25,11 +25,10 @@ const NAV_ITEMS: NavItem[] = [
     href: '/network',
     label: '네트워크 사역',
     children: [
-      { href: '/directory',                      label: '국내 이주민 사역지도', desc: '전국 이주민 사역 단체 지도' },
-      { href: '/network',                        label: '리스닝콜 안내',        desc: '전국 이주민 사역자 리스닝콜 소개' },
-      { href: '/network/archive?tab=listening',  label: '리스닝콜',             desc: '역대 리스닝콜 기록 및 자료' },
-      { href: '/network/archive?tab=forum',      label: '포럼',                 desc: 'KIMA 이주민 선교 포럼 기록 및 자료' },
-      { href: '/network/schedule',               label: '일정 & 참석 신청',    desc: '다음 리스닝콜·포럼 일정 확인' },
+      { href: '/directory',           label: '국내 이주민 사역지도', desc: '전국 이주민 사역 단체 지도' },
+      { href: '/network/listening',   label: '리스닝콜',             desc: '리스닝콜 안내 및 역대 기록' },
+      { href: '/network/forum',       label: '포럼',                 desc: 'KIMA 이주민 선교 포럼 소개 및 기록' },
+      { href: '/network/schedule',    label: 'KIMA 행사 일정',       desc: '리스닝콜·포럼 일정 및 참석 신청' },
     ],
   },
   {
