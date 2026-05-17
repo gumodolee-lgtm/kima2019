@@ -29,7 +29,8 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
     let raf: number
 
     const tryInit = () => {
-      if (typeof window !== 'undefined' && window.kakao?.maps?.Map) {
+      if (typeof window !== 'undefined' && window.kakao?.maps) {
+        // autoload=false 이므로 load() 호출 후 콜백에서 maps.Map이 사용 가능
         window.kakao.maps.load(() => {
           if (!containerRef.current) return
           const map = new window.kakao.maps.Map(containerRef.current, {
