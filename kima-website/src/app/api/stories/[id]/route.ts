@@ -8,6 +8,7 @@ function canWrite(role?: string) {
 }
 
 const patchSchema = z.object({
+  type: z.enum(['NEWS', 'FIELD_STORY', 'EVENT_MEDIA', 'EVENT_PROMO', 'PRAYER_REQUEST']).optional(),
   status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional(),
   isPublished: z.boolean().optional(),
   isAnswered: z.boolean().optional(),
@@ -39,6 +40,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const story = await prisma.story.update({
       where: { id },
       data: {
+        ...(d.type !== undefined ? { type: d.type } : {}),
         ...(d.status !== undefined ? { status: d.status } : {}),
         ...(d.isPublished !== undefined ? { isPublished: d.isPublished } : {}),
         ...(d.isAnswered !== undefined ? { isAnswered: d.isAnswered } : {}),

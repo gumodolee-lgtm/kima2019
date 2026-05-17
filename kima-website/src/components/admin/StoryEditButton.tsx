@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation'
 
 type StoryType = 'NEWS' | 'FIELD_STORY' | 'EVENT_MEDIA' | 'EVENT_PROMO' | 'PRAYER_REQUEST'
 
+const TYPE_LABELS: Record<StoryType, string> = {
+  NEWS:           '📰 KIMA 뉴스',
+  EVENT_MEDIA:    '📸 KIMA 행사&영상',
+  FIELD_STORY:    '✍️ 사역현장 이야기',
+  EVENT_PROMO:    '📣 이주민사역 행사 홍보',
+  PRAYER_REQUEST: '🙏 중보기도 요청',
+}
+
 interface StoryEditProps {
   story: {
     id: string
@@ -29,19 +37,20 @@ export function StoryEditButton({ story }: StoryEditProps) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [form, setForm] = useState({
-    title: story.title,
-    content: story.content,
-    excerpt: story.excerpt ?? '',
-    linkUrl: story.linkUrl ?? '',
-    source: story.source ?? '',
-    publishedAt: story.publishedAt
+    type:             story.type,
+    title:            story.title,
+    content:          story.content,
+    excerpt:          story.excerpt ?? '',
+    linkUrl:          story.linkUrl ?? '',
+    source:           story.source ?? '',
+    publishedAt:      story.publishedAt
       ? new Date(story.publishedAt).toISOString().split('T')[0]
       : '',
-    eventLocation: story.eventLocation ?? '',
+    eventLocation:    story.eventLocation ?? '',
     ministryLocation: story.ministryLocation ?? '',
-    videoUrls: story.videoUrls.join('\n'),
-    tags: story.tags.join(', '),
-    isPublished: story.isPublished,
+    videoUrls:        story.videoUrls.join('\n'),
+    tags:             story.tags.join(', '),
+    isPublished:      story.isPublished,
   })
 
   const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) =>
@@ -57,6 +66,7 @@ export function StoryEditButton({ story }: StoryEditProps) {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          type:             form.type,
           title:            form.title.trim(),
           content:          form.content.trim(),
           excerpt:          form.excerpt.trim() || null,
@@ -98,95 +108,144 @@ export function StoryEditButton({ story }: StoryEditProps) {
     <div className="mt-4 bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-3">
       <h4 className="text-sm font-semibold text-gray-700">스토리 수정</h4>
 
+      {/* 카테고리 변경 */}
+      <div>
+        <label className="block text-xs text-gray-500 mb-1.5">카테고리</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {(Object.keys(TYPE_LABELS) as StoryType[]).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => set('type', t)}
+              disabled={isPending}
+              className={`py-1.5 px-2 rounded-lg border text-xs font-medium transition-colors text-left ${
+                form.type === t
+                  ? 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
+                  : 'border-gray-200 text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              {TYPE_LABELS[t]}
+            </button>
+          ))}
+        </div>
+        {form.type !== story.type && (
+          <p className="text-xs text-amber-600 mt-1.5">
+            ⚠️ 카테고리를 <strong>{TYPE_LABELS[story.type]}</strong>에서 <strong>{TYPE_LABELS[form.type]}</strong>으로 변경합니다.
+          </p>
+        )}
+      </div>
+
+      {/* 제목 */}
       <div>
         <label className="block text-xs text-gray-500 mb-1">제목 *</label>
-        <input type="text" value={form.title} onChange={(e) => set('title', e.target.value)}
+        <input type="text" title="제목" value={form.title}
+          onChange={(e) => set('title', e.target.value)}
           className={ic} disabled={isPending} />
       </div>
 
-      {story.type === 'NEWS' && (
+      {/* NEWS 전용 */}
+      {form.type === 'NEWS' && (
         <>
           <div>
             <label className="block text-xs text-gray-500 mb-1">뉴스 링크 URL</label>
-            <input type="text" value={form.linkUrl} onChange={(e) => set('linkUrl', e.target.value)}
+            <input type="text" title="뉴스 링크 URL" value={form.linkUrl}
+              onChange={(e) => set('linkUrl', e.target.value)}
               placeholder="https://..." className={ic} disabled={isPending} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">출처</label>
-              <input type="text" value={form.source} onChange={(e) => set('source', e.target.value)}
+              <input type="text" title="출처" value={form.source}
+                onChange={(e) => set('source', e.target.value)}
                 className={ic} disabled={isPending} />
             </div>
             <div>
               <label className="block text-xs text-gray-500 mb-1">발행일</label>
-              <input type="date" value={form.publishedAt} onChange={(e) => set('publishedAt', e.target.value)}
+              <input type="date" title="발행일" value={form.publishedAt}
+                onChange={(e) => set('publishedAt', e.target.value)}
                 className={ic} disabled={isPending} />
             </div>
           </div>
         </>
       )}
 
-      {story.type === 'EVENT_MEDIA' && (
+      {/* EVENT_MEDIA 전용 */}
+      {form.type === 'EVENT_MEDIA' && (
         <>
           <div>
             <label className="block text-xs text-gray-500 mb-1">행사 날짜</label>
-            <input type="date" value={form.publishedAt} onChange={(e) => set('publishedAt', e.target.value)}
+            <input type="date" title="행사 날짜" value={form.publishedAt}
+              onChange={(e) => set('publishedAt', e.target.value)}
               className={ic} disabled={isPending} />
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">장소</label>
-            <input type="text" value={form.eventLocation} onChange={(e) => set('eventLocation', e.target.value)}
+            <input type="text" title="장소" value={form.eventLocation}
+              onChange={(e) => set('eventLocation', e.target.value)}
               className={ic} disabled={isPending} />
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">동영상 링크 (줄바꿈으로 구분)</label>
-            <textarea value={form.videoUrls} onChange={(e) => set('videoUrls', e.target.value)}
+            <textarea title="동영상 링크" value={form.videoUrls}
+              onChange={(e) => set('videoUrls', e.target.value)}
               rows={2} className={`${ic} resize-none`} disabled={isPending} />
           </div>
         </>
       )}
 
-      {story.type === 'FIELD_STORY' && (
+      {/* FIELD_STORY 전용 */}
+      {form.type === 'FIELD_STORY' && (
         <div>
           <label className="block text-xs text-gray-500 mb-1">사역 지역/단체</label>
-          <input type="text" value={form.ministryLocation} onChange={(e) => set('ministryLocation', e.target.value)}
+          <input type="text" title="사역 지역/단체" value={form.ministryLocation}
+            onChange={(e) => set('ministryLocation', e.target.value)}
             className={ic} disabled={isPending} />
         </div>
       )}
 
-      {story.type === 'EVENT_PROMO' && (
+      {/* EVENT_PROMO 전용 */}
+      {form.type === 'EVENT_PROMO' && (
         <>
           <div>
             <label className="block text-xs text-gray-500 mb-1">행사 장소</label>
-            <input type="text" title="행사 장소" value={form.eventLocation} onChange={(e) => set('eventLocation', e.target.value)}
+            <input type="text" title="행사 장소" value={form.eventLocation}
+              onChange={(e) => set('eventLocation', e.target.value)}
               className={ic} disabled={isPending} />
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">동영상 링크 (줄바꿈으로 구분)</label>
-            <textarea title="동영상 링크" value={form.videoUrls} onChange={(e) => set('videoUrls', e.target.value)}
+            <textarea title="동영상 링크" value={form.videoUrls}
+              onChange={(e) => set('videoUrls', e.target.value)}
               rows={2} className={`${ic} resize-none`} disabled={isPending} />
           </div>
         </>
       )}
 
+      {/* 내용 */}
       <div>
         <label className="block text-xs text-gray-500 mb-1">내용 *</label>
-        <textarea value={form.content} onChange={(e) => set('content', e.target.value)}
+        <textarea title="내용" value={form.content}
+          onChange={(e) => set('content', e.target.value)}
           rows={5} className={`${ic} resize-y`} disabled={isPending} />
       </div>
 
+      {/* 한줄 요약 */}
       <div>
         <label className="block text-xs text-gray-500 mb-1">한줄 요약</label>
-        <input type="text" value={form.excerpt} onChange={(e) => set('excerpt', e.target.value)}
+        <input type="text" title="한줄 요약" value={form.excerpt}
+          onChange={(e) => set('excerpt', e.target.value)}
           className={ic} disabled={isPending} />
       </div>
 
+      {/* 태그 */}
       <div>
         <label className="block text-xs text-gray-500 mb-1">태그 (쉼표로 구분)</label>
-        <input type="text" value={form.tags} onChange={(e) => set('tags', e.target.value)}
+        <input type="text" title="태그" value={form.tags}
+          onChange={(e) => set('tags', e.target.value)}
           placeholder="예: 이주민, 선교, 2024" className={ic} disabled={isPending} />
       </div>
 
+      {/* 공개 여부 */}
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" checked={form.isPublished}
           onChange={(e) => set('isPublished', e.target.checked)} disabled={isPending} />
