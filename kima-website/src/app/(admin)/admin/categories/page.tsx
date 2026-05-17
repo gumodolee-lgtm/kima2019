@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { CategoryOfficerForm } from '@/components/admin/CategoryOfficerForm'
+import { CategoryAddForm, CategoryDeleteButton } from '@/components/admin/CategoryAddForm'
 import { SeedCategoryOfficersButton } from '@/components/admin/SeedCategoryOfficersButton'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
@@ -32,7 +33,6 @@ export default async function AdminCategoriesPage() {
       officerEmail: (r as unknown as { officerEmail?: string | null }).officerEmail ?? null,
     }))
   } catch {
-    // DB에 officerPhone/officerEmail 컬럼이 없을 때 fallback
     const rows = await prisma.category.findMany({
       select: { id: true, type: true, name: true, slug: true, order: true,
         officerName: true, officerSns: true, officerQr: true, createdAt: true },
@@ -55,7 +55,9 @@ export default async function AdminCategoriesPage() {
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold text-[#1B3A6B]">카테고리 관리</h1>
-          <p className="text-sm text-gray-500 mt-1">각 카테고리의 담당 위원장 정보를 관리합니다.</p>
+          <p className="text-sm text-gray-500 mt-1">
+            담당 위원장 정보 편집, 언어권별·사역대상별 카테고리 추가·삭제가 가능합니다.
+          </p>
         </div>
         <SeedCategoryOfficersButton />
       </div>
@@ -63,31 +65,60 @@ export default async function AdminCategoriesPage() {
       <div className="space-y-8">
         {(Object.keys(TYPE_LABELS) as CategoryType[]).map((type) => (
           <div key={type}>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              {TYPE_LABELS[type]}
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                {TYPE_LABELS[type]}
+                <span className="ml-2 text-xs font-normal text-gray-400 normal-case">
+                  ({grouped[type].length}개)
+                </span>
+              </h2>
+              {(type === 'LANGUAGE' || type === 'TARGET') && (
+                <CategoryAddForm type={type} />
+              )}
+              {type === 'REGION' && (
+                <span className="text-xs text-gray-400">지역별은 고정값입니다</span>
+              )}
+            </div>
+
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
-              {grouped[type].map((cat) => (
-                <div key={cat.id} className="px-5 py-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-20 flex-shrink-0">
-                      <p className="text-sm font-medium text-gray-900">{cat.name}</p>
-                      <p className="text-xs text-gray-400">/{cat.slug}</p>
-                    </div>
-                    <div className="flex-1">
-                      <CategoryOfficerForm
+              {grouped[type].length === 0 ? (
+                <div className="px-5 py-6 text-center text-sm text-gray-400">
+                  등록된 카테고리가 없습니다. 위의 추가 버튼을 눌러 추가하세요.
+                </div>
+              ) : (
+                grouped[type].map((cat) => (
+                  <div key={cat.id} className="px-5 py-4">
+                    <div className="flex items-start gap-4">
+                      {/* 이름 + slug */}
+                      <div className="w-24 flex-shrink-0">
+                        <p className="text-sm font-medium text-gray-900">{cat.name}</p>
+                        <p className="text-xs text-gray-400">/{cat.slug}</p>
+                      </div>
+
+                      {/* 담당자 편집 폼 */}
+                      <div className="flex-1">
+                        <CategoryOfficerForm
+                          categoryId={cat.id}
+                          officerName={cat.officerName}
+                          officerPhone={cat.officerPhone}
+                          officerEmail={cat.officerEmail}
+                          officerSns={cat.officerSns}
+                          officerQr={cat.officerQr}
+                        />
+                      </div>
+
+                      {/* 삭제 버튼 (LANGUAGE, TARGET만) */}
+                      <CategoryDeleteButton
                         categoryId={cat.id}
-                        officerName={cat.officerName}
-                        officerPhone={cat.officerPhone}
-                        officerEmail={cat.officerEmail}
-                        officerSns={cat.officerSns}
-                        officerQr={cat.officerQr}
+                        categoryName={cat.name}
+                        categoryType={cat.type}
                       />
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
+
           </div>
         ))}
       </div>
