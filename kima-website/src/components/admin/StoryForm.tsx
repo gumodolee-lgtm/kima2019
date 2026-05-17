@@ -37,11 +37,19 @@ export function StoryForm() {
   const set = <K extends keyof typeof EMPTY>(k: K, v: typeof EMPTY[K]) =>
     setForm((p) => ({ ...p, [k]: v }))
 
+  const MAX_FILES = 20
+
   const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
     if (!files.length) return
-    setPendingImages((prev) => [...prev, ...files])
-    setPreviewUrls((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))])
+    setPendingImages((prev) => {
+      const next = [...prev, ...files].slice(0, MAX_FILES)
+      return next
+    })
+    setPreviewUrls((prev) => {
+      const newUrls = files.map((f) => URL.createObjectURL(f))
+      return [...prev, ...newUrls].slice(0, MAX_FILES)
+    })
     e.target.value = ''
   }, [])
 
@@ -255,10 +263,10 @@ export function StoryForm() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={isLoading}
+              disabled={isLoading || pendingImages.length >= MAX_FILES}
               className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-gray-300 text-sm text-gray-500 hover:border-[#1B3A6B] hover:text-[#1B3A6B] transition-colors disabled:opacity-50"
             >
-              📷 사진 선택 (여러 장 가능)
+              📷 사진 선택 (최대 {MAX_FILES}장)
             </button>
 
             {previewUrls.length > 0 && (
@@ -284,7 +292,12 @@ export function StoryForm() {
               </div>
             )}
             {pendingImages.length > 0 && (
-              <p className="text-xs text-gray-400 mt-1">{pendingImages.length}장 선택됨 — 등록 시 업로드됩니다.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {pendingImages.length}장 선택됨 — 등록 시 업로드됩니다.
+                {pendingImages.length >= MAX_FILES && (
+                  <span className="text-amber-600"> (최대 {MAX_FILES}장)</span>
+                )}
+              </p>
             )}
           </div>
 
