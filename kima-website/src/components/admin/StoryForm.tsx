@@ -69,48 +69,51 @@ export function StoryForm() {
     setError('')
 
     startTransition(async () => {
-      let imageUrls: string[] = []
+      try {
+        let imageUrls: string[] = []
 
-      if (form.type === 'EVENT_MEDIA' && pendingImages.length > 0) {
-        setIsUploading(true)
-        const fd = new FormData()
-        pendingImages.forEach((f) => fd.append('files', f))
-        const uploadRes = await fetch('/api/upload', { method: 'POST', body: fd })
-        setIsUploading(false)
-        if (!uploadRes.ok) {
-          const d = await uploadRes.json()
-          setError(d.error ?? '이미지 업로드에 실패했습니다.')
+        if (form.type === 'EVENT_MEDIA' && pendingImages.length > 0) {
+          setIsUploading(true)
+          const fd = new FormData()
+          pendingImages.forEach((f) => fd.append('files', f))
+          const uploadRes = await fetch('/api/upload', { method: 'POST', body: fd })
+          setIsUploading(false)
+          if (!uploadRes.ok) {
+            const d = await uploadRes.json().catch(() => ({}))
+            setError(d.error ?? '이미지 업로드에 실패했습니다.')
+            return
+          }
+          imageUrls = (await uploadRes.json()).urls ?? []
+        }
+
+        const res = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type:          form.type,
+            title:         form.title,
+            content:       form.content,
+            excerpt:       form.excerpt || undefined,
+            linkUrl:       form.linkUrl || undefined,
+            source:        form.source || undefined,
+            publishedAt:   form.publishedAt ? new Date(form.publishedAt).toISOString() : undefined,
+            eventLocation: form.eventLocation || undefined,
+            videoUrls:     form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
+            images:        imageUrls,
+            tags:          form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+          }),
+        })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          setError(data.error ?? '등록에 실패했습니다.')
           return
         }
-        imageUrls = (await uploadRes.json()).urls ?? []
+        reset()
+        router.refresh()
+      } catch (err) {
+        setIsUploading(false)
+        setError(err instanceof Error ? err.message : '등록 중 오류가 발생했습니다.')
       }
-
-      const res = await fetch('/api/stories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type:          form.type,
-          title:         form.title,
-          content:       form.content,
-          excerpt:       form.excerpt || undefined,
-          linkUrl:       form.linkUrl || undefined,
-          source:        form.source || undefined,
-          publishedAt:   form.publishedAt ? new Date(form.publishedAt).toISOString() : undefined,
-          eventLocation: form.eventLocation || undefined,
-          videoUrls:     form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
-          images:        imageUrls,
-          tags:          form.tags.split(',').map((t) => t.trim()).filter(Boolean),
-          status:        'APPROVED',
-          isPublished:   true,
-        }),
-      })
-      if (!res.ok) {
-        const data = await res.json()
-        setError(data.error ?? '등록에 실패했습니다.')
-        return
-      }
-      reset()
-      router.refresh()
     })
   }
 

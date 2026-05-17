@@ -62,31 +62,35 @@ export function StoryEditButton({ story }: StoryEditProps) {
     setError('')
 
     startTransition(async () => {
-      const res = await fetch(`/api/stories/${story.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type:             form.type,
-          title:            form.title.trim(),
-          content:          form.content.trim(),
-          excerpt:          form.excerpt.trim() || null,
-          linkUrl:          form.linkUrl.trim() || null,
-          source:           form.source.trim() || null,
-          publishedAt:      form.publishedAt ? new Date(form.publishedAt).toISOString() : null,
-          eventLocation:    form.eventLocation.trim() || null,
-          ministryLocation: form.ministryLocation.trim() || null,
-          videoUrls:        form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
-          tags:             form.tags.split(',').map((t) => t.trim()).filter(Boolean),
-          isPublished:      form.isPublished,
-        }),
-      })
-      if (!res.ok) {
-        const data = await res.json()
-        setError(data.error ?? '수정에 실패했습니다.')
-        return
+      try {
+        const res = await fetch(`/api/stories/${story.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type:             form.type,
+            title:            form.title.trim(),
+            content:          form.content.trim(),
+            excerpt:          form.excerpt.trim() || null,
+            linkUrl:          form.linkUrl.trim() || null,
+            source:           form.source.trim() || null,
+            publishedAt:      form.publishedAt ? new Date(form.publishedAt).toISOString() : null,
+            eventLocation:    form.eventLocation.trim() || null,
+            ministryLocation: form.ministryLocation.trim() || null,
+            videoUrls:        form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean),
+            tags:             form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+            isPublished:      form.isPublished,
+          }),
+        })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          setError(data.error ?? '수정에 실패했습니다.')
+          return
+        }
+        setOpen(false)
+        router.refresh()
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '수정 중 오류가 발생했습니다.')
       }
-      setOpen(false)
-      router.refresh()
     })
   }
 
