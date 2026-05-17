@@ -3,8 +3,6 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
-const FILE_TYPES = ['PDF', 'PPT', 'DOC', 'XLS', 'ETC'] as const
-
 interface ResourceUploadFormProps {
   categoryId: string
   categoryName: string
@@ -21,7 +19,6 @@ export function ResourceUploadForm({ categoryId, categoryName }: ResourceUploadF
     title: '',
     description: '',
     driveUrl: '',
-    fileType: 'PDF' as string,
     accessLevel: 'MEMBER' as string,
   })
 
@@ -44,7 +41,6 @@ export function ResourceUploadForm({ categoryId, categoryName }: ResourceUploadF
           title: form.title.trim(),
           description: form.description.trim() || undefined,
           driveUrl: form.driveUrl.trim(),
-          fileType: form.fileType,
           accessLevel: form.accessLevel,
           categoryId,
         }),
@@ -55,7 +51,7 @@ export function ResourceUploadForm({ categoryId, categoryName }: ResourceUploadF
         return
       }
       setSuccess('자료가 등록되었습니다!')
-      setForm({ title: '', description: '', driveUrl: '', fileType: 'PDF', accessLevel: 'MEMBER' })
+      setForm({ title: '', description: '', driveUrl: '', accessLevel: 'MEMBER' })
       setTimeout(() => { setSuccess(''); setOpen(false) }, 1500)
       router.refresh()
     })
@@ -113,31 +109,19 @@ export function ResourceUploadForm({ categoryId, categoryName }: ResourceUploadF
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">파일 형식</label>
-          <select
-            value={form.fileType}
-            onChange={(e) => set('fileType', e.target.value)}
-            disabled={isPending}
-            className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
-          >
-            {FILE_TYPES.map((ft) => <option key={ft}>{ft}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">접근 등급</label>
-          <select
-            value={form.accessLevel}
-            onChange={(e) => set('accessLevel', e.target.value)}
-            disabled={isPending}
-            className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
-          >
-            <option value="PUBLIC">공개</option>
-            <option value="MEMBER">회원</option>
-            <option value="PREMIUM">정회원</option>
-          </select>
-        </div>
+      <div>
+        <label htmlFor="access-level" className="block text-xs text-gray-500 mb-1">접근 등급</label>
+        <select
+          id="access-level"
+          value={form.accessLevel}
+          onChange={(e) => set('accessLevel', e.target.value)}
+          disabled={isPending}
+          className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
+        >
+          <option value="PUBLIC">공개</option>
+          <option value="MEMBER">회원</option>
+          <option value="PREMIUM">정회원</option>
+        </select>
       </div>
 
       {error && <p className="text-xs text-red-500">{error}</p>}
