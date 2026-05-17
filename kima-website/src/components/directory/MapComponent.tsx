@@ -48,6 +48,7 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
   const onSelectRef     = useRef(onSelect)
   const onHoverRef      = useRef(onHover)
   const showContactRef  = useRef(showContact)
+  const prevOrgsKeyRef  = useRef<string>('')        // organizations 변경 감지용
   onSelectRef.current  = onSelect
   onHoverRef.current   = onHover
   showContactRef.current = showContact
@@ -293,6 +294,11 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
 
     const mappable = organizations.filter((o) => o.lat != null && o.lng != null)
 
+    // organizations 실제 변경 여부 (필터 변경 vs 마커 클릭)
+    const orgsKey = organizations.map((o) => o.id).join()
+    const orgsChanged = orgsKey !== prevOrgsKeyRef.current
+    prevOrgsKeyRef.current = orgsKey
+
     mappable.forEach((org, idx) => {
       const isSelected = org.id === selectedId
       const pos = new window.kakao.maps.LatLng(org.lat!, org.lng!)
@@ -311,10 +317,12 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
         'transition:transform 0.12s ease',
       ].join(';')
 
-      // 마커 등장 시 깜빡임 (순차 딜레이로 물결 효과)
-      const delay = Math.min(idx * 30, 600)
-      dot.style.animation = `kima-blink 0.8s ease-out ${delay}ms 1 both`
-      dot.addEventListener('animationend', () => { dot.style.animation = '' }, { once: true })
+      // 깜빡임: 필터 변경 시에만 (마커 클릭 시엔 생략)
+      if (orgsChanged) {
+        const delay = Math.min(idx * 30, 600)
+        dot.style.animation = `kima-blink 0.8s ease-out ${delay}ms 1 both`
+        dot.addEventListener('animationend', () => { dot.style.animation = '' }, { once: true })
+      }
 
       dot.addEventListener('mouseenter', () => {
         dot.style.transform = 'scale(1.4)'
@@ -367,19 +375,20 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
       overlaysRef.current.set(org.id, overlay)
     })
 
-    // 마커가 있으면 전체가 보이도록 bounds 조정
-    if (mappable.length > 0) {
+    // bounds 조정: organizations가 바뀐 경우(필터 변경·초기 로드)에만 실행
+    // selectedId만 바뀐 경우(마커 클릭)에는 현재 줌·위치 유지
+    if (orgsChanged && mappable.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds()
       mappable.forEach((o) => bounds.extend(new window.kakao.maps.LatLng(o.lat!, o.lng!)))
       mapRef.current.setBounds(bounds)
     }
 
-    // 선택된 단체 InfoWindow 표시
+    // 선택된 단체 InfoWindow 표시 (panTo는 organizations 변경 시에만)
     if (selectedId) {
       const org = mappable.find((o) => o.id === selectedId)
       if (org) {
         const pos = new window.kakao.maps.LatLng(org.lat!, org.lng!)
-        mapRef.current.panTo(pos)
+        if (orgsChanged) mapRef.current.panTo(pos)
         showInfo(org, pos)
       }
     }
