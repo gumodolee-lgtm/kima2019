@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { PasswordChangeForm } from '@/components/member/PasswordChangeForm'
 import type { Metadata } from 'next'
 import type { UserRole } from '@prisma/client'
 
@@ -140,6 +141,14 @@ export default async function MypagePage() {
             )}
           </div>
         </div>
+
+        {/* 비밀번호 변경 — 이메일/비밀번호 로그인 계정만 표시 */}
+        {user.accounts.some((a) => a.provider === 'credentials') && (
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-7">
+            <h3 className="font-semibold text-gray-800 mb-4">보안 설정</h3>
+            <PasswordChangeForm />
+          </div>
+        )}
 
         {/* 최근 활동 */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-7">
