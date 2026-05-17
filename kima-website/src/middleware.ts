@@ -49,12 +49,12 @@ export default auth((req) => {
   const expiresAt = req.auth?.user?.expiresAt
   const origin = getOrigin(req)
 
-  // 회원 관리 · 단체 승인 → ADMIN 전용
-  if (pathname.startsWith('/admin/members') || pathname.startsWith('/admin/organizations')) {
+  // 단체 승인 → ADMIN 전용
+  if (pathname.startsWith('/admin/organizations')) {
     if (!hasRole(userRole, 'ADMIN')) {
       return NextResponse.redirect(`${origin}/`)
     }
-  // 나머지 관리 메뉴(자료·일정·카테고리) → OFFICER 이상
+  // 나머지 관리 메뉴 → OFFICER 이상
   } else if (pathname.startsWith('/admin')) {
     if (!hasRole(userRole, 'OFFICER')) {
       return NextResponse.redirect(`${origin}/`)

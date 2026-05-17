@@ -14,15 +14,15 @@ function hasRole(role: UserRole, required: keyof typeof ROLE_HIERARCHY) {
 
 const NAV = [
   { href: '/admin',               label: '대시보드',     icon: '🏠', exact: true,  minRole: 'OFFICER' as const },
-  { href: '/admin/members',       label: '회원 관리',    icon: '👥', exact: false, minRole: 'ADMIN'   as const },
+  { href: '/admin/members',       label: '회원 관리',    icon: '👥', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/organizations', label: '단체 승인',    icon: '🏢', exact: false, minRole: 'ADMIN'   as const },
   { href: '/admin/categories',    label: '카테고리 관리', icon: '📂', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/resources',     label: '자료 관리',    icon: '📄', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/events',        label: '일정 관리',    icon: '📅', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/stories',       label: '현장스토리',   icon: '📖', exact: false, minRole: 'OFFICER' as const },
-  { href: '/admin/email',         label: '메일 발송',    icon: '✉️', exact: false, minRole: 'ADMIN'   as const },
+  { href: '/admin/email',         label: '메일 발송',    icon: '✉️', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/bulk-register', label: '회원 일괄등록', icon: '👤', exact: false, minRole: 'ADMIN'   as const },
-  { href: '/admin/popups',        label: '팝업 관리',    icon: '🪟', exact: false, minRole: 'ADMIN'   as const },
+  { href: '/admin/popups',        label: '팝업 관리',    icon: '🪟', exact: false, minRole: 'OFFICER' as const },
 ]
 
 interface Props {

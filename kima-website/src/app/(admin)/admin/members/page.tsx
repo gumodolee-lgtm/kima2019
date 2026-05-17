@@ -68,7 +68,8 @@ function SortHeader({
 
 export default async function AdminMembersPage({ searchParams }: PageProps) {
   const session = await auth()
-  if (session?.user?.role !== 'ADMIN') redirect('/')
+  const role = session?.user?.role
+  if (role !== 'ADMIN' && role !== 'OFFICER') redirect('/')
 
   const sp = await searchParams
   const isPendingTab = sp.tab === 'pending'
