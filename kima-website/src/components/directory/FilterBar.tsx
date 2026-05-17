@@ -2,8 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
-import { REGIONS } from '@/schemas/member.schema'
-import { LANGUAGES, TARGETS, ORG_TYPES } from '@/schemas/organization.schema'
+import { ORG_REGIONS, LANGUAGES, TARGETS, ORG_TYPES } from '@/schemas/organization.schema'
 
 interface FilterBarProps {
   totalCount: number
@@ -47,7 +46,7 @@ export function FilterBar({ totalCount }: FilterBarProps) {
           onChange={(e) => setFilter('region', e.target.value)}
         >
           <option value="">지역 전체</option>
-          {REGIONS.map((r) => (
+          {ORG_REGIONS.map((r) => (
             <option key={r} value={r}>{r}</option>
           ))}
         </select>

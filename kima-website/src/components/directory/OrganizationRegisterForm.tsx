@@ -4,74 +4,40 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { organizationSchema, LANGUAGES, TARGETS, ORG_TYPES, type OrganizationInput } from '@/schemas/organization.schema'
-import { REGIONS } from '@/schemas/member.schema'
+import { organizationSchema, ORG_REGIONS, ORG_TYPES, type OrganizationInput } from '@/schemas/organization.schema'
 import { FieldError } from '@/components/auth/FieldError'
 import { Button } from '@/components/ui/Button'
 
-function CheckboxGroup({
-  label,
-  options,
-  selected,
-  onChange,
-  error,
-}: {
-  label: string
-  options: readonly string[]
-  selected: string[]
-  onChange: (values: string[]) => void
-  error?: string
-}) {
-  const toggle = (value: string) => {
-    if (selected.includes(value)) {
-      onChange(selected.filter((v) => v !== value))
-    } else {
-      onChange([...selected, value])
-    }
-  }
-
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
-      <div className="flex flex-wrap gap-2">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => toggle(opt)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-              selected.includes(opt)
-                ? 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-[#1B3A6B]'
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-      {error && <FieldError message={error} />}
-    </div>
-  )
+function toArray(text: string): string[] {
+  return text.split(',').map((s) => s.trim()).filter(Boolean)
 }
 
 export function OrganizationRegisterForm() {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [languagesText, setLanguagesText] = useState('')
+  const [targetsText, setTargetsText] = useState('')
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<OrganizationInput>({
     resolver: zodResolver(organizationSchema),
     defaultValues: { languages: [], targets: [] },
   })
 
-  const languages = watch('languages') as string[]
-  const targets = watch('targets') as string[]
+  const handleLanguagesChange = (text: string) => {
+    setLanguagesText(text)
+    setValue('languages', toArray(text), { shouldValidate: true })
+  }
+
+  const handleTargetsChange = (text: string) => {
+    setTargetsText(text)
+    setValue('targets', toArray(text), { shouldValidate: true })
+  }
 
   const onSubmit = async (data: OrganizationInput) => {
     setServerError(null)
@@ -138,7 +104,7 @@ export function OrganizationRegisterForm() {
           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30 text-gray-700"
         >
           <option value="">지역을 선택해주세요</option>
-          {REGIONS.map((r) => (
+          {ORG_REGIONS.map((r) => (
             <option key={r} value={r}>{r}</option>
           ))}
         </select>
@@ -158,21 +124,35 @@ export function OrganizationRegisterForm() {
         </select>
       </div>
 
-      <CheckboxGroup
-        label="주요 언어권 (최소 1개 선택) *"
-        options={LANGUAGES}
-        selected={languages}
-        onChange={(vals) => setValue('languages', vals as OrganizationInput['languages'], { shouldValidate: true })}
-        error={errors.languages?.message}
-      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          주요 언어권 <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          value={languagesText}
+          onChange={(e) => handleLanguagesChange(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+          placeholder="예) 베트남어, 네팔어, 중국어"
+        />
+        <p className="mt-1 text-xs text-gray-400">여러 언어는 쉼표(,)로 구분해서 입력하세요.</p>
+        <FieldError message={errors.languages?.message} />
+      </div>
 
-      <CheckboxGroup
-        label="사역대상 (최소 1개 선택) *"
-        options={TARGETS}
-        selected={targets}
-        onChange={(vals) => setValue('targets', vals as OrganizationInput['targets'], { shouldValidate: true })}
-        error={errors.targets?.message}
-      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          사역대상 <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          value={targetsText}
+          onChange={(e) => handleTargetsChange(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+          placeholder="예) 이주노동자, 유학생, 결혼이민자"
+        />
+        <p className="mt-1 text-xs text-gray-400">여러 대상은 쉼표(,)로 구분해서 입력하세요.</p>
+        <FieldError message={errors.targets?.message} />
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">단체 소개 (선택)</label>
