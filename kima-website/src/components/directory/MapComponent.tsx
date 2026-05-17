@@ -101,6 +101,7 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
       'padding:16px', 'width:290px',
       'box-shadow:0 8px 32px rgba(0,0,0,0.22)',
       'position:relative', F,
+      'overflow-wrap:break-word', 'word-break:keep-all',
     ].join(';')
 
     // ── 헤더 (단체명 + 닫기)
@@ -108,8 +109,9 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
     header.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px'
 
     const nameBlock = document.createElement('div')
+    nameBlock.style.cssText = 'min-width:0;flex:1'
     const nameEl = document.createElement('p')
-    nameEl.style.cssText = 'margin:0;font-weight:700;color:#1B3A6B;font-size:14px;line-height:1.4'
+    nameEl.style.cssText = 'margin:0;font-weight:700;color:#1B3A6B;font-size:14px;line-height:1.5;word-break:keep-all;overflow-wrap:break-word'
     nameEl.textContent = org.name
     nameBlock.appendChild(nameEl)
     if (org.nameEn) {
@@ -186,7 +188,7 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover, sho
       icon.style.cssText = 'font-size:11px;color:#9ca3af;flex-shrink:0;padding-top:1px'
       icon.textContent = '📍'
       const txt = document.createElement('span')
-      txt.style.cssText = 'font-size:11px;color:#6b7280;line-height:1.5'
+      txt.style.cssText = 'font-size:11px;color:#6b7280;line-height:1.6;word-break:keep-all;overflow-wrap:break-word'
       txt.textContent = org.address
       addrRow.appendChild(icon); addrRow.appendChild(txt)
       wrap.appendChild(addrRow)
