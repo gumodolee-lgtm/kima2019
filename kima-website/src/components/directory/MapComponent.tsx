@@ -7,6 +7,30 @@ declare global {
   interface Window { kakao: any }
 }
 
+const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? '39d4bf701d74f59a028c9c6c4861baea'
+
+function loadKakaoScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') { reject(new Error('SSR')); return }
+    if (window.kakao?.maps) { resolve(); return }
+
+    const existing = document.querySelector('script[data-kakao-map]')
+    if (existing) {
+      // 이미 추가된 스크립트가 로드 완료되길 기다림
+      const poll = () => { window.kakao?.maps ? resolve() : setTimeout(poll, 50) }
+      poll(); return
+    }
+
+    const script = document.createElement('script')
+    script.setAttribute('data-kakao-map', 'true')
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`
+    script.async = true
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Kakao Maps SDK 로드 실패'))
+    document.head.appendChild(script)
+  })
+}
+
 interface MapComponentProps {
   organizations: Organization[]
   selectedId?: string
@@ -23,23 +47,22 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
 
   const [ready, setReady] = useState(false)
 
-  // ── 지도 초기화 ──────────────────────────────────────────────
+  // ── SDK 로드 → 지도 초기화 ───────────────────────────────────
   useEffect(() => {
     if (!containerRef.current) return
-    let raf: number
+    let cancelled = false
 
-    const tryInit = () => {
-      if (typeof window !== 'undefined' && window.kakao?.maps) {
-        // autoload=false 이므로 load() 호출 후 콜백에서 maps.Map이 사용 가능
+    loadKakaoScript()
+      .then(() => {
+        if (cancelled || !containerRef.current) return
         window.kakao.maps.load(() => {
-          if (!containerRef.current) return
+          if (cancelled || !containerRef.current) return
           const map = new window.kakao.maps.Map(containerRef.current, {
             center: new window.kakao.maps.LatLng(36.5, 127.9),
             level: 8,
           })
           mapRef.current = map
 
-          // 지도 빈 곳 클릭 시 InfoWindow 닫기
           window.kakao.maps.event.addListener(map, 'click', () => {
             infoOverlayRef.current?.setMap(null)
             infoOverlayRef.current = null
@@ -47,13 +70,12 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
 
           setReady(true)
         })
-      } else {
-        raf = requestAnimationFrame(tryInit)
-      }
-    }
+      })
+      .catch(() => {
+        // SDK 로드 실패 — 지도 없이 목록만 표시
+      })
 
-    raf = requestAnimationFrame(tryInit)
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelled = true }
   }, [])
 
   // ── InfoWindow 표시 ───────────────────────────────────────────
