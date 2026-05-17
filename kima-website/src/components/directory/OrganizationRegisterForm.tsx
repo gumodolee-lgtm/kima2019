@@ -62,9 +62,9 @@ export function OrganizationRegisterForm() {
     return (
       <div className="text-center py-16">
         <div className="text-5xl mb-4">✅</div>
-        <h2 className="text-xl font-bold text-[#1B3A6B] mb-2">신청이 완료되었습니다</h2>
+        <h2 className="text-xl font-bold text-[#1B3A6B] mb-2">등록이 완료되었습니다</h2>
         <p className="text-sm text-gray-500 leading-relaxed mb-6">
-          관리자 검토 후 디렉토리에 등재됩니다. (보통 3~5 영업일 소요)
+          단체가 사역지도 디렉토리에 바로 등재되었습니다.
         </p>
         <Button onClick={() => router.push('/directory')}>디렉토리로 돌아가기</Button>
       </div>
@@ -214,7 +214,7 @@ export function OrganizationRegisterForm() {
       )}
 
       <p className="text-xs text-gray-400">
-        * 관리자 승인 후 디렉토리에 공개됩니다. 허위 정보 등록 시 삭제될 수 있습니다.
+        * 등록 즉시 사역지도 디렉토리에 공개됩니다. 허위 정보 등록 시 삭제될 수 있습니다.
       </p>
 
       <Button type="submit" className="w-full" isLoading={isSubmitting}>
