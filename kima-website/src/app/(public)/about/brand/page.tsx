@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 
 export const metadata: Metadata = { title: 'CI 가이드 | KIMA' }
 
@@ -19,16 +20,28 @@ export default function BrandPage() {
           <h2 className="text-xl font-bold text-[#1B3A6B] mb-6">로고</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 flex flex-col items-center justify-center gap-3">
-              <div className="text-4xl font-bold text-[#1B3A6B] tracking-widest">KIMA</div>
+              <Image
+                src="/images/kima-logo.png"
+                alt="KIMA 로고 (라이트 배경용)"
+                width={180}
+                height={80}
+                className="object-contain"
+              />
               <p className="text-xs text-gray-400">라이트 배경용</p>
             </div>
             <div className="bg-[#1B3A6B] rounded-xl shadow-sm p-8 flex flex-col items-center justify-center gap-3">
-              <div className="text-4xl font-bold text-white tracking-widest">KIMA</div>
+              <Image
+                src="/images/kima-logo.png"
+                alt="KIMA 로고 (다크 배경용)"
+                width={180}
+                height={80}
+                className="object-contain brightness-0 invert"
+              />
               <p className="text-xs text-blue-300">다크 배경용</p>
             </div>
           </div>
           <p className="mt-4 text-sm text-gray-500">
-            ※ 공식 로고 파일(SVG, PNG)은 사무국(kima20191227@gmail.com)으로 요청해 주세요.
+            ※ 공식 로고 파일(PNG)은 사무국(kima20191227@gmail.com)으로 요청해 주세요.
           </p>
         </section>
 

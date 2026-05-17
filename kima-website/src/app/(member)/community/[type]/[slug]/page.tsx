@@ -300,9 +300,6 @@ export default async function CategoryBoardPage({ params }: Props) {
                             <span className="text-xs font-medium text-gray-700 truncate">{resource.title}</span>
                             <AccessBadge level={resource.accessLevel} />
                           </div>
-                          {resource.fileType && (
-                            <span className="text-xs text-gray-400">{resource.fileType}</span>
-                          )}
                         </div>
                         {canAccess ? (
                           <a

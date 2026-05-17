@@ -108,7 +108,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
 
         {/* 자료 목록 */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-4">
-          <ResourceList resources={serialized} userAccessLevel={userAccessLevel} />
+          <ResourceList resources={serialized} userAccessLevel={userAccessLevel} searchable />
         </div>
 
         {/* 안내 */}
