@@ -99,31 +99,25 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Load xlsx dynamically (server-only)
-    const XLSX = await import('xlsx')
-
-    const filePath = path.join(process.cwd(), 'public', 'KIMA 정회원명단_202512기준.xlsx')
+    // JSON 변환 파일에서 로드 (Excel 파일은 gitignore 대상)
+    const filePath = path.join(process.cwd(), 'public', 'orgs_data.json')
     if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ error: 'Excel 파일을 찾을 수 없습니다.' }, { status: 404 })
+      return NextResponse.json({ error: 'orgs_data.json 파일을 찾을 수 없습니다. Excel을 JSON으로 변환 후 public/orgs_data.json에 저장하세요.' }, { status: 404 })
     }
 
-    const wb = XLSX.readFile(filePath)
-    const ws = wb.Sheets[wb.SheetNames[0]]
-    const rows: unknown[][] = XLSX.utils.sheet_to_json(ws, { header: 1 }) as unknown[][]
-
-    // Skip header row (index 0)
-    const dataRows = rows.slice(1).filter((r) => r[4]) // must have 단체이름
+    interface OrgRow { name: string; address?: string; email?: string; phone?: string; nationRaw?: string; missionRaw?: string }
+    const dataRows: OrgRow[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
 
     let created = 0
     let skipped = 0
 
     for (const row of dataRows) {
-      const name = String(row[4] ?? '').trim()
-      const address = String(row[6] ?? '').trim()
-      const email = String(row[7] ?? '').trim()
-      const phone = String(row[5] ?? '').trim()
-      const nationRaw = String(row[9] ?? '').trim()
-      const missionRaw = String(row[10] ?? '').trim() + ' ' + String(row[11] ?? '')
+      const name = String(row.name ?? '').trim()
+      const address = String(row.address ?? '').trim()
+      const email = String(row.email ?? '').trim()
+      const phone = String(row.phone ?? '').trim()
+      const nationRaw = String(row.nationRaw ?? '').trim()
+      const missionRaw = String(row.missionRaw ?? '').trim()
 
       if (!name) { skipped++; continue }
 
