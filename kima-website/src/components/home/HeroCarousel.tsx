@@ -5,13 +5,6 @@ import Link from 'next/link'
 
 const SLIDES = [
   {
-    id: 1,
-    type: 'text' as const,
-    badge: 'Korean Immigrant Mission Association',
-    title: '이주민과 함께,\n한국 교회가 하나로',
-    desc: '전국 다문화 사역 단체를 연결하고, 현장을 기록하며, 후원이 필요한 곳으로 자원이 흐르게 하는 플랫폼입니다.',
-  },
-  {
     id: 2,
     type: 'image' as const,
     image: 'https://i.imgur.com/f3hqL8I.jpg',
@@ -34,6 +27,13 @@ const SLIDES = [
     badge: '400만 이주민 시대를 향한 KIMA의 비전',
     title: '연결·기록·가시화·\n후원으로 이어주는',
     desc: '다양한 언어권과 지역의 사역자들이 협력하여 이주민들에게 복음과 사랑을 전합니다.',
+  },
+  {
+    id: 1,
+    type: 'text' as const,
+    badge: 'Korean Immigrant Mission Association',
+    title: '이주민과 함께,\n한국 교회가 하나로',
+    desc: '전국 다문화 사역 단체를 연결하고, 현장을 기록하며, 후원이 필요한 곳으로 자원이 흐르게 하는 플랫폼입니다.',
   },
 ]
 
@@ -98,8 +98,8 @@ export function HeroCarousel({ isLoggedIn }: Props) {
             {slide.desc}
           </p>
 
-          {/* CTA는 첫 슬라이드에만 */}
-          {current === 0 && (
+          {/* CTA는 텍스트 슬라이드에만 */}
+          {slide.type === 'text' && (
             <div className="flex flex-wrap gap-4">
               {isLoggedIn ? (
                 <Link
