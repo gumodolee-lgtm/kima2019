@@ -112,7 +112,7 @@ export default function DirectoryPage() {
         {/* 헤더 */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#1B3A6B]">단체 디렉토리</h1>
+            <h1 className="text-2xl font-bold text-[#1B3A6B]">국내 이주민 사역지도</h1>
             <p className="mt-1 text-sm text-gray-500">전국 다문화 사역 단체를 찾아보세요</p>
           </div>
           <Link

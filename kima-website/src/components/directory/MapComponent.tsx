@@ -1,12 +1,7 @@
 'use client'
 
-import { useCallback, useState } from 'react'
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api'
+import { useEffect, useRef } from 'react'
 import type { Organization } from '@prisma/client'
-
-const MAP_CONTAINER_STYLE = { width: '100%', height: '100%' }
-const DEFAULT_CENTER = { lat: 36.5, lng: 127.9 } // 한국 중심
-const DEFAULT_ZOOM = 7
 
 interface MapComponentProps {
   organizations: Organization[]
@@ -15,93 +10,74 @@ interface MapComponentProps {
 }
 
 export function MapComponent({ organizations, selectedId, onSelect }: MapComponentProps) {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''
-  const [activeMarker, setActiveMarker] = useState<string | null>(null)
+  const mapRef = useRef<HTMLDivElement>(null)
+  const leafletRef = useRef<{
+    map: import('leaflet').Map
+    markers: Map<string, import('leaflet').Marker>
+  } | null>(null)
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: apiKey,
-    id: 'kima-google-maps',
-  })
+  useEffect(() => {
+    if (!mapRef.current || leafletRef.current) return
 
-  const handleMarkerClick = useCallback(
-    (id: string) => {
-      setActiveMarker(id)
-      onSelect?.(id)
-    },
-    [onSelect]
-  )
+    import('leaflet').then((L) => {
+      if (!mapRef.current) return
 
-  if (!apiKey) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-xl">
-        <div className="text-center p-8">
-          <div className="text-4xl mb-3">🗺️</div>
-          <p className="text-sm text-gray-500 font-medium">지도를 표시하려면</p>
-          <p className="text-sm text-gray-400">
-            NEXT_PUBLIC_GOOGLE_MAPS_API_KEY 환경변수를 설정해 주세요
-          </p>
-        </div>
-      </div>
-    )
-  }
+      const map = L.map(mapRef.current, {
+        center: [36.5, 127.9],
+        zoom: 7,
+        zoomControl: true,
+      })
 
-  if (loadError) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-red-50 rounded-xl">
-        <p className="text-sm text-red-500">지도를 불러오지 못했습니다.</p>
-      </div>
-    )
-  }
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+      }).addTo(map)
 
-  if (!isLoaded) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-xl animate-pulse">
-        <p className="text-sm text-gray-400">지도 로딩 중...</p>
-      </div>
-    )
-  }
+      const redIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      })
 
-  const mappable = organizations.filter((o) => o.lat && o.lng)
+      const markers = new Map<string, import('leaflet').Marker>()
+
+      organizations
+        .filter((o) => o.lat && o.lng)
+        .forEach((org) => {
+          const marker = L.marker([org.lat!, org.lng!], { icon: redIcon })
+            .addTo(map)
+            .bindPopup(
+              `<div style="min-width:120px"><strong style="color:#1B3A6B">${org.name}</strong>${org.region ? `<br/><span style="font-size:12px;color:#6b7280">${org.region}</span>` : ''}</div>`
+            )
+          marker.on('click', () => onSelect?.(org.id))
+          markers.set(org.id, marker)
+        })
+
+      leafletRef.current = { map, markers }
+    })
+
+    return () => {
+      leafletRef.current?.map.remove()
+      leafletRef.current = null
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!leafletRef.current) return
+    const { markers } = leafletRef.current
+    markers.forEach((marker, id) => {
+      if (id === selectedId) {
+        marker.openPopup()
+      }
+    })
+  }, [selectedId])
 
   return (
-    <GoogleMap
-      mapContainerStyle={MAP_CONTAINER_STYLE}
-      center={DEFAULT_CENTER}
-      zoom={DEFAULT_ZOOM}
-      options={{
-        streetViewControl: false,
-        mapTypeControl: false,
-        fullscreenControl: false,
-      }}
-    >
-      {mappable.map((org) => (
-        <Marker
-          key={org.id}
-          position={{ lat: org.lat!, lng: org.lng! }}
-          title={org.name}
-          icon={
-            selectedId === org.id
-              ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-              : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-          }
-          onClick={() => handleMarkerClick(org.id)}
-        />
-      ))}
-      {activeMarker && (() => {
-        const org = organizations.find((o) => o.id === activeMarker)
-        if (!org?.lat || !org?.lng) return null
-        return (
-          <InfoWindow
-            position={{ lat: org.lat, lng: org.lng }}
-            onCloseClick={() => setActiveMarker(null)}
-          >
-            <div className="p-1 max-w-[160px]">
-              <p className="text-sm font-semibold text-[#1B3A6B]">{org.name}</p>
-              {org.region && <p className="text-xs text-gray-500 mt-0.5">{org.region}</p>}
-            </div>
-          </InfoWindow>
-        )
-      })()}
-    </GoogleMap>
+    <div ref={mapRef} className="w-full h-full rounded-xl z-0" />
   )
 }
