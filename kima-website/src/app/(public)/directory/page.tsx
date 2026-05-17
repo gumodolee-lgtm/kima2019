@@ -44,14 +44,16 @@ function DirectoryContent() {
   const isLoggedIn = !!session?.user
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className="flex flex-col flex-1 min-h-0 gap-3">
       {/* 필터 */}
-      <FilterBar totalCount={orgs.length} />
+      <div className="shrink-0">
+        <FilterBar totalCount={orgs.length} />
+      </div>
 
       {/* 지도 + 목록 */}
-      <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-        {/* 지도 */}
-        <div className="lg:w-1/2 h-[400px] lg:h-auto rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0 gap-4">
+        {/* 지도 — 모바일 50vh, 데스크탑 전체 높이 */}
+        <div className="h-[50vh] lg:h-full lg:w-1/2 rounded-xl overflow-hidden border border-gray-200 shadow-sm shrink-0">
           <MapComponent
             organizations={orgs}
             selectedId={selectedId}
@@ -60,7 +62,7 @@ function DirectoryContent() {
         </div>
 
         {/* 단체 목록 */}
-        <div className="lg:w-1/2 flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-280px)] pr-1">
+        <div className="lg:w-1/2 flex flex-col gap-3 overflow-y-auto pb-4 pr-1">
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <LoadingSpinner />
@@ -107,13 +109,13 @@ function DirectoryContent() {
 
 export default function DirectoryPage() {
   return (
-    <div className="min-h-screen bg-[#F8F9FA]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="bg-[#F8F9FA] flex flex-col h-[calc(100vh-80px)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 w-full flex flex-col flex-1 min-h-0">
         {/* 헤더 */}
-        <div className="flex items-end justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 shrink-0">
           <div>
             <h1 className="text-2xl font-bold text-[#1B3A6B]">국내 이주민 사역지도</h1>
-            <p className="mt-1 text-sm text-gray-500">전국 다문화 사역 단체를 찾아보세요</p>
+            <p className="mt-0.5 text-sm text-gray-500">전국 다문화 사역 단체를 찾아보세요</p>
           </div>
           <Link
             href="/directory/register"
