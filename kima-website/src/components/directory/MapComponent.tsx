@@ -46,6 +46,7 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
   onSelectRef.current = onSelect
 
   const [ready, setReady] = useState(false)
+  const [sdkError, setSdkError] = useState<string | null>(null)
 
   // ── SDK 로드 → 지도 초기화 ───────────────────────────────────
   useEffect(() => {
@@ -71,8 +72,8 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
           setReady(true)
         })
       })
-      .catch(() => {
-        // SDK 로드 실패 — 지도 없이 목록만 표시
+      .catch((err: Error) => {
+        if (!cancelled) setSdkError(err.message)
       })
 
     return () => { cancelled = true }
@@ -158,16 +159,16 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
       const pos = new window.kakao.maps.LatLng(org.lat!, org.lng!)
 
       const dot = document.createElement('div')
-      const size = isSelected ? 20 : 14
-      const bg   = isSelected ? '#1B3A6B' : '#C8922A'
+      const size = isSelected ? 22 : 16
+      const bg   = isSelected ? '#1B3A6B' : '#E84040'
       dot.style.cssText = [
         `width:${size}px`,
         `height:${size}px`,
         `background:${bg}`,
-        'border:2.5px solid white',
+        'border:3px solid white',
         'border-radius:50%',
         'cursor:pointer',
-        'box-shadow:0 1px 5px rgba(0,0,0,0.35)',
+        'box-shadow:0 2px 6px rgba(0,0,0,0.5)',
         'transition:transform 0.12s ease',
       ].join(';')
 
@@ -208,16 +209,12 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
     }
   }, [ready, organizations, selectedId, showInfo])
 
-  const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
-
-  if (!kakaoKey) {
+  if (sdkError) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-gray-50">
         <div className="text-center p-6">
-          <p className="text-sm font-medium text-gray-600">지도를 표시하려면</p>
-          <p className="text-xs text-gray-400 mt-1">
-            NEXT_PUBLIC_KAKAO_MAP_KEY 환경변수를 설정해 주세요
-          </p>
+          <p className="text-sm font-medium text-gray-600">지도를 불러오지 못했습니다</p>
+          <p className="text-xs text-gray-400 mt-1">{sdkError}</p>
         </div>
       </div>
     )
