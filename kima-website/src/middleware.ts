@@ -70,12 +70,6 @@ export default auth((req) => {
     }
   }
 
-  if (pathname.startsWith('/community') || pathname.startsWith('/network')) {
-    if (!isLoggedIn) {
-      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
-    }
-  }
-
   if (pathname.startsWith('/member')) {
     if (!isLoggedIn) {
       return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
@@ -94,8 +88,6 @@ export default auth((req) => {
 export const config = {
   matcher: [
     '/admin/:path*',
-    '/community/:path*',
-    '/network/:path*',
     '/resources/:path*',
     '/member/:path*',
     '/directory/register',
