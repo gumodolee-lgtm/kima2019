@@ -7,6 +7,7 @@ interface Member {
   name: string
   org: string
   position?: string   // 직분 (Excel)
+  phone?: string      // 핸드폰 번호
   email?: string      // 이메일 (Excel)
   nations?: string    // 사역대상국가 (Excel)
   mission?: string    // 사역구분 (Excel)
@@ -79,7 +80,7 @@ const NETWORK_CHAIRS: Member[] = [
   { title: '지역교회네트워크위원장',   name: '김귀희', org: '사랑의 교회, 디아스포라 고문' },
 ]
 
-function MemberCard({ title, name, org, position, email, nations, mission }: Member) {
+function MemberCard({ title, name, org, position, phone, email, nations, mission }: Member) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex items-start gap-4">
       <div className="w-11 h-11 rounded-full bg-[#1B3A6B] flex items-center justify-center text-white font-bold text-base flex-shrink-0">
@@ -95,7 +96,7 @@ function MemberCard({ title, name, org, position, email, nations, mission }: Mem
         </div>
         {org && <p className="text-xs text-gray-400 mt-0.5 leading-snug">{org}</p>}
 
-        {(nations || mission || email) && (
+        {(nations || mission || phone || email) && (
           <div className="mt-2.5 pt-2.5 border-t border-gray-100 space-y-1">
             {nations && (
               <div className="flex items-start gap-1.5">
@@ -107,6 +108,17 @@ function MemberCard({ title, name, org, position, email, nations, mission }: Mem
               <div className="flex items-start gap-1.5">
                 <span className="text-[10px] text-gray-400 shrink-0 mt-0.5 w-14">사역구분</span>
                 <span className="text-xs text-gray-600 leading-snug">{mission}</span>
+              </div>
+            )}
+            {phone && (
+              <div className="flex items-start gap-1.5">
+                <span className="text-[10px] text-gray-400 shrink-0 mt-0.5 w-14">연락처</span>
+                <a
+                  href={`tel:${phone}`}
+                  className="text-xs text-[#1B3A6B] hover:underline leading-snug"
+                >
+                  {phone}
+                </a>
               </div>
             )}
             {email && (
