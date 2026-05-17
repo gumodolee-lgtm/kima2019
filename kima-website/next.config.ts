@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // 카카오 지도 JS키 - 공개키이므로 코드에 직접 포함 (브라우저에 노출되는 값)
   env: {
-    NEXT_PUBLIC_KAKAO_MAP_KEY: process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? '39d4bf701d74f59a028c9c6c4861baea',
+    NEXT_PUBLIC_KAKAO_MAP_KEY: process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? 'c3db9b11452db7f5a8e2587ced3ab66e',
   },
   typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: true },
