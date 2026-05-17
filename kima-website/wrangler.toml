@@ -1,9 +1,9 @@
 name = "kima-website"
-compatibility_date = "2024-09-23"
+compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Cloudflare Pages 빌드 출력 디렉토리
-pages_build_output_dir = ".vercel/output/static"
+# Cloudflare Pages 빌드 출력 디렉토리 (OpenNext)
+pages_build_output_dir = ".open-next/assets"
 
 # ─────────────────────────────────────────────
 # Cloudflare Workers Cron (별도 워커로 배포)
