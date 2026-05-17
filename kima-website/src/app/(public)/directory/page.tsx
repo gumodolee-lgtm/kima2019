@@ -64,7 +64,7 @@ function DirectoryContent() {
           <FilterBar totalCount={orgs.length} />
         </div>
         <div className="h-[40vh] shrink-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} />
+          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} showContact={isLoggedIn} />
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
           {loading ? (
@@ -89,7 +89,7 @@ function DirectoryContent() {
 
         {/* 지도 — 전체 배경 */}
         <div className="absolute inset-0 z-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} />
+          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} showContact={isLoggedIn} />
         </div>
 
         {/* 상단 왼쪽 오버레이 — 제목 카드 */}

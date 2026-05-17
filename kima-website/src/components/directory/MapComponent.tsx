@@ -36,18 +36,21 @@ interface MapComponentProps {
   selectedId?: string
   onSelect?: (id: string) => void
   onHover?: (id: string | undefined) => void
+  showContact?: boolean
 }
 
-export function MapComponent({ organizations, selectedId, onSelect, onHover }: MapComponentProps) {
-  const containerRef   = useRef<HTMLDivElement>(null)
-  const mapRef         = useRef<any>(null)
-  const overlaysRef    = useRef<Map<string, any>>(new Map())
-  const infoOverlayRef = useRef<any>(null)
-  const hoverLabelRef  = useRef<any>(null)
-  const onSelectRef    = useRef(onSelect)
-  const onHoverRef     = useRef(onHover)
-  onSelectRef.current = onSelect
-  onHoverRef.current  = onHover
+export function MapComponent({ organizations, selectedId, onSelect, onHover, showContact }: MapComponentProps) {
+  const containerRef    = useRef<HTMLDivElement>(null)
+  const mapRef          = useRef<any>(null)
+  const overlaysRef     = useRef<Map<string, any>>(new Map())
+  const infoOverlayRef  = useRef<any>(null)
+  const hoverLabelRef   = useRef<any>(null)
+  const onSelectRef     = useRef(onSelect)
+  const onHoverRef      = useRef(onHover)
+  const showContactRef  = useRef(showContact)
+  onSelectRef.current  = onSelect
+  onHoverRef.current   = onHover
+  showContactRef.current = showContact
 
   const [ready, setReady] = useState(false)
   const [sdkError, setSdkError] = useState<string | null>(null)
@@ -83,63 +86,174 @@ export function MapComponent({ organizations, selectedId, onSelect, onHover }: M
     return () => { cancelled = true }
   }, [])
 
-  // ── InfoWindow 표시 ───────────────────────────────────────────
+  // ── 확장 팝업 표시 ────────────────────────────────────────────
   const showInfo = useCallback((org: Organization, pos: any) => {
     infoOverlayRef.current?.setMap(null)
     infoOverlayRef.current = null
     if (!mapRef.current) return
 
+    const F = "font-family:'Noto Sans KR',sans-serif"
+
+    // ── 카드 래퍼
     const wrap = document.createElement('div')
     wrap.style.cssText = [
-      'background:white',
-      'border-radius:10px',
-      'padding:10px 32px 10px 14px',
-      'box-shadow:0 4px 16px rgba(0,0,0,0.18)',
-      'min-width:150px',
-      'max-width:230px',
-      'position:relative',
-      "font-family:'Noto Sans KR',sans-serif",
+      'background:white', 'border-radius:14px',
+      'padding:16px', 'width:290px',
+      'box-shadow:0 8px 32px rgba(0,0,0,0.22)',
+      'position:relative', F,
     ].join(';')
 
-    const title = document.createElement('p')
-    title.style.cssText = 'margin:0 0 3px;font-weight:700;color:#1B3A6B;font-size:13px;line-height:1.4'
-    title.textContent = org.name
-    wrap.appendChild(title)
+    // ── 헤더 (단체명 + 닫기)
+    const header = document.createElement('div')
+    header.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px'
 
-    if (org.address) {
-      const addr = document.createElement('p')
-      addr.style.cssText = 'margin:0;font-size:11px;color:#6b7280;line-height:1.4'
-      addr.textContent = org.address
-      wrap.appendChild(addr)
-    }
-    if (org.region) {
-      const region = document.createElement('p')
-      region.style.cssText = 'margin:2px 0 0;font-size:11px;color:#9ca3af'
-      region.textContent = org.region
-      wrap.appendChild(region)
+    const nameBlock = document.createElement('div')
+    const nameEl = document.createElement('p')
+    nameEl.style.cssText = 'margin:0;font-weight:700;color:#1B3A6B;font-size:14px;line-height:1.4'
+    nameEl.textContent = org.name
+    nameBlock.appendChild(nameEl)
+    if (org.nameEn) {
+      const nameEnEl = document.createElement('p')
+      nameEnEl.style.cssText = 'margin:2px 0 0;font-size:11px;color:#9ca3af'
+      nameEnEl.textContent = org.nameEn
+      nameBlock.appendChild(nameEnEl)
     }
 
-    // 닫기 버튼
-    const close = document.createElement('button')
-    close.textContent = '×'
-    close.style.cssText = 'position:absolute;top:6px;right:8px;background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;line-height:1;padding:0'
-    close.addEventListener('click', (e) => {
+    const closeBtn = document.createElement('button')
+    closeBtn.textContent = '✕'
+    closeBtn.style.cssText = 'flex-shrink:0;background:#f3f4f6;border:none;color:#6b7280;cursor:pointer;font-size:12px;line-height:1;padding:4px 6px;border-radius:6px;margin-top:1px'
+    closeBtn.addEventListener('click', (e) => {
       e.stopPropagation()
       infoOverlayRef.current?.setMap(null)
       infoOverlayRef.current = null
     })
-    wrap.appendChild(close)
+    header.appendChild(nameBlock)
+    header.appendChild(closeBtn)
+    wrap.appendChild(header)
 
-    // 말풍선 꼬리
+    // ── 뱃지 (지역 + 유형)
+    const badges = document.createElement('div')
+    badges.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px'
+
+    const mkBadge = (text: string, bg: string, color: string) => {
+      const b = document.createElement('span')
+      b.style.cssText = `display:inline-block;padding:2px 9px;border-radius:9999px;font-size:11px;font-weight:600;background:${bg};color:${color}`
+      b.textContent = text
+      return b
+    }
+    badges.appendChild(mkBadge(org.region, '#eff6ff', '#3b82f6'))
+    if (org.type) badges.appendChild(mkBadge(org.type, '#fffbeb', '#d97706'))
+    wrap.appendChild(badges)
+
+    // ── 언어권 태그
+    if (org.languages?.length > 0) {
+      const tagRow = document.createElement('div')
+      tagRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px;margin-bottom:10px'
+      const show = org.languages.slice(0, 5)
+      show.forEach((lang) => {
+        const t = document.createElement('span')
+        t.style.cssText = 'padding:2px 8px;border-radius:9999px;font-size:10px;background:#f3f4f6;color:#6b7280'
+        t.textContent = lang
+        tagRow.appendChild(t)
+      })
+      if (org.languages.length > 5) {
+        const more = document.createElement('span')
+        more.style.cssText = 'padding:2px 8px;border-radius:9999px;font-size:10px;background:#f3f4f6;color:#9ca3af'
+        more.textContent = `+${org.languages.length - 5}`
+        tagRow.appendChild(more)
+      }
+      wrap.appendChild(tagRow)
+    }
+
+    // ── 소개
+    if (org.description) {
+      const desc = document.createElement('p')
+      desc.style.cssText = 'margin:0 0 10px;font-size:11px;color:#6b7280;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden'
+      desc.textContent = org.description
+      wrap.appendChild(desc)
+    }
+
+    // ── 구분선
+    const hr = document.createElement('div')
+    hr.style.cssText = 'border-top:1px solid #f3f4f6;margin:0 0 10px'
+    wrap.appendChild(hr)
+
+    // ── 주소
+    if (org.address) {
+      const addrRow = document.createElement('div')
+      addrRow.style.cssText = 'display:flex;gap:5px;align-items:flex-start;margin-bottom:6px'
+      const icon = document.createElement('span')
+      icon.style.cssText = 'font-size:11px;color:#9ca3af;flex-shrink:0;padding-top:1px'
+      icon.textContent = '📍'
+      const txt = document.createElement('span')
+      txt.style.cssText = 'font-size:11px;color:#6b7280;line-height:1.5'
+      txt.textContent = org.address
+      addrRow.appendChild(icon); addrRow.appendChild(txt)
+      wrap.appendChild(addrRow)
+    }
+
+    // ── 연락처 (로그인 회원) or 안내
+    if (showContactRef.current) {
+      if (org.phone) {
+        const phoneLink = document.createElement('a')
+        phoneLink.href = `tel:${org.phone}`
+        phoneLink.style.cssText = 'display:flex;gap:5px;align-items:center;font-size:11px;color:#1B3A6B;text-decoration:none;margin-bottom:4px'
+        phoneLink.addEventListener('click', (e) => e.stopPropagation())
+        const ic = document.createElement('span'); ic.textContent = '📞'
+        const tv = document.createElement('span'); tv.textContent = org.phone
+        phoneLink.appendChild(ic); phoneLink.appendChild(tv)
+        wrap.appendChild(phoneLink)
+      }
+      if (org.email) {
+        const emailLink = document.createElement('a')
+        emailLink.href = `mailto:${org.email}`
+        emailLink.style.cssText = 'display:flex;gap:5px;align-items:center;font-size:11px;color:#1B3A6B;text-decoration:none;margin-bottom:4px'
+        emailLink.addEventListener('click', (e) => e.stopPropagation())
+        const ic = document.createElement('span'); ic.textContent = '✉️'
+        const tv = document.createElement('span'); tv.textContent = org.email
+        emailLink.appendChild(ic); emailLink.appendChild(tv)
+        wrap.appendChild(emailLink)
+      }
+      if (org.website) {
+        const webLink = document.createElement('a')
+        webLink.href = org.website
+        webLink.target = '_blank'
+        webLink.rel = 'noopener noreferrer'
+        webLink.style.cssText = 'display:flex;gap:5px;align-items:center;font-size:11px;color:#1B3A6B;text-decoration:none;margin-bottom:4px'
+        webLink.addEventListener('click', (e) => e.stopPropagation())
+        const ic = document.createElement('span'); ic.textContent = '🌐'
+        const tv = document.createElement('span'); tv.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px'; tv.textContent = org.website
+        webLink.appendChild(ic); webLink.appendChild(tv)
+        wrap.appendChild(webLink)
+      }
+    } else if (org.phone || org.email) {
+      const note = document.createElement('p')
+      note.style.cssText = 'margin:0 0 6px;font-size:10px;color:#9ca3af;padding:6px 8px;background:#f9fafb;border-radius:6px'
+      note.textContent = '🔒 연락처는 로그인 후 확인할 수 있습니다'
+      wrap.appendChild(note)
+    }
+
+    // ── 상세 보기 링크
+    const footer = document.createElement('div')
+    footer.style.cssText = 'margin-top:12px;text-align:right'
+    const detailLink = document.createElement('a')
+    detailLink.href = `/directory/${org.id}`
+    detailLink.style.cssText = 'font-size:12px;font-weight:700;color:#1B3A6B;text-decoration:none;padding:5px 10px;background:#eff6ff;border-radius:7px'
+    detailLink.textContent = '상세 보기 →'
+    detailLink.addEventListener('click', (e) => e.stopPropagation())
+    footer.appendChild(detailLink)
+    wrap.appendChild(footer)
+
+    // ── 말풍선 꼬리
     const tail = document.createElement('div')
-    tail.style.cssText = 'position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid white;filter:drop-shadow(0 2px 2px rgba(0,0,0,0.08))'
+    tail.style.cssText = 'position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:10px solid white;filter:drop-shadow(0 2px 2px rgba(0,0,0,0.06))'
     wrap.appendChild(tail)
 
     const overlay = new window.kakao.maps.CustomOverlay({
       position: pos,
       content: wrap,
       xAnchor: 0.5,
-      yAnchor: 1.18,
+      yAnchor: 1.15,
       zIndex: 20,
     })
     overlay.setMap(mapRef.current)
