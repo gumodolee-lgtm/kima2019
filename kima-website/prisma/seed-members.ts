@@ -11,13 +11,20 @@
  * 초기 비밀번호: kima2019!  (회원들에게 변경 안내 필요)
  */
 
+import { config } from 'dotenv'
+import { resolve } from 'path'
+
+// .env.local 명시적 로드 (tsx 실행 시 자동 로드 안 됨)
+config({ path: resolve(process.cwd(), '.env.local') })
+
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcryptjs'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
+const connectionString = process.env.DATABASE_URL!
+const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter })
 
 const INITIAL_PASSWORD = 'kima123456'
