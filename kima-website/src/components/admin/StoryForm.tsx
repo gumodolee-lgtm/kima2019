@@ -31,7 +31,7 @@ export function StoryForm() {
   const [form, setForm] = useState(EMPTY)
   const [pendingImages, setPendingImages] = useState<File[]>([])
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
-  const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const set = <K extends keyof typeof EMPTY>(k: K, v: typeof EMPTY[K]) =>
@@ -67,6 +67,7 @@ export function StoryForm() {
     setPendingImages([])
     setPreviewUrls([])
     setError('')
+    setUploadProgress('')
     setOpen(false)
   }
 
@@ -81,17 +82,22 @@ export function StoryForm() {
         let imageUrls: string[] = []
 
         if (form.type === 'EVENT_MEDIA' && pendingImages.length > 0) {
-          setIsUploading(true)
-          const fd = new FormData()
-          pendingImages.forEach((f) => fd.append('files', f))
-          const uploadRes = await fetch('/api/upload', { method: 'POST', body: fd })
-          setIsUploading(false)
-          if (!uploadRes.ok) {
-            const d = await uploadRes.json().catch(() => ({}))
-            setError(d.error ?? '이미지 업로드에 실패했습니다.')
-            return
+          // 한 장씩 순차 업로드 (Cloudflare Workers 요청 크기 제한 회피)
+          for (let i = 0; i < pendingImages.length; i++) {
+            setUploadProgress(`사진 업로드 중… (${i + 1}/${pendingImages.length}장)`)
+            const fd = new FormData()
+            fd.append('files', pendingImages[i])
+            const uploadRes = await fetch('/api/upload', { method: 'POST', body: fd })
+            if (!uploadRes.ok) {
+              const d = await uploadRes.json().catch(() => ({}))
+              setUploadProgress('')
+              setError(d.error ?? `사진 ${i + 1}번 업로드에 실패했습니다. (HTTP ${uploadRes.status})`)
+              return
+            }
+            const data = await uploadRes.json()
+            imageUrls.push(...(data.urls ?? []))
           }
-          imageUrls = (await uploadRes.json()).urls ?? []
+          setUploadProgress('')
         }
 
         const res = await fetch('/api/stories', {
@@ -119,7 +125,7 @@ export function StoryForm() {
         reset()
         router.refresh()
       } catch (err) {
-        setIsUploading(false)
+        setUploadProgress('')
         setError(err instanceof Error ? err.message : '등록 중 오류가 발생했습니다.')
       }
     })
@@ -139,7 +145,7 @@ export function StoryForm() {
     )
   }
 
-  const isLoading = isPending || isUploading
+  const isLoading = isPending || !!uploadProgress
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6 space-y-4">
@@ -357,6 +363,9 @@ export function StoryForm() {
         />
       </div>
 
+      {uploadProgress && (
+        <p className="text-xs text-blue-600 font-medium">{uploadProgress}</p>
+      )}
       {error && <p className="text-sm text-red-500">{error}</p>}
 
       <div className="flex gap-2">
@@ -366,7 +375,7 @@ export function StoryForm() {
           disabled={isLoading}
           className="px-4 py-2 rounded-lg bg-[#1B3A6B] text-white text-sm font-medium hover:bg-[#142d54] disabled:opacity-50 transition-colors"
         >
-          {isUploading ? '사진 업로드 중…' : isPending ? '등록 중…' : '등록'}
+          {uploadProgress ? '업로드 중…' : isPending ? '등록 중…' : '등록'}
         </button>
         <button
           type="button"
