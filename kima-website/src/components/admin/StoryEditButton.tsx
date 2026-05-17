@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
-type StoryType = 'NEWS' | 'FIELD_STORY' | 'EVENT_MEDIA' | 'PRAYER_REQUEST'
+type StoryType = 'NEWS' | 'FIELD_STORY' | 'EVENT_MEDIA' | 'EVENT_PROMO' | 'PRAYER_REQUEST'
 
 interface StoryEditProps {
   story: {
@@ -152,6 +152,21 @@ export function StoryEditButton({ story }: StoryEditProps) {
           <input type="text" value={form.ministryLocation} onChange={(e) => set('ministryLocation', e.target.value)}
             className={ic} disabled={isPending} />
         </div>
+      )}
+
+      {story.type === 'EVENT_PROMO' && (
+        <>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">행사 장소</label>
+            <input type="text" title="행사 장소" value={form.eventLocation} onChange={(e) => set('eventLocation', e.target.value)}
+              className={ic} disabled={isPending} />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">동영상 링크 (줄바꿈으로 구분)</label>
+            <textarea title="동영상 링크" value={form.videoUrls} onChange={(e) => set('videoUrls', e.target.value)}
+              rows={2} className={`${ic} resize-none`} disabled={isPending} />
+          </div>
+        </>
       )}
 
       <div>

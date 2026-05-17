@@ -47,10 +47,11 @@ const NAV_ITEMS: NavItem[] = [
     href: '/story',
     label: '현장스토리',
     children: [
-      { href: '/story/news',    label: 'KIMA 뉴스',        desc: '외부 언론 기사·뉴스 링크 모음' },
-      { href: '/story/field',   label: '사역현장 이야기',   desc: '회원들이 올리는 현장 스토리' },
-      { href: '/story/media',   label: '행사 사진&영상',    desc: 'KIMA 행사 갤러리' },
-      { href: '/story/prayer',  label: '중보기도 요청',     desc: '긴급·일반 기도 제목 나눔' },
+      { href: '/story/news',         label: 'KIMA 뉴스',          desc: '외부 언론 기사·뉴스 링크 모음' },
+      { href: '/story/media',        label: 'KIMA 행사&영상',     desc: 'KIMA 행사 사진·영상 갤러리' },
+      { href: '/story/field',        label: '사역현장 이야기',     desc: '회원들이 올리는 현장 스토리' },
+      { href: '/story/event-promo',  label: '이주민사역 행사 홍보', desc: '이주민 사역 행사를 소개하고 알립니다' },
+      { href: '/story/prayer',       label: '중보기도 요청',       desc: '긴급·일반 기도 제목 나눔' },
     ],
   },
   {

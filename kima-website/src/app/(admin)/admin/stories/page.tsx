@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import { StoryForm } from '@/components/admin/StoryForm'
-import { SeedCeremonyButton } from '@/components/admin/SeedCeremonyButton'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StoryApproveButton } from '@/components/admin/StoryApproveButton'
 import { PrayerAnsweredButton } from '@/components/admin/PrayerAnsweredButton'
@@ -14,7 +13,8 @@ export const metadata: Metadata = { title: '현장스토리 관리 | KIMA 관리
 const TYPE_LABELS: Record<string, string> = {
   NEWS:           '📰 KIMA 뉴스',
   FIELD_STORY:    '✍️ 현장 이야기',
-  EVENT_MEDIA:    '📸 행사 사진&영상',
+  EVENT_MEDIA:    '📸 KIMA 행사&영상',
+  EVENT_PROMO:    '📣 이주민사역 행사 홍보',
   PRAYER_REQUEST: '🙏 중보기도',
 }
 
@@ -45,12 +45,9 @@ export default async function AdminStoriesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-xl font-bold text-[#1B3A6B]">현장스토리 관리</h1>
-          <p className="text-sm text-gray-500 mt-1">뉴스·현장 이야기·행사 사진영상·중보기도를 관리합니다.</p>
-        </div>
-        <SeedCeremonyButton />
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-[#1B3A6B]">현장스토리 관리</h1>
+        <p className="text-sm text-gray-500 mt-1">뉴스·현장 이야기·KIMA 행사&영상·이주민사역 행사 홍보·중보기도를 관리합니다.</p>
       </div>
 
       <StoryForm />

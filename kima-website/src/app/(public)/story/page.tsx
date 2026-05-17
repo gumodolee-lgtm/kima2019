@@ -15,6 +15,13 @@ const SECTIONS = [
     color: 'bg-amber-50 border-amber-200 text-amber-800',
   },
   {
+    href: '/story/media',
+    icon: '📸',
+    label: 'KIMA 행사&영상',
+    desc: 'KIMA가 주관·참여한 행사들의 사진·영상 갤러리',
+    color: 'bg-purple-50 border-purple-200 text-purple-800',
+  },
+  {
     href: '/story/field',
     icon: '✍️',
     label: '사역현장 이야기',
@@ -22,11 +29,11 @@ const SECTIONS = [
     color: 'bg-blue-50 border-blue-200 text-blue-800',
   },
   {
-    href: '/story/media',
-    icon: '📸',
-    label: 'KIMA 행사 사진&영상',
-    desc: 'KIMA가 주관·참여한 행사들의 갤러리',
-    color: 'bg-purple-50 border-purple-200 text-purple-800',
+    href: '/story/event-promo',
+    icon: '📣',
+    label: '이주민사역 행사 홍보',
+    desc: '이주민 사역 관련 행사를 소개하고 알립니다',
+    color: 'bg-rose-50 border-rose-200 text-rose-800',
   },
   {
     href: '/story/prayer',

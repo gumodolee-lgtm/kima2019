@@ -5,7 +5,7 @@ import { z } from 'zod/v4'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
 
 const OFFICER_TYPES = ['NEWS', 'EVENT_MEDIA'] as const
-const MEMBER_TYPES  = ['FIELD_STORY', 'PRAYER_REQUEST'] as const
+const MEMBER_TYPES  = ['FIELD_STORY', 'EVENT_PROMO', 'PRAYER_REQUEST'] as const
 const ALL_TYPES     = [...OFFICER_TYPES, ...MEMBER_TYPES] as const
 
 const storySchema = z.object({
@@ -79,8 +79,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '임원 이상만 작성할 수 있습니다.' }, { status: 403 })
     }
 
-    // FIELD_STORY requires login
-    if (type === 'FIELD_STORY' && !session?.user?.id) {
+    // FIELD_STORY / EVENT_PROMO requires login
+    if ((type === 'FIELD_STORY' || type === 'EVENT_PROMO') && !session?.user?.id) {
       return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
     }
 
@@ -102,8 +102,8 @@ export async function POST(request: NextRequest) {
     const role = session?.user?.role
     const isOfficerUser = isOfficer(role)
 
-    // FIELD_STORY는 로그인한 모든 회원이 즉시 승인 (관리자 검토 불필요)
-    const resolvedStatus = (isOfficerUser || type === 'FIELD_STORY')
+    // FIELD_STORY / EVENT_PROMO는 로그인한 모든 회원이 즉시 승인
+    const resolvedStatus = (isOfficerUser || type === 'FIELD_STORY' || type === 'EVENT_PROMO')
       ? 'APPROVED'
       : 'PENDING'
     const resolvedPublished = resolvedStatus === 'APPROVED'
