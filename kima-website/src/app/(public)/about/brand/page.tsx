@@ -18,26 +18,16 @@ export default function BrandPage() {
         {/* 로고 */}
         <section>
           <h2 className="text-xl font-bold text-[#1B3A6B] mb-6">로고</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex">
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 flex flex-col items-center justify-center gap-3">
               <Image
                 src="/images/kima-logo.png"
-                alt="KIMA 로고 (라이트 배경용)"
+                alt="KIMA 로고"
                 width={180}
                 height={80}
                 className="object-contain"
               />
               <p className="text-xs text-gray-400">라이트 배경용</p>
-            </div>
-            <div className="bg-[#1B3A6B] rounded-xl shadow-sm p-8 flex flex-col items-center justify-center gap-3">
-              <Image
-                src="/images/kima-logo.png"
-                alt="KIMA 로고 (다크 배경용)"
-                width={180}
-                height={80}
-                className="object-contain brightness-0 invert"
-              />
-              <p className="text-xs text-blue-300">다크 배경용</p>
             </div>
           </div>
           <p className="mt-4 text-sm text-gray-500">
