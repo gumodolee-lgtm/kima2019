@@ -5,18 +5,21 @@ import { cn } from '@/lib/utils'
 interface OrganizationCardProps {
   org: Organization
   isSelected?: boolean
+  isHovered?: boolean
   onSelect?: () => void
   showContact?: boolean
 }
 
-export function OrganizationCard({ org, isSelected, onSelect, showContact }: OrganizationCardProps) {
+export function OrganizationCard({ org, isSelected, isHovered, onSelect, showContact }: OrganizationCardProps) {
   return (
     <div
       className={cn(
         'bg-white rounded-xl border p-4 cursor-pointer transition-all',
         isSelected
           ? 'border-[#1B3A6B] shadow-md ring-1 ring-[#1B3A6B]'
-          : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
+          : isHovered
+            ? 'border-[#1B3A6B]/40 bg-blue-50/60 shadow-sm'
+            : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
       )}
       onClick={onSelect}
     >

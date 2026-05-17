@@ -22,6 +22,7 @@ function DirectoryContent() {
   const [orgs, setOrgs] = useState<Organization[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedId, setSelectedId] = useState<string | undefined>()
+  const [hoveredId, setHoveredId] = useState<string | undefined>()
 
   useEffect(() => {
     const params = new URLSearchParams()
@@ -63,7 +64,7 @@ function DirectoryContent() {
           <FilterBar totalCount={orgs.length} />
         </div>
         <div className="h-[40vh] shrink-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} />
+          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} />
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
           {loading ? (
@@ -74,6 +75,7 @@ function DirectoryContent() {
                 key={org.id}
                 org={org}
                 isSelected={selectedId === org.id}
+                isHovered={hoveredId === org.id}
                 onSelect={() => setSelectedId(org.id)}
                 showContact={isLoggedIn}
               />
@@ -87,7 +89,7 @@ function DirectoryContent() {
 
         {/* 지도 — 전체 배경 */}
         <div className="absolute inset-0 z-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} />
+          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} />
         </div>
 
         {/* 상단 왼쪽 오버레이 — 제목 카드 */}
@@ -145,6 +147,7 @@ function DirectoryContent() {
                   key={org.id}
                   org={org}
                   isSelected={selectedId === org.id}
+                  isHovered={hoveredId === org.id}
                   onSelect={() => setSelectedId(org.id)}
                   showContact={isLoggedIn}
                 />

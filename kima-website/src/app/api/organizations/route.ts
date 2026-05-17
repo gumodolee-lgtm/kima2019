@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
     const orgs = await prisma.organization.findMany({
       where: {
         isPublic: true,
-        ...(region ? { region } : {}),
+        // region: contains로 '서울경기인천' 같은 레거시 데이터도 포함
+        ...(region ? { region: { contains: region } } : {}),
         ...(language ? { languages: { has: language } } : {}),
         ...(target ? { targets: { has: target } } : {}),
         ...(type ? { type } : {}),

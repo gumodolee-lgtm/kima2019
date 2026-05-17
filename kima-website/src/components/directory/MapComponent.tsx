@@ -35,15 +35,19 @@ interface MapComponentProps {
   organizations: Organization[]
   selectedId?: string
   onSelect?: (id: string) => void
+  onHover?: (id: string | undefined) => void
 }
 
-export function MapComponent({ organizations, selectedId, onSelect }: MapComponentProps) {
-  const containerRef  = useRef<HTMLDivElement>(null)
-  const mapRef        = useRef<any>(null)
-  const overlaysRef   = useRef<Map<string, any>>(new Map())
+export function MapComponent({ organizations, selectedId, onSelect, onHover }: MapComponentProps) {
+  const containerRef   = useRef<HTMLDivElement>(null)
+  const mapRef         = useRef<any>(null)
+  const overlaysRef    = useRef<Map<string, any>>(new Map())
   const infoOverlayRef = useRef<any>(null)
-  const onSelectRef   = useRef(onSelect)
+  const hoverLabelRef  = useRef<any>(null)
+  const onSelectRef    = useRef(onSelect)
+  const onHoverRef     = useRef(onHover)
   onSelectRef.current = onSelect
+  onHoverRef.current  = onHover
 
   const [ready, setReady] = useState(false)
   const [sdkError, setSdkError] = useState<string | null>(null)
@@ -146,15 +150,34 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
   useEffect(() => {
     if (!ready || !mapRef.current) return
 
-    // 기존 마커·인포 제거
+    // 기존 마커·인포·호버 레이블 제거
     overlaysRef.current.forEach((ov) => ov.setMap(null))
     overlaysRef.current.clear()
     infoOverlayRef.current?.setMap(null)
     infoOverlayRef.current = null
+    hoverLabelRef.current?.setMap(null)
+    hoverLabelRef.current = null
+
+    // CSS keyframe 한 번만 주입
+    if (!document.getElementById('kima-marker-style')) {
+      const style = document.createElement('style')
+      style.id = 'kima-marker-style'
+      style.textContent = `
+        @keyframes kima-blink {
+          0%   { opacity: 1;    transform: scale(1);   }
+          20%  { opacity: 0.1;  transform: scale(0.7); }
+          40%  { opacity: 1;    transform: scale(1.3); }
+          60%  { opacity: 0.1;  transform: scale(0.7); }
+          80%  { opacity: 1;    transform: scale(1.2); }
+          100% { opacity: 1;    transform: scale(1);   }
+        }
+      `
+      document.head.appendChild(style)
+    }
 
     const mappable = organizations.filter((o) => o.lat != null && o.lng != null)
 
-    mappable.forEach((org) => {
+    mappable.forEach((org, idx) => {
       const isSelected = org.id === selectedId
       const pos = new window.kakao.maps.LatLng(org.lat!, org.lng!)
 
@@ -172,8 +195,45 @@ export function MapComponent({ organizations, selectedId, onSelect }: MapCompone
         'transition:transform 0.12s ease',
       ].join(';')
 
-      dot.addEventListener('mouseenter', () => { dot.style.transform = 'scale(1.4)' })
-      dot.addEventListener('mouseleave', () => { dot.style.transform = 'scale(1)' })
+      // 마커 등장 시 깜빡임 (순차 딜레이로 물결 효과)
+      const delay = Math.min(idx * 30, 600)
+      dot.style.animation = `kima-blink 0.8s ease-out ${delay}ms 1 both`
+      dot.addEventListener('animationend', () => { dot.style.animation = '' }, { once: true })
+
+      dot.addEventListener('mouseenter', () => {
+        dot.style.transform = 'scale(1.4)'
+        onHoverRef.current?.(org.id)
+        hoverLabelRef.current?.setMap(null)
+        const label = document.createElement('div')
+        label.style.cssText = [
+          'background:rgba(27,58,107,0.9)',
+          'color:white',
+          'border-radius:5px',
+          'padding:4px 9px',
+          'font-size:12px',
+          'font-weight:600',
+          'white-space:nowrap',
+          "font-family:'Noto Sans KR',sans-serif",
+          'pointer-events:none',
+          'box-shadow:0 2px 6px rgba(0,0,0,0.3)',
+        ].join(';')
+        label.textContent = org.name
+        const hl = new window.kakao.maps.CustomOverlay({
+          position: pos,
+          content: label,
+          xAnchor: 0.5,
+          yAnchor: 1.8,
+          zIndex: 15,
+        })
+        hl.setMap(mapRef.current)
+        hoverLabelRef.current = hl
+      })
+      dot.addEventListener('mouseleave', () => {
+        dot.style.transform = 'scale(1)'
+        onHoverRef.current?.(undefined)
+        hoverLabelRef.current?.setMap(null)
+        hoverLabelRef.current = null
+      })
       dot.addEventListener('click', (e) => {
         e.stopPropagation()
         onSelectRef.current?.(org.id)
