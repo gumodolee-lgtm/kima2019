@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { organizationSchema } from '@/schemas/organization.schema'
+import { geocodeAddress } from '@/lib/kakaoGeocoding'
 
 export async function GET(request: NextRequest) {
   try {
@@ -43,6 +44,8 @@ export async function POST(request: NextRequest) {
     }
 
     const data = parsed.data
+    const coords = data.address ? await geocodeAddress(data.address) : null
+
     const org = await prisma.organization.create({
       data: {
         name: data.name,
@@ -53,6 +56,8 @@ export async function POST(request: NextRequest) {
         targets: data.targets as string[],
         type: data.type || null,
         address: data.address || null,
+        lat: coords?.lat ?? null,
+        lng: coords?.lng ?? null,
         phone: data.phone || null,
         email: data.email || null,
         website: data.website || null,

@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Script from 'next/script'
 import { Suspense, useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
@@ -168,9 +169,19 @@ function DirectoryContent() {
 }
 
 export default function DirectoryPage() {
+  const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
+
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-[calc(100vh-80px)]"><LoadingSpinner /></div>}>
-      <DirectoryContent />
-    </Suspense>
+    <>
+      {kakaoKey && (
+        <Script
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`}
+          strategy="afterInteractive"
+        />
+      )}
+      <Suspense fallback={<div className="flex items-center justify-center h-[calc(100vh-80px)]"><LoadingSpinner /></div>}>
+        <DirectoryContent />
+      </Suspense>
+    </>
   )
 }

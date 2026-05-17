@@ -103,7 +103,15 @@
       "Bash(dir /s /b \"D:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\")",
       "Bash(findstr route.ts)",
       "Bash(mkdir -p \"D:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/community/[type]/[slug]/write\")",
-      "Bash(mkdir -p \"D:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/community/[type]/[slug]/posts/[id]\")"
+      "Bash(mkdir -p \"D:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/community/[type]/[slug]/posts/[id]\")",
+      "Bash(grep -v \"//.*MEMBER\\\\|//.*PREMIUM\")",
+      "Bash(cd /d/AI_PROJECT/kima_homepage/kima-website && cat .env.local | grep DATABASE_URL 2>&1)",
+      "Read(//d/d/AI_PROJECT/kima_homepage/kima-website/**)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.zchqhqaluahakaoiiway:dlquddls2892I*@aws-1-ap-south-1.pooler.supabase.com:5432/postgres\" npx prisma db push)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.zchqhqaluahakaoiiway:dlquddls2892I*@aws-1-ap-south-1.pooler.supabase.com:5432/postgres\" npx prisma generate)",
+      "WebFetch(domain:goodpeopleusa.org)",
+      "Bash(xargs grep -l \"organization\")",
+      "Bash(npm uninstall *)"
     ],
     "additionalDirectories": [
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth",

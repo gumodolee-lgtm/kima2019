@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, organizationApprovedEmailHtml } from '@/lib/email'
+import { geocodeAddress } from '@/lib/kakaoGeocoding'
 import { z } from 'zod/v4'
 
 const patchSchema = z.object({
@@ -24,9 +25,17 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     if (parsed.data.action === 'approve') {
+      // 좌표가 없고 주소가 있으면 지오코딩
+      const existing = await prisma.organization.findUnique({ where: { id }, select: { address: true, lat: true } })
+      let coordsData: { lat?: number; lng?: number } = {}
+      if (existing?.address && existing.lat == null) {
+        const coords = await geocodeAddress(existing.address)
+        if (coords) coordsData = coords
+      }
+
       const org = await prisma.organization.update({
         where: { id },
-        data: { isPublic: true },
+        data: { isPublic: true, ...coordsData },
       })
 
       // 단체 이메일이 있으면 승인 알림 발송

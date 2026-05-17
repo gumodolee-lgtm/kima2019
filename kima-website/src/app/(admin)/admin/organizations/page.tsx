@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
 import { SeedMembersButton } from '@/components/admin/SeedMembersButton'
+import { GeocodeButton } from '@/components/admin/GeocodeButton'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -34,7 +35,10 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
           <h1 className="text-xl font-bold text-[#1B3A6B]">단체 승인 관리</h1>
           <p className="text-sm text-gray-500 mt-1">신청된 단체를 검토하고 승인 또는 반려합니다.</p>
         </div>
-        <SeedMembersButton />
+        <div className="flex flex-col sm:flex-row gap-2">
+          <GeocodeButton />
+          <SeedMembersButton />
+        </div>
       </div>
 
       {/* 탭 */}

@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-16T12:06:53.240Z",
+  "lastUpdated": "2026-05-17T10:11:17.143Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -63,7 +63,9 @@
     "request-premium",
     "seed-category-officers",
     "category",
-    "popups"
+    "popups",
+    "geocode-organizations",
+    "geocode"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -76,9 +78,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-16T12:04:03.785Z"
+        "lastUpdated": "2026-05-17T10:09:41.260Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\lib\\kakaoGeocoding.ts"
     },
     "tests": {
       "phase": "do",
@@ -167,9 +169,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:26:24.732Z",
-        "lastUpdated": "2026-05-11T04:26:45.464Z"
+        "lastUpdated": "2026-05-16T12:18:38.557Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\ui\\EmptyState.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\ui\\Badge.tsx"
     },
     "layout": {
       "phase": "do",
@@ -193,9 +195,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:28.586Z",
-        "lastUpdated": "2026-05-16T09:18:36.262Z"
+        "lastUpdated": "2026-05-17T10:11:17.143Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
     },
     "[id]": {
       "phase": "do",
@@ -206,9 +208,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:30.906Z",
-        "lastUpdated": "2026-05-16T12:01:48.433Z"
+        "lastUpdated": "2026-05-17T10:10:08.634Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\popups\\[id]\\route.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\organizations\\[id]\\route.ts"
     },
     "directory": {
       "phase": "do",
@@ -219,9 +221,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:53.818Z",
-        "lastUpdated": "2026-05-11T09:33:20.890Z"
+        "lastUpdated": "2026-05-17T10:10:56.899Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\directory\\loading.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\directory\\page.tsx"
     },
     "prisma": {
       "phase": "do",
@@ -323,9 +325,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-16T12:03:44.766Z"
+        "lastUpdated": "2026-05-17T10:11:06.079Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\AdminSidebar.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\GeocodeButton.tsx"
     },
     "members": {
       "phase": "do",
@@ -570,9 +572,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:41:36.976Z",
-        "lastUpdated": "2026-05-11T06:41:36.976Z"
+        "lastUpdated": "2026-05-16T12:23:22.896Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\terms\\page.tsx"
+      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\terms\\page.tsx"
     },
     "mypage": {
       "phase": "do",
@@ -661,7 +663,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T10:52:11.111Z",
-        "lastUpdated": "2026-05-16T12:03:35.953Z"
+        "lastUpdated": "2026-05-16T12:38:35.154Z"
       },
       "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\home\\PopupBanner.tsx"
     },
@@ -674,7 +676,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T12:10:00.781Z",
-        "lastUpdated": "2026-05-16T08:36:42.233Z"
+        "lastUpdated": "2026-05-16T12:23:58.200Z"
       },
       "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\stories\\route.ts"
     },
@@ -869,9 +871,35 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T12:01:38.717Z",
-        "lastUpdated": "2026-05-16T12:03:12.555Z"
+        "lastUpdated": "2026-05-16T12:38:19.622Z"
       },
       "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\popups\\page.tsx"
+    },
+    "geocode-organizations": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-17T09:33:44.478Z",
+        "lastUpdated": "2026-05-17T10:10:13.401Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\geocode-organizations\\route.ts"
+    },
+    "geocode": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-17T10:09:55.871Z",
+        "lastUpdated": "2026-05-17T10:09:55.871Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\organizations\\geocode\\route.ts"
     }
   },
   "pipeline": {
@@ -882,7 +910,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-16T12:06:53.240Z"
+    "lastActivity": "2026-05-17T10:11:17.143Z"
   },
   "history": [
     {
@@ -3282,6 +3310,330 @@
     {
       "timestamp": "2026-05-16T12:06:53.240Z",
       "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:18:38.557Z",
+      "feature": "ui",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:18:40.819Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:18:48.503Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:18:55.074Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:19:18.442Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:19:25.066Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:19:29.950Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:20:11.300Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:22:54.968Z",
+      "feature": "terms",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:23:22.896Z",
+      "feature": "terms",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:23:31.923Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:23:39.333Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:23:58.200Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:27:29.376Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:32:45.809Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:34:00.042Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:34:05.861Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:34:11.253Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:35:04.193Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:36:55.008Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:37:04.269Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:37:11.362Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:37:52.368Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:37:56.436Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:38:01.991Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:38:14.116Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:38:19.622Z",
+      "feature": "popups",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:38:24.484Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-16T12:38:35.154Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T08:27:36.962Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T08:27:42.882Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:08:38.741Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:08:55.981Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:09:01.951Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:17:38.287Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:18:01.419Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:23:28.780Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:05.426Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:16.935Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:23.525Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:29.098Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:35.982Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T09:33:44.478Z",
+      "feature": "geocode-organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:09:41.260Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:09:55.871Z",
+      "feature": "geocode",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:04.398Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:08.634Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:13.401Z",
+      "feature": "geocode-organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:40.586Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:50.366Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:10:56.899Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:11:06.079Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:11:12.124Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:11:17.143Z",
+      "feature": "organizations",
       "phase": "do",
       "action": "updated"
     }
