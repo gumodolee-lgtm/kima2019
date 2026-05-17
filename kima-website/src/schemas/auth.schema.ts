@@ -41,10 +41,10 @@ export const registerSchema = z
     organization: z.string().max(100, '단체명은 100자 이하로 입력해주세요').optional(),
     ministryLanguages: z
       .array(z.string())
-      .min(1, '사역 언어를 1개 이상 선택해주세요'),
+      .min(1, '사역 언어를 1개 이상 입력해주세요'),
     ministryTargets: z
       .array(z.string())
-      .min(1, '사역 대상을 1개 이상 선택해주세요'),
+      .min(1, '사역 대상을 1개 이상 입력해주세요'),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: '비밀번호가 일치하지 않습니다',

@@ -8,8 +8,6 @@ import {
   registerSchema,
   type RegisterInput,
   POSITIONS,
-  MINISTRY_LANGUAGES,
-  MINISTRY_TARGETS,
 } from '@/schemas/auth.schema'
 import { FieldError } from './FieldError'
 
@@ -19,48 +17,16 @@ const LABEL = 'block text-sm font-medium text-gray-700 mb-1'
 const SECTION = 'bg-gray-50 rounded-xl p-5 space-y-4'
 const SECTION_TITLE = 'text-sm font-semibold text-[#1B3A6B] mb-3 pb-1 border-b border-gray-200'
 
-function CheckboxGroup({
-  options,
-  value,
-  onChange,
-  error,
-}: {
-  options: readonly string[]
-  value: string[]
-  onChange: (v: string[]) => void
-  error?: string
-}) {
-  const toggle = (opt: string) => {
-    onChange(value.includes(opt) ? value.filter((v) => v !== opt) : [...value, opt])
-  }
-  return (
-    <div>
-      <div className="flex flex-wrap gap-2 mt-1">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => toggle(opt)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-              value.includes(opt)
-                ? 'bg-[#1B3A6B] text-white border-[#1B3A6B]'
-                : 'bg-white text-gray-600 border-gray-300 hover:border-[#1B3A6B]'
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
-    </div>
-  )
+// 콤마 구분 텍스트 → string[] 변환
+function toArray(text: string): string[] {
+  return text.split(',').map((s) => s.trim()).filter(Boolean)
 }
 
 export function RegisterForm() {
   const router = useRouter()
   const [serverError, setServerError] = useState('')
-  const [languages, setLanguages] = useState<string[]>([])
-  const [targets, setTargets] = useState<string[]>([])
+  const [languagesText, setLanguagesText] = useState('')
+  const [targetsText, setTargetsText] = useState('')
 
   const {
     register,
@@ -72,14 +38,14 @@ export function RegisterForm() {
     defaultValues: { ministryLanguages: [], ministryTargets: [] },
   })
 
-  const handleLanguagesChange = (v: string[]) => {
-    setLanguages(v)
-    setValue('ministryLanguages', v, { shouldValidate: true })
+  const handleLanguagesChange = (text: string) => {
+    setLanguagesText(text)
+    setValue('ministryLanguages', toArray(text), { shouldValidate: true })
   }
 
-  const handleTargetsChange = (v: string[]) => {
-    setTargets(v)
-    setValue('ministryTargets', v, { shouldValidate: true })
+  const handleTargetsChange = (text: string) => {
+    setTargetsText(text)
+    setValue('ministryTargets', toArray(text), { shouldValidate: true })
   }
 
   const onSubmit = async (data: RegisterInput) => {
@@ -196,24 +162,34 @@ export function RegisterForm() {
 
       {/* 사역 언어 */}
       <div className={SECTION}>
-        <p className={SECTION_TITLE}>사역 언어 * (복수 선택)</p>
-        <CheckboxGroup
-          options={MINISTRY_LANGUAGES}
-          value={languages}
-          onChange={handleLanguagesChange}
-          error={errors.ministryLanguages?.message}
-        />
+        <p className={SECTION_TITLE}>사역 언어 *</p>
+        <div>
+          <input
+            type="text"
+            value={languagesText}
+            onChange={(e) => handleLanguagesChange(e.target.value)}
+            className={INPUT}
+            placeholder="예) 베트남어, 네팔어, 중국어"
+          />
+          <p className="mt-1 text-xs text-gray-400">여러 언어는 쉼표(,)로 구분해서 입력하세요.</p>
+          <FieldError message={errors.ministryLanguages?.message} />
+        </div>
       </div>
 
       {/* 사역 대상 */}
       <div className={SECTION}>
-        <p className={SECTION_TITLE}>사역 대상 * (복수 선택)</p>
-        <CheckboxGroup
-          options={MINISTRY_TARGETS}
-          value={targets}
-          onChange={handleTargetsChange}
-          error={errors.ministryTargets?.message}
-        />
+        <p className={SECTION_TITLE}>사역 대상 *</p>
+        <div>
+          <input
+            type="text"
+            value={targetsText}
+            onChange={(e) => handleTargetsChange(e.target.value)}
+            className={INPUT}
+            placeholder="예) 이주노동자, 유학생, 결혼이민자"
+          />
+          <p className="mt-1 text-xs text-gray-400">여러 대상은 쉼표(,)로 구분해서 입력하세요.</p>
+          <FieldError message={errors.ministryTargets?.message} />
+        </div>
       </div>
 
       {serverError && (
