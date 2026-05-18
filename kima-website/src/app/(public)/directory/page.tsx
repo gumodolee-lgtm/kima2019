@@ -45,84 +45,49 @@ function DirectoryContent() {
   const isLoggedIn = !!session?.user
 
   return (
-    <>
-      {/* ── 모바일 레이아웃 ── */}
-      <div className="lg:hidden flex flex-col h-[calc(100vh-80px)]">
-        <div className="shrink-0 px-4 pt-4 pb-3 bg-[#F8F9FA] border-b border-gray-100">
-          <div className="flex items-end justify-between mb-3">
+    <div className="flex flex-col h-[calc(100vh-80px)]">
+
+      {/* ── 상단: 제목 + 필터 ──────────────────────────── */}
+      <div className="shrink-0 bg-white border-b border-gray-100 px-5 py-4">
+        <div className="max-w-screen-2xl mx-auto">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-xl font-bold text-[#1B3A6B]">국내 이주민 사역지도</h1>
-              <p className="text-xs text-gray-500 mt-0.5">전국 다문화 사역 단체를 찾아보세요</p>
+              <h1 className="text-lg font-bold text-[#1B3A6B]">사역단체 전국지도</h1>
+              <p className="text-xs text-gray-400 mt-0.5">전국 다문화 사역 단체를 찾아보세요</p>
             </div>
             <Link
               href="/directory/register"
-              className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#1B3A6B] text-white text-xs font-medium hover:bg-[#15305a]"
+              className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#1B3A6B] text-white text-xs font-medium hover:bg-[#15305a] shrink-0"
             >
-              + 등록 신청
+              + 단체 등록
             </Link>
           </div>
           <FilterBar totalCount={orgs.length} />
         </div>
-        <div className="h-[40vh] shrink-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} showContact={isLoggedIn} />
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
-          {loading ? (
-            <div className="flex justify-center py-10"><LoadingSpinner /></div>
-          ) : (
-            orgs.map((org) => (
-              <OrganizationCard
-                key={org.id}
-                org={org}
-                isSelected={selectedId === org.id}
-                isHovered={hoveredId === org.id}
-                onSelect={() => setSelectedId(org.id)}
-                showContact={isLoggedIn}
-              />
-            ))
-          )}
-        </div>
       </div>
 
-      {/* ── 데스크탑 레이아웃: 지도 전체화면 + 오버레이 ── */}
-      <div className="hidden lg:block relative h-[calc(100vh-80px)]">
+      {/* ── 하단: 지도 + 목록 ──────────────────────────── */}
+      <div className="flex flex-1 min-h-0">
 
-        {/* 지도 — 전체 배경 */}
-        <div className="absolute inset-0 z-0">
-          <MapComponent organizations={orgs} selectedId={selectedId} onSelect={setSelectedId} onHover={setHoveredId} showContact={isLoggedIn} />
+        {/* 지도 */}
+        <div className="flex-1 min-w-0 relative">
+          <MapComponent
+            organizations={orgs}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onHover={setHoveredId}
+            showContact={isLoggedIn}
+          />
         </div>
 
-        {/* 상단 왼쪽 오버레이 — 제목 카드 */}
-        <div className="absolute top-4 left-4 z-[1000]">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg px-5 py-3">
-            <h1 className="text-base font-bold text-[#1B3A6B] leading-tight">국내 이주민 사역지도</h1>
-            <p className="text-xs text-gray-400 mt-0.5">전국 다문화 사역 단체</p>
-          </div>
-        </div>
-
-        {/* 상단 중앙 오버레이 — 필터 */}
-        <div className="absolute top-4 left-52 right-[352px] z-[1000]">
-          <FilterBar totalCount={orgs.length} />
-        </div>
-
-        {/* 오른쪽 패널 — 단체 목록 */}
-        <div className="absolute right-0 top-0 bottom-0 w-[340px] z-[999] bg-white shadow-2xl flex flex-col">
+        {/* 오른쪽 목록 패널 */}
+        <div className="w-[320px] xl:w-[360px] shrink-0 flex flex-col bg-white border-l border-gray-100 shadow-xl">
           {/* 패널 헤더 */}
-          <div className="px-5 py-4 bg-[#1B3A6B] shrink-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white font-bold text-sm">등록 단체 현황</p>
-                <p className="text-blue-200 text-xs mt-0.5">
-                  {loading ? '불러오는 중…' : `${orgs.length}개 단체`}
-                </p>
-              </div>
-              <Link
-                href="/directory/register"
-                className="inline-flex items-center px-3 py-1.5 rounded-lg bg-white text-[#1B3A6B] text-xs font-semibold hover:bg-blue-50 transition-colors"
-              >
-                + 단체 등록
-              </Link>
-            </div>
+          <div className="px-5 py-3 bg-[#1B3A6B] shrink-0">
+            <p className="text-white font-bold text-sm">등록 단체 현황</p>
+            <p className="text-blue-200 text-xs mt-0.5">
+              {loading ? '불러오는 중…' : `${orgs.length}개 단체`}
+            </p>
           </div>
 
           {/* 목록 */}
@@ -166,7 +131,7 @@ function DirectoryContent() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
