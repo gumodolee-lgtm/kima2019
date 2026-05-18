@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
+import { safeStorageKey } from '@/lib/utils'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
+
+const ALLOWED_TYPES = [
+  'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic',
+  'application/pdf',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'video/mp4', 'video/quicktime',
+]
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,17 +41,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `파일 크기는 ${MAX_MB}MB 이하여야 합니다.` }, { status: 400 })
     }
 
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json({ error: '허용되지 않는 파일 형식입니다. (이미지·PDF·PPT·Word·Excel·영상만 가능)' }, { status: 400 })
+    }
+
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const ext = file.name.includes('.') ? '.' + file.name.split('.').pop()!.toLowerCase() : ''
-    const safeName = file.name
-      .replace(/\.[^.]+$/, '')          // strip extension
-      .replace(/[^a-zA-Z0-9._-]/g, '_') // only ASCII-safe chars
-      .replace(/_{2,}/g, '_')            // collapse repeated underscores
-      .slice(0, 60) + ext
-    const timestamp = Date.now()
-    const path = `${folder}/${timestamp}-${safeName}`
+    const path = safeStorageKey(file, folder)
 
     const { error: uploadError } = await supabaseAdmin.storage
       .from('forum-files')

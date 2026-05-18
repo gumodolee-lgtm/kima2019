@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
+import { safeStorageKey } from '@/lib/utils'
 
 const BUCKET = 'kima-media'
 const MAX_FILES = 20
 const MAX_FILE_SIZE_MB = 10
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic']
 
 function isOfficer(role?: string) {
   return role === 'ADMIN' || role === 'OFFICER'
@@ -48,12 +50,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const invalidType = files.find((f) => !ALLOWED_TYPES.includes(f.type))
+    if (invalidType) {
+      return NextResponse.json(
+        { error: 'JPG, PNG, WebP, GIF, HEIC 이미지 파일만 업로드 가능합니다.' },
+        { status: 400 }
+      )
+    }
+
     const supabase = createClient(supabaseUrl, serviceKey)
     const urls: string[] = []
 
     for (const file of files) {
-      const ext      = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-      const filename = `events/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+      const filename = safeStorageKey(file, 'events')
       const bytes    = await file.arrayBuffer()
 
       const { error } = await supabase.storage

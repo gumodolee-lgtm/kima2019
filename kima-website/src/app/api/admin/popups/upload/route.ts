@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
+import { safeStorageKey } from '@/lib/utils'
 
 const BUCKET = 'popups'
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
@@ -28,8 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     const adminClient = createClient(supabaseUrl, serviceKey)
-    const ext = file.name.split('.').pop() ?? 'jpg'
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const filename = safeStorageKey(file, '')
     const bytes = await file.arrayBuffer()
 
     const { error } = await adminClient.storage.from(BUCKET).upload(filename, bytes, {
