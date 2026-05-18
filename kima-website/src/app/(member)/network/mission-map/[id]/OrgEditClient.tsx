@@ -25,7 +25,7 @@ interface EditData {
 }
 
 interface Props {
-  orgId: number
+  orgId: number | string
   initial: EditData
   currentImage: string | null
 }

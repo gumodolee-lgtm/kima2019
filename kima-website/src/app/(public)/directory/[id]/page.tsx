@@ -68,7 +68,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                   <p className="text-sm text-gray-400 mt-1">{org.nameEn}</p>
                 )}
               </div>
-              <div className="flex flex-wrap gap-2 shrink-0">
+              <div className="flex flex-wrap gap-2 shrink-0 items-start">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
                   {org.region}
                 </span>
@@ -76,6 +76,17 @@ export default async function OrganizationDetailPage({ params }: Props) {
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
                     {org.type}
                   </span>
+                )}
+                {isLoggedIn && (
+                  <Link
+                    href={`/network/mission-map/${id}/edit`}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 border border-gray-300 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-50 hover:border-[#1B3A6B] hover:text-[#1B3A6B] transition-colors"
+                  >
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    수정
+                  </Link>
                 )}
               </div>
             </div>

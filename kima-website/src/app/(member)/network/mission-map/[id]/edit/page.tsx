@@ -44,8 +44,7 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
 
   const currentImage: string | null = org.image ?? null
 
-  // OrgEditClient uses the gmfsnsId for API calls; fall back to cuid for directly-registered orgs
-  const editId = org.gmfsnsId ?? (org.id as unknown as number)
+  const editId: number | string = org.gmfsnsId ?? org.id
 
   return (
     <div className="min-h-screen bg-white">
