@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 interface OrgRow {
@@ -40,6 +40,10 @@ function ResultModal({
   onDelete: (id: string, name: string) => void
   deleting: string | null
 }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+  if (!mounted) return null
+
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm p-4 pt-16 overflow-y-auto">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[80vh]">

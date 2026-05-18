@@ -17,7 +17,10 @@ export async function GET(request: NextRequest) {
     const orgs = await prisma.organization.findMany({
       where: {
         isPublic: true,
-        ...(q ? { name: { contains: q, mode: 'insensitive' } } : {}),
+        ...(q ? { OR: [
+          { name:   { contains: q, mode: 'insensitive' } },
+          { nameEn: { contains: q, mode: 'insensitive' } },
+        ]} : {}),
         ...(regions.length > 0 ? { region: { in: regions } } : {}),
         ...(languages.length > 0 ? { languages: { hasSome: languages } } : {}),
         ...(targets.length > 0 ? { targets: { hasSome: targets } } : {}),

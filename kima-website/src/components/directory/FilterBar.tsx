@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ORG_REGIONS, LANGUAGES, TARGETS, ORG_TYPES } from '@/schemas/organization.schema'
 
 interface FilterBarProps {
@@ -26,6 +26,8 @@ export function FilterBar({ totalCount }: FilterBarProps) {
   const currentQ        = searchParams.get('q') ?? ''
 
   const [searchInput, setSearchInput] = useState(currentQ)
+
+  useEffect(() => { setSearchInput(currentQ) }, [currentQ])
 
   const totalSelected = selectedRegions.length + selectedLangs.length + selectedTargets.length + selectedTypes.length
 
