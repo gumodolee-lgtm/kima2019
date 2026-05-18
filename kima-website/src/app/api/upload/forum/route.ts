@@ -3,11 +3,6 @@ import { auth } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
 import { safeStorageKey } from '@/lib/utils'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 const ALLOWED_TYPES = [
   'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic',
   'application/pdf',
@@ -21,6 +16,11 @@ const ALLOWED_TYPES = [
 ]
 
 export async function POST(request: NextRequest) {
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
   try {
     const session = await auth()
     const role = session?.user?.role
