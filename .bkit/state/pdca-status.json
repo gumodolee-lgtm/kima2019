@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-18T00:36:54.345Z",
+  "lastUpdated": "2026-05-18T01:07:03.831Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -68,7 +68,9 @@
     "geocode",
     "scripts",
     "event-promo",
-    "bulk-register"
+    "bulk-register",
+    "constants",
+    "normalize-addresses"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -81,9 +83,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-18T00:24:53.228Z"
+        "lastUpdated": "2026-05-18T01:01:55.063Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\middleware.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\page.tsx"
     },
     "tests": {
       "phase": "do",
@@ -198,9 +200,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:28.586Z",
-        "lastUpdated": "2026-05-18T00:36:46.897Z"
+        "lastUpdated": "2026-05-18T01:07:03.830Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\organizations\\route.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
     },
     "[id]": {
       "phase": "do",
@@ -211,7 +213,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:30.906Z",
-        "lastUpdated": "2026-05-18T00:27:15.693Z"
+        "lastUpdated": "2026-05-18T00:50:39.714Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\organizations\\[id]\\route.ts"
     },
@@ -328,9 +330,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-18T00:27:44.804Z"
+        "lastUpdated": "2026-05-18T01:06:49.795Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\OrgEditForm.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\AutoNormalizeRegions.tsx"
     },
     "members": {
       "phase": "do",
@@ -809,7 +811,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T09:18:07.161Z",
-        "lastUpdated": "2026-05-18T00:36:25.868Z"
+        "lastUpdated": "2026-05-18T00:50:01.283Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\seed-members\\route.ts"
     },
@@ -942,6 +944,32 @@
         "lastUpdated": "2026-05-18T00:36:54.345Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\bulk-register\\page.tsx"
+    },
+    "constants": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T00:45:00.625Z",
+        "lastUpdated": "2026-05-18T01:06:39.395Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\constants\\koreaRegions.ts"
+    },
+    "normalize-addresses": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T00:50:50.863Z",
+        "lastUpdated": "2026-05-18T00:56:54.207Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\normalize-addresses\\route.ts"
     }
   },
   "pipeline": {
@@ -952,7 +980,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-18T00:36:54.345Z"
+    "lastActivity": "2026-05-18T01:07:03.831Z"
   },
   "history": [
     {
@@ -4348,6 +4376,162 @@
     {
       "timestamp": "2026-05-18T00:36:54.345Z",
       "feature": "bulk-register",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:45:00.625Z",
+      "feature": "constants",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:49:17.316Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:49:37.154Z",
+      "feature": "seed-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:49:43.380Z",
+      "feature": "seed-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:49:52.254Z",
+      "feature": "seed-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:01.283Z",
+      "feature": "seed-members",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:08.826Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:15.566Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:34.345Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:39.714Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:50:50.863Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:51:15.992Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:51:21.469Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:51:25.913Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:56:38.958Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:56:54.207Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:01:07.025Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:01:24.276Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:01:28.597Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:01:41.333Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:01:55.063Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:06:27.900Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:06:39.395Z",
+      "feature": "constants",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:06:49.795Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:06:57.826Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:07:03.830Z",
+      "feature": "organizations",
       "phase": "do",
       "action": "updated"
     }
