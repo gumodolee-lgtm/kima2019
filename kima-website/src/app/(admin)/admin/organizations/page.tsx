@@ -8,6 +8,7 @@ import { NormalizeAddressButton } from '@/components/admin/NormalizeAddressButto
 import { AutoNormalizeRegions } from '@/components/admin/AutoNormalizeRegions'
 import { DeleteOrgButton } from '@/components/admin/DeleteOrgButton'
 import { ImportGmfsnsButton } from '@/components/admin/ImportGmfsnsButton'
+import { AssignDefaultImagesButton } from '@/components/admin/AssignDefaultImagesButton'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -57,6 +58,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
           <NormalizeAddressButton />
           <GeocodeButton />
           <ImportGmfsnsButton />
+          <AssignDefaultImagesButton />
         </div>
       </div>
 
