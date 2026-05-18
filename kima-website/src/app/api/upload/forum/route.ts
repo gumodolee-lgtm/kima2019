@@ -31,9 +31,12 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
+    const ext = file.name.includes('.') ? '.' + file.name.split('.').pop()!.toLowerCase() : ''
     const safeName = file.name
-      .replace(/[^a-zA-Z0-9가-힣._-]/g, '_')
-      .slice(0, 80)
+      .replace(/\.[^.]+$/, '')          // strip extension
+      .replace(/[^a-zA-Z0-9._-]/g, '_') // only ASCII-safe chars
+      .replace(/_{2,}/g, '_')            // collapse repeated underscores
+      .slice(0, 60) + ext
     const timestamp = Date.now()
     const path = `${folder}/${timestamp}-${safeName}`
 
