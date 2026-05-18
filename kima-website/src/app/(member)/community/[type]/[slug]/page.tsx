@@ -116,7 +116,7 @@ export default async function CategoryBoardPage({ params }: Props) {
   const userRole = session?.user?.role
   const ROLE_WEIGHT = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 } as const
   const roleWeight = userRole ? (ROLE_WEIGHT[userRole] ?? 1) : 0
-  const canWrite = roleWeight >= 2
+  const canWrite = roleWeight >= 3
   const isPremium = roleWeight >= 2
 
   const notices = category.posts.filter((p) => p.type === 'NOTICE')

@@ -10,6 +10,21 @@ const patchSchema = z.object({
   rejectReason: z.string().max(500).optional(),
 })
 
+const editSchema = z.object({
+  name: z.string().min(1).max(100),
+  nameEn: z.string().nullable().optional(),
+  description: z.string().max(500).nullable().optional(),
+  region: z.string(),
+  languages: z.array(z.string()).min(1),
+  targets: z.array(z.string()).min(1),
+  type: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  website: z.string().nullable().optional(),
+  isPublic: z.boolean().optional(),
+})
+
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
@@ -55,5 +70,45 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ message: '반려 처리되었습니다.' })
   } catch {
     return NextResponse.json({ error: '처리 중 오류가 발생했습니다.' }, { status: 500 })
+  }
+}
+
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await auth()
+    const role = session?.user?.role
+    if (role !== 'ADMIN' && role !== 'OFFICER') {
+      return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
+    }
+
+    const { id } = await params
+    const body = await request.json()
+    const parsed = editSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: '입력값이 올바르지 않습니다.' }, { status: 400 })
+    }
+
+    const d = parsed.data
+    const org = await prisma.organization.update({
+      where: { id },
+      data: {
+        name: d.name,
+        nameEn: d.nameEn ?? null,
+        description: d.description ?? null,
+        region: d.region,
+        languages: d.languages,
+        targets: d.targets,
+        type: d.type ?? null,
+        address: d.address ?? null,
+        phone: d.phone ?? null,
+        email: d.email ?? null,
+        website: d.website ?? null,
+        ...(d.isPublic !== undefined ? { isPublic: d.isPublic } : {}),
+      },
+    })
+
+    return NextResponse.json({ org })
+  } catch {
+    return NextResponse.json({ error: '수정 중 오류가 발생했습니다.' }, { status: 500 })
   }
 }

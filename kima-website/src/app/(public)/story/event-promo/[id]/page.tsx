@@ -8,6 +8,12 @@ export const dynamic = 'force-dynamic'
 
 type Props = { params: Promise<{ id: string }> }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const story = await prisma.story.findUnique({ where: { id }, select: { title: true } }).catch(() => null)
+  return { title: story ? `${story.title} | KIMA 행사 홍보` : '행사 홍보 | KIMA' }
+}
+
 export default async function EventPromoDetailPage({ params }: Props) {
   const { id } = await params
   const story = await prisma.story.findUnique({

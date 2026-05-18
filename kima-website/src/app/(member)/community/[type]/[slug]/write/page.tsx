@@ -42,7 +42,7 @@ export default async function WritePostPage({ params }: Props) {
   const role = session.user.role
   const ROLE_WEIGHT: Record<string, number> = { MEMBER: 1, PREMIUM: 2, OFFICER: 3, ADMIN: 4 }
   const roleWeight = ROLE_WEIGHT[role] ?? 0
-  if (roleWeight < 2) {
+  if (roleWeight < 3) {
     redirect(`/community/${type}/${slug}`)
   }
   const canWriteNotice = roleWeight >= 3

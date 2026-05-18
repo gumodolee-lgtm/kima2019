@@ -111,13 +111,28 @@
       "Bash(DATABASE_URL=\"postgresql://postgres.zchqhqaluahakaoiiway:dlquddls2892I*@aws-1-ap-south-1.pooler.supabase.com:5432/postgres\" npx prisma generate)",
       "WebFetch(domain:goodpeopleusa.org)",
       "Bash(xargs grep -l \"organization\")",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(python3 -c ' *)",
+      "Bash(pip3 show *)",
+      "Bash(python scripts/convert_excel_to_json.py)",
+      "Bash(npx tsx *)",
+      "Bash(pip install *)",
+      "Bash(python scripts/geocode_nominatim.py)",
+      "Bash(xargs grep -l \"임원단\\\\|leadership\\\\|임원\")",
+      "Bash(npx next *)",
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\\\(public\\)\\\\story\\\\event-promo\\\\[id]\")",
+      "Bash(Out-Null)",
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\\\(member\\)\\\\story\\\\event-promo\\\\write\")",
+      "Bash(mkdir -p \"d:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(public\\)/story/event-promo/[id]\" && mkdir -p \"d:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/story/event-promo/write\" && echo \"done\")",
+      "Bash(Get-ChildItem -Recurse -Filter \"route.ts\" \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\")",
+      "Bash(Select-Object FullName)"
     ],
     "additionalDirectories": [
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth",
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\media",
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write",
-      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\posts"
+      "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\posts",
+      "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\event-promo"
     ]
   },
   "_projectAccount": "kima20191227@gmail.com",

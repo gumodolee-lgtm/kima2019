@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-17T10:11:17.143Z",
+  "lastUpdated": "2026-05-18T00:30:59.453Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -65,7 +65,9 @@
     "category",
     "popups",
     "geocode-organizations",
-    "geocode"
+    "geocode",
+    "scripts",
+    "event-promo"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -78,9 +80,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-17T10:09:41.260Z"
+        "lastUpdated": "2026-05-18T00:24:53.228Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\lib\\kakaoGeocoding.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\middleware.ts"
     },
     "tests": {
       "phase": "do",
@@ -117,9 +119,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:42:46.570Z",
-        "lastUpdated": "2026-05-16T12:00:22.463Z"
+        "lastUpdated": "2026-05-18T00:30:59.453Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\schemas\\auth.schema.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\schemas\\organization.schema.ts"
     },
     "register": {
       "phase": "do",
@@ -182,9 +184,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:28:03.747Z",
-        "lastUpdated": "2026-05-16T09:15:49.652Z"
+        "lastUpdated": "2026-05-17T21:44:41.328Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\layout\\Header.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\layout\\Header.tsx"
     },
     "organizations": {
       "phase": "do",
@@ -195,7 +197,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:28.586Z",
-        "lastUpdated": "2026-05-17T10:11:17.143Z"
+        "lastUpdated": "2026-05-18T00:28:18.518Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
     },
@@ -208,7 +210,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:30.906Z",
-        "lastUpdated": "2026-05-17T10:10:08.634Z"
+        "lastUpdated": "2026-05-18T00:27:15.693Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\organizations\\[id]\\route.ts"
     },
@@ -221,9 +223,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:53.818Z",
-        "lastUpdated": "2026-05-17T10:10:56.899Z"
+        "lastUpdated": "2026-05-17T13:09:17.056Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\directory\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\directory\\MapComponent.tsx"
     },
     "prisma": {
       "phase": "do",
@@ -260,9 +262,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:20:51.328Z",
-        "lastUpdated": "2026-05-16T11:51:16.127Z"
+        "lastUpdated": "2026-05-17T13:13:19.477Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\community\\CommunityTabs.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\community\\ResourceUploadForm.tsx"
     },
     "[slug]": {
       "phase": "do",
@@ -273,9 +275,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:22:12.871Z",
-        "lastUpdated": "2026-05-16T12:06:53.240Z"
+        "lastUpdated": "2026-05-18T00:24:58.148Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\page.tsx"
     },
     "write": {
       "phase": "do",
@@ -286,9 +288,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:22:36.089Z",
-        "lastUpdated": "2026-05-16T11:54:02.037Z"
+        "lastUpdated": "2026-05-18T00:25:04.537Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write\\page.tsx"
     },
     "resources": {
       "phase": "do",
@@ -299,9 +301,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T05:53:08.485Z",
-        "lastUpdated": "2026-05-16T11:54:33.372Z"
+        "lastUpdated": "2026-05-17T13:17:40.637Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\resources\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(premium)\\resources\\page.tsx"
     },
     "upgrade": {
       "phase": "do",
@@ -325,9 +327,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-17T10:11:06.079Z"
+        "lastUpdated": "2026-05-18T00:27:44.804Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\GeocodeButton.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\OrgEditForm.tsx"
     },
     "members": {
       "phase": "do",
@@ -351,9 +353,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:08:31.928Z",
-        "lastUpdated": "2026-05-16T11:51:46.453Z"
+        "lastUpdated": "2026-05-17T13:25:47.861Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\categories\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\categories\\page.tsx"
     },
     "events": {
       "phase": "do",
@@ -455,7 +457,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:31:59.898Z",
-        "lastUpdated": "2026-05-11T10:26:11.349Z"
+        "lastUpdated": "2026-05-17T13:10:07.884Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\about\\leadership\\page.tsx"
     },
@@ -468,7 +470,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:32:18.593Z",
-        "lastUpdated": "2026-05-11T06:32:18.593Z"
+        "lastUpdated": "2026-05-17T13:20:56.174Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\about\\brand\\page.tsx"
     },
@@ -481,9 +483,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:32:44.823Z",
-        "lastUpdated": "2026-05-16T08:19:56.362Z"
+        "lastUpdated": "2026-05-18T00:10:01.037Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\story\\MediaGallery.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\story\\VideoEmbed.tsx"
     },
     "donate": {
       "phase": "do",
@@ -663,9 +665,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T10:52:11.111Z",
-        "lastUpdated": "2026-05-16T12:38:35.154Z"
+        "lastUpdated": "2026-05-17T13:20:12.970Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\home\\PopupBanner.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\home\\HeroCarousel.tsx"
     },
     "stories": {
       "phase": "do",
@@ -676,9 +678,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T12:10:00.781Z",
-        "lastUpdated": "2026-05-16T12:23:58.200Z"
+        "lastUpdated": "2026-05-17T23:32:24.759Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\stories\\route.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\stories\\error.tsx"
     },
     "news": {
       "phase": "do",
@@ -780,9 +782,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T08:18:08.857Z",
-        "lastUpdated": "2026-05-16T12:01:59.465Z"
+        "lastUpdated": "2026-05-17T23:45:58.301Z"
       },
-      "lastFile": "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\popups\\upload\\route.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\upload\\route.ts"
     },
     "seed-ceremony": {
       "phase": "do",
@@ -900,6 +902,32 @@
         "lastUpdated": "2026-05-17T10:09:55.871Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\organizations\\geocode\\route.ts"
+    },
+    "scripts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-17T10:30:03.878Z",
+        "lastUpdated": "2026-05-17T10:34:10.875Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\scripts\\geocode_nominatim.py"
+    },
+    "event-promo": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-17T21:46:13.664Z",
+        "lastUpdated": "2026-05-17T21:46:13.664Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\event-promo\\page.tsx"
     }
   },
   "pipeline": {
@@ -910,7 +938,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-17T10:11:17.143Z"
+    "lastActivity": "2026-05-18T00:30:59.453Z"
   },
   "history": [
     {
@@ -3634,6 +3662,630 @@
     {
       "timestamp": "2026-05-17T10:11:17.143Z",
       "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:30:03.879Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:30:40.919Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:31:01.588Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:32:06.288Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T10:34:10.875Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T11:02:35.197Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T11:08:17.561Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T11:20:43.218Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T11:20:47.715Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T11:20:55.493Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:08:05.463Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:08:14.029Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:43:37.737Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:53:33.976Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:53:44.047Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:18.194Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:23.668Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:31.078Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:38.977Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:47.971Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:55:55.197Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:56:00.785Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:56:06.810Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:57:38.248Z",
+      "feature": "schemas",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:57:44.297Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T12:58:17.565Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:00:47.680Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:01:22.446Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:01:35.449Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:02:15.188Z",
+      "feature": "layout",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:05:54.499Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:06:00.693Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:06:05.685Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:08:55.187Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:09:05.287Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:09:17.056Z",
+      "feature": "directory",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:09:52.436Z",
+      "feature": "leadership",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:09:57.540Z",
+      "feature": "leadership",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:10:07.884Z",
+      "feature": "leadership",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:12:47.838Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:12:53.479Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:12:59.130Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:13:03.971Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:13:12.138Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:13:19.477Z",
+      "feature": "community",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:14:54.439Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:17:40.637Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:17:45.050Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:17:49.977Z",
+      "feature": "brand",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:17:59.759Z",
+      "feature": "brand",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:20:05.681Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:20:12.970Z",
+      "feature": "home",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:20:56.174Z",
+      "feature": "brand",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:24:48.177Z",
+      "feature": "categories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:24:56.377Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:25:20.357Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:25:39.667Z",
+      "feature": "categories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T13:25:47.861Z",
+      "feature": "categories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:44:13.901Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:44:19.712Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:44:25.960Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:44:41.328Z",
+      "feature": "layout",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:44:59.602Z",
+      "feature": "story",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:46:13.665Z",
+      "feature": "event-promo",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:46:41.684Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:47:28.216Z",
+      "feature": "write",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:10.552Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:13.815Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:20.980Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:25.975Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:35.016Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:50:47.242Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:58:47.761Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:58:54.185Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T21:59:39.139Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:31:59.132Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:32:14.326Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:32:24.759Z",
+      "feature": "stories",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:45:58.301Z",
+      "feature": "upload",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:46:08.191Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:46:14.740Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:46:20.217Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:54:15.347Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:54:28.436Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:54:40.848Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-17T23:54:52.223Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:07:22.151Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:07:33.848Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:09:52.503Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:10:01.037Z",
+      "feature": "story",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:10:08.213Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:10:19.461Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:10:30.816Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:10:39.479Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:24:53.228Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:24:58.148Z",
+      "feature": "[slug]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:25:04.537Z",
+      "feature": "write",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:25:10.733Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:26:56.833Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:27:05.637Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:27:15.694Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:27:44.804Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:28:18.518Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T00:30:59.453Z",
+      "feature": "schemas",
       "phase": "do",
       "action": "updated"
     }
