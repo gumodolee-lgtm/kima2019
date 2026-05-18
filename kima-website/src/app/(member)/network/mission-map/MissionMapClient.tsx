@@ -97,18 +97,6 @@ export function MissionMapClient({ orgs }: Props) {
     return LANG_DISPLAY_OPTIONS.filter((l) => s.has(l))
   }, [orgs])
 
-  // Derive available types from actual data
-  const availableTypes = useMemo(() => {
-    const s = new Set(orgs.map((o) => o.type).filter(Boolean))
-    return TYPE_OPTIONS.filter((t) => s.has(t))
-  }, [orgs])
-
-  // Derive available targets from actual data
-  const availableTargets = useMemo(() => {
-    const s = new Set(orgs.flatMap((o) => o.targets || []))
-    return TARGET_OPTIONS.filter((t) => s.has(t))
-  }, [orgs])
-
   const toggle = (_set: Set<string>, val: string, setter: React.Dispatch<React.SetStateAction<Set<string>>>) => {
     setter((prev: Set<string>) => { const n = new Set(prev); n.has(val) ? n.delete(val) : n.add(val); return n })
   }
@@ -165,7 +153,7 @@ export function MissionMapClient({ orgs }: Props) {
           <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-14 pt-0.5 shrink-0">유형</span>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
-              {(availableTypes.length > 0 ? availableTypes : TYPE_OPTIONS).map((t) => (
+              {TYPE_OPTIONS.map((t) => (
                 <label key={t} className="flex items-center gap-1.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
