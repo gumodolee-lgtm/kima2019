@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { normalizeKoreanAddress } from '@/lib/normalizeKoreanAddress'
+import { ORG_REGIONS } from '@/schemas/organization.schema'
 
 /**
  * POST /api/admin/normalize-addresses
@@ -21,11 +22,8 @@ export async function POST() {
       select: { id: true, address: true, region: true },
     })
 
-    // 유효한 KIMA 지역 목록 (레거시 '서울경기인천' 등 통합값 제외)
-    const VALID_REGIONS = new Set([
-      '서울', '경기', '인천',
-      '부산경남', '대구경북', '광주전라', '대전충청', '강원', '제주', '기타',
-    ])
+    // 유효한 KIMA 지역 목록 (organization.schema의 ORG_REGIONS 기준)
+    const VALID_REGIONS = new Set<string>(ORG_REGIONS)
 
     let updated = 0
     let skipped = 0
@@ -49,7 +47,8 @@ export async function POST() {
             })
             updated++
             continue
-          } catch {
+          } catch (e) {
+            console.error(`[normalize-addresses] org ${org.id} update failed:`, e)
             failed++
             continue
           }
@@ -64,7 +63,8 @@ export async function POST() {
             data: { region: '기타' },
           })
           updated++
-        } catch {
+        } catch (e) {
+          console.error(`[normalize-addresses] org ${org.id} fallback update failed:`, e)
           failed++
         }
         continue
@@ -74,7 +74,8 @@ export async function POST() {
     }
 
     return NextResponse.json({ updated, skipped, failed, total: orgs.length })
-  } catch {
+  } catch (e) {
+    console.error('[normalize-addresses] unexpected error:', e)
     return NextResponse.json({ error: '처리 중 오류가 발생했습니다.' }, { status: 500 })
   }
 }

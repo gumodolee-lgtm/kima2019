@@ -28,15 +28,15 @@ export default async function HomePage() {
     newsStories, fieldStories, eventMediaStories, prayerStories, eventPromoStories,
     dbEvents, orgCount, memberCount, resourceCount,
   ] = await Promise.all([
-    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'NEWS'           }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
-    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'FIELD_STORY'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
-    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_MEDIA'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
-    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'PRAYER_REQUEST'}, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
-    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_PROMO'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
-    prisma.event.findMany({ where: { scheduledAt: { gte: new Date() } }, orderBy: { scheduledAt: 'asc' }, take: 4 }).catch(() => []),
-    prisma.organization.count({ where: { isPublic: true } }).catch(() => 0),
-    prisma.user.count().catch(() => 0),
-    prisma.resource.count().catch(() => 0),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'NEWS'           }, orderBy: { createdAt: 'desc' }, take: 2 }).catch((e) => { console.error('[home] stories/NEWS:', e); return [] }),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'FIELD_STORY'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch((e) => { console.error('[home] stories/FIELD_STORY:', e); return [] }),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_MEDIA'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch((e) => { console.error('[home] stories/EVENT_MEDIA:', e); return [] }),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'PRAYER_REQUEST'}, orderBy: { createdAt: 'desc' }, take: 2 }).catch((e) => { console.error('[home] stories/PRAYER_REQUEST:', e); return [] }),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_PROMO'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch((e) => { console.error('[home] stories/EVENT_PROMO:', e); return [] }),
+    prisma.event.findMany({ where: { scheduledAt: { gte: new Date() } }, orderBy: { scheduledAt: 'asc' }, take: 4 }).catch((e) => { console.error('[home] events:', e); return [] }),
+    prisma.organization.count({ where: { isPublic: true } }).catch((e) => { console.error('[home] orgCount:', e); return 0 }),
+    prisma.user.count().catch((e) => { console.error('[home] memberCount:', e); return 0 }),
+    prisma.resource.count().catch((e) => { console.error('[home] resourceCount:', e); return 0 }),
   ])
 
   const storyGroups = [

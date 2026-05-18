@@ -10,6 +10,7 @@ const REGIONS = [
   '대전충청',
   '강원',
   '제주',
+  '기타',
 ] as const
 
 export const updateProfileSchema = z.object({
