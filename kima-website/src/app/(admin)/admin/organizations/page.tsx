@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
 import { OrgEditForm } from '@/components/admin/OrgEditForm'
 import { GeocodeButton } from '@/components/admin/GeocodeButton'
+import { NormalizeAddressButton } from '@/components/admin/NormalizeAddressButton'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -44,7 +45,10 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
           <h1 className="text-xl font-bold text-[#1B3A6B]">단체 관리</h1>
           <p className="text-sm text-gray-500 mt-1">단체를 검색하고 수정·승인·반려합니다.</p>
         </div>
-        <GeocodeButton />
+        <div className="flex flex-col gap-2">
+          <NormalizeAddressButton />
+          <GeocodeButton />
+        </div>
       </div>
 
       {/* 탭 */}

@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, organizationApprovedEmailHtml } from '@/lib/email'
 import { geocodeAddress } from '@/lib/kakaoGeocoding'
+import { addressToKimaRegion } from '@/lib/normalizeKoreanAddress'
 import { z } from 'zod/v4'
 
 const patchSchema = z.object({
@@ -89,13 +90,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const d = parsed.data
+
+    // region이 '기타'이면 주소에서 자동 추론 시도
+    const region =
+      d.region && d.region !== '기타'
+        ? d.region
+        : addressToKimaRegion(d.address ?? null, d.region || '기타')
+
     const org = await prisma.organization.update({
       where: { id },
       data: {
         name: d.name,
         nameEn: d.nameEn ?? null,
         description: d.description ?? null,
-        region: d.region,
+        region,
         languages: d.languages,
         targets: d.targets,
         type: d.type ?? null,

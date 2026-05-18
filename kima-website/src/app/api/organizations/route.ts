@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { organizationSchema } from '@/schemas/organization.schema'
 import { geocodeAddress } from '@/lib/kakaoGeocoding'
+import { addressToKimaRegion } from '@/lib/normalizeKoreanAddress'
 
 export async function GET(request: NextRequest) {
   try {
@@ -55,12 +56,18 @@ export async function POST(request: NextRequest) {
     const data = parsed.data
     const coords = data.address ? await geocodeAddress(data.address) : null
 
+    // region이 명시되지 않았거나 '기타'이면 주소에서 자동 추론
+    const region =
+      data.region && data.region !== '기타'
+        ? data.region
+        : addressToKimaRegion(data.address ?? null, data.region || '기타')
+
     const org = await prisma.organization.create({
       data: {
         name: data.name,
         nameEn: data.nameEn || null,
         description: data.description || null,
-        region: data.region,
+        region,
         languages: data.languages as string[],
         targets: data.targets as string[],
         type: data.type || null,

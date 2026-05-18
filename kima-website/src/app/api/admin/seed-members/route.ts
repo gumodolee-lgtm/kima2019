@@ -1,49 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { normalizeKoreanAddress } from '@/lib/normalizeKoreanAddress'
 import path from 'path'
 import fs from 'fs'
 
-// Province → KIMA region label
-const PROVINCE_TO_REGION: Record<string, string> = {
-  서울: '서울',
-  경기: '경기',
-  인천: '인천',
-  부산: '부산경남',
-  경남: '부산경남',
-  대구: '대구경북',
-  경북: '대구경북',
-  광주: '광주전라',
-  전남: '광주전라',
-  전북: '광주전라',
-  대전: '대전충청',
-  충남: '대전충청',
-  충북: '대전충청',
-  세종: '대전충청',
-  강원: '강원제주',
-  제주: '강원제주',
-  울산: '부산경남',
-}
-
-// Province → center lat/lng (with slight random jitter applied per-record at runtime)
+// Province(full name) → center lat/lng for jitter
 const PROVINCE_LATLON: Record<string, [number, number]> = {
-  서울: [37.5665, 126.978],
-  경기: [37.4138, 127.5183],
-  인천: [37.4563, 126.7052],
-  부산: [35.1796, 129.0756],
-  경남: [35.4606, 128.2132],
-  대구: [35.8714, 128.6014],
-  경북: [36.4919, 128.8889],
-  광주: [35.1595, 126.8526],
-  전남: [34.8679, 126.991],
-  전북: [35.7175, 127.153],
-  대전: [36.3504, 127.3845],
-  충남: [36.5184, 126.8],
-  충북: [36.6357, 127.4914],
-  세종: [36.48, 127.289],
-  강원: [37.8228, 128.1555],
-  제주: [33.4996, 126.5312],
-  울산: [35.5384, 129.3114],
+  서울특별시: [37.5665, 126.978],
+  경기도: [37.4138, 127.5183],
+  인천광역시: [37.4563, 126.7052],
+  부산광역시: [35.1796, 129.0756],
+  경상남도: [35.4606, 128.2132],
+  대구광역시: [35.8714, 128.6014],
+  경상북도: [36.4919, 128.8889],
+  광주광역시: [35.1595, 126.8526],
+  전라남도: [34.8679, 126.991],
+  전북특별자치도: [35.7175, 127.153],
+  대전광역시: [36.3504, 127.3845],
+  충청남도: [36.5184, 126.8],
+  충청북도: [36.6357, 127.4914],
+  세종특별자치시: [36.48, 127.289],
+  강원특별자치도: [37.8228, 128.1555],
+  제주특별자치도: [33.4996, 126.5312],
+  울산광역시: [35.5384, 129.3114],
 }
 
 // 사역구분 keywords → targets array
@@ -81,13 +61,6 @@ function parseLanguages(raw: string): string[] {
   return result.length > 0 ? result : ['기타']
 }
 
-function extractProvince(address: string): string | null {
-  const m = address.trim().match(
-    /^(서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주)/
-  )
-  return m ? m[1] : null
-}
-
 function jitter(base: number, range: number): number {
   return base + (Math.random() - 0.5) * 2 * range
 }
@@ -121,8 +94,9 @@ export async function POST(req: NextRequest) {
 
       if (!name) { skipped++; continue }
 
-      const province = extractProvince(address)
-      const region = province ? (PROVINCE_TO_REGION[province] ?? '기타') : '기타'
+      const normalized = normalizeKoreanAddress(address)
+      const province = normalized.province ?? null
+      const region = normalized.kimaRegion ?? '기타'
       const languages = parseLanguages(nationRaw)
       const targets = parseTargets(missionRaw)
 
