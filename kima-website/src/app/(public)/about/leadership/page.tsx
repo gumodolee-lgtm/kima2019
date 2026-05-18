@@ -15,6 +15,7 @@ interface Member {
 
 const ADVISORS: Member[] = [
   { title: '고문',   name: '허명호', org: '월드네이버 대표',            position: '목사/선교사', email: 'hur0121@naver.com',          nations: '200개국 이주민 사역',  mission: '노동자, 이주 가정' },
+  { title: '고문',   name: '정노화', org: '군포이주와다문화센터',         position: '선교사',     phone: '010-3880-4980', email: 'pmf@naver.com', nations: '서울경기인천',        mission: '이주노동자, 결혼이민자' },
   { title: '자문위원', name: '신상록', org: '함께하는다문화네트워크 이사장', position: '교장',       email: 'pc745745@nate.com',          nations: '이주민 자녀',         mission: '이주민 자녀 교육' },
   { title: '자문위원', name: '문창선', org: '위디선교회 대표' },
   { title: '자문위원', name: '허은열', org: '씨앗선교교회',              position: '대표',       email: 'all4dcf@hanmail.net',        nations: '다국적',             mission: '노동자, 유학생, 이주 가정, 무슬림, 난민' },
