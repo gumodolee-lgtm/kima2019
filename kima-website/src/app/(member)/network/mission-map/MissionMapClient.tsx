@@ -28,10 +28,10 @@ interface Props {
 }
 
 // 유형 필터 옵션 (사이트 기준)
-const TYPE_OPTIONS = ['교회', 'NGO', '법률', '의료', '교육', '다문화센터', '선교단체', '부설기관', '기타']
+const TYPE_OPTIONS = ['교회', 'NGO', '법률', '의료', '교육', '센터', '선교단체', '부설기관', '기타']
 
 // 사역대상 필터 옵션
-const TARGET_OPTIONS = ['이주노동자', '유학생', '결혼이민자', '다문화자녀', '난민미등록', '귀국이주민']
+const TARGET_OPTIONS = ['이주노동자', '유학생', '결혼이민자', '다문화자녀', '난민미등록', '귀국이주민', '중보사역', '기타']
 
 // 언어 표시 라벨 (JSON 값 → 화면 표시)
 const LANG_TO_DISPLAY: Record<string, string> = {
