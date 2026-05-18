@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { MemberRoleForm } from '@/components/admin/MemberRoleForm'
 import { MemberSearchInput } from '@/components/admin/MemberSearchInput'
+import { DeleteMemberButton } from '@/components/admin/DeleteMemberButton'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import type { UserRole, Prisma } from '@prisma/client'
@@ -213,6 +214,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
                 <th scope="col" className="px-4 py-3 text-left">
                   <SortHeader label="등급 / 메모" field="role" currentSort={sort} currentOrder={order} params={urlParams} />
                 </th>
+                <th scope="col" className="px-4 py-3 text-right text-xs text-gray-400 font-medium">관리</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -261,6 +263,9 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
                           currentNote={user.premiumNote}
                         />
                       </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <DeleteMemberButton userId={user.id} userName={user.name ?? user.email} />
                     </td>
                   </tr>
                 )

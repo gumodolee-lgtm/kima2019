@@ -2,14 +2,21 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
-import orgsData from '@/data/gmfsns_orgs.json'
+import { prisma } from '@/lib/prisma'
 import { OrgEditClient } from '../OrgEditClient'
 
-const orgs = orgsData as any[]
+async function findOrg(id: string) {
+  const numeric = parseInt(id, 10)
+  if (!isNaN(numeric)) {
+    const org = await prisma.organization.findUnique({ where: { gmfsnsId: numeric } })
+    if (org) return org
+  }
+  return prisma.organization.findUnique({ where: { id } })
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
-  const org = orgs.find((o) => String(o.id) === id)
+  const org = await findOrg(id)
   return { title: org ? `${org.name} 정보 수정 | KIMA` : '단체 정보 수정 | KIMA' }
 }
 
@@ -20,43 +27,32 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
   }
 
   const { id } = await params
-  const org = orgs.find((o) => String(o.id) === id)
+  const org = await findOrg(id)
   if (!org) notFound()
 
-  // Fetch saved overrides from Supabase (graceful fallback if table not yet created)
-  let override: Record<string, any> | null = null
-  try {
-    const res = await fetch(
-      `${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/member/gmfsns-orgs/${id}`,
-      { cache: 'no-store', headers: { cookie: '' } },
-    )
-    if (res.ok) {
-      const json = await res.json()
-      override = json.data
-    }
-  } catch { /* ignore */ }
-
   const initial = {
-    type: override?.type ?? org.type ?? '',
-    targets: override?.targets ?? org.targets ?? [],
-    languages: override?.languages ?? org.languages ?? [],
-    address: override?.address ?? org.address ?? '',
-    phone: override?.phone ?? org.phone ?? '',
-    email: override?.email ?? org.email ?? '',
-    website: override?.website ?? org.website ?? '',
-    introLines: override?.intro_lines ?? org.introLines ?? [],
-    contactItems: override?.contact_items ?? org.contactItems ?? [],
+    type: org.type ?? '',
+    targets: org.targets ?? [],
+    languages: org.languages ?? [],
+    address: org.address ?? '',
+    phone: org.phone ?? '',
+    email: org.email ?? '',
+    website: org.website ?? '',
+    introLines: org.introLines ?? [],
+    contactItems: org.contactItems ?? [],
   }
 
-  // 현재 이미지: Supabase 저장 이미지 우선, 없으면 로컬 JSON 이미지
-  const currentImage: string | null = override?.image_url ?? org.image ?? null
+  const currentImage: string | null = org.image ?? null
+
+  // OrgEditClient uses the gmfsnsId for API calls; fall back to cuid for directly-registered orgs
+  const editId = org.gmfsnsId ?? (org.id as unknown as number)
 
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
       <div className="bg-gray-50 border-b border-gray-100 px-4 py-3">
         <div className="max-w-3xl mx-auto text-xs text-gray-400 flex items-center gap-1.5 flex-wrap">
-          <Link href="/network/mission-map" className="hover:text-[#1B3A6B]">이주민 단체 지도</Link>
+          <Link href="/network/mission-map" className="hover:text-[#1B3A6B]">유형별 단체 현황</Link>
           <span>/</span>
           <Link href={`/network/mission-map/${id}`} className="hover:text-[#1B3A6B] truncate max-w-[200px]">{org.name}</Link>
           <span>/</span>
@@ -70,7 +66,7 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
           <p className="text-sm text-gray-500 mt-1">단체 정보를 수정하고 저장해주세요. 수정한 내용은 즉시 반영됩니다.</p>
         </div>
 
-        <OrgEditClient orgId={org.id} initial={initial} currentImage={currentImage} />
+        <OrgEditClient orgId={editId} initial={initial} currentImage={currentImage} />
       </div>
     </div>
   )

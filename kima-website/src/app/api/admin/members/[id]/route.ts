@@ -5,6 +5,27 @@ import { sendEmail, premiumApprovedEmailHtml } from '@/lib/email'
 import { z } from 'zod/v4'
 import type { UserRole } from '@prisma/client'
 
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await auth()
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    }
+
+    const { id } = await params
+
+    // Prevent self-deletion
+    if (id === session.user.id) {
+      return NextResponse.json({ error: '자기 자신은 삭제할 수 없습니다.' }, { status: 400 })
+    }
+
+    await prisma.user.delete({ where: { id } })
+    return NextResponse.json({ message: '회원이 삭제되었습니다.' })
+  } catch {
+    return NextResponse.json({ error: '회원 삭제 중 오류가 발생했습니다.' }, { status: 500 })
+  }
+}
+
 const patchSchema = z.object({
   role: z.enum(['MEMBER', 'PREMIUM', 'OFFICER', 'ADMIN']).optional(),
   premiumNote: z.string().max(500).nullable().optional(),

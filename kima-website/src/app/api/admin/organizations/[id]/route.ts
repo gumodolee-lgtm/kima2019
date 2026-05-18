@@ -6,6 +6,21 @@ import { geocodeAddress } from '@/lib/kakaoGeocoding'
 import { addressToKimaRegion } from '@/lib/normalizeKoreanAddress'
 import { z } from 'zod/v4'
 
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await auth()
+    const role = session?.user?.role
+    if (role !== 'ADMIN' && role !== 'OFFICER') {
+      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    }
+    const { id } = await params
+    await prisma.organization.delete({ where: { id } })
+    return NextResponse.json({ message: '단체가 삭제되었습니다.' })
+  } catch {
+    return NextResponse.json({ error: '삭제 중 오류가 발생했습니다.' }, { status: 500 })
+  }
+}
+
 const patchSchema = z.object({
   action: z.enum(['approve', 'reject']),
   rejectReason: z.string().max(500).optional(),

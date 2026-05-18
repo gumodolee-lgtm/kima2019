@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const ORG_REGIONS = [
+export const ORG_REGIONS = [
   '서울',
   '경기',
   '인천',
@@ -13,18 +13,20 @@ const ORG_REGIONS = [
   '기타',
 ] as const
 
-const LANGUAGES = [
-  '베트남', '네팔', '몽골', '인도네시아', '필리핀',
-  '러시아', '중국', '태국', '기타',
+export const LANGUAGES = [
+  '네팔어', '베트남어', '태국어', '라오스어', '몽골어', '러시아어',
+  '중국&동포', '필리핀어', '캄보디아어', '미얀마어', '영어', '일본어',
+  '스리랑카어', '아랍어', '힌디어', '기타',
 ] as const
 
-const TARGETS = [
-  '이주노동자', '유학생', '결혼이민자', '다문화자녀', '난민미등록', '귀국이주민',
+export const TARGETS = [
+  '이주노동자', '유학생', '결혼이민자', '다문화자녀',
+  '난민미등록', '귀국이주민', '중보사역', '기타',
 ] as const
 
-const ORG_TYPES = [
+export const ORG_TYPES = [
   '교회', 'NGO', '법률', '의료', '교육',
-  '다문화센터', '선교단체', '부설기관', '기타',
+  '센터', '선교단체', '부설기관', '기타',
 ] as const
 
 export const organizationSchema = z.object({
@@ -36,8 +38,8 @@ export const organizationSchema = z.object({
     .or(z.literal('')),
   description: z.string().max(500, '소개는 500자 이하로 입력해주세요').optional(),
   region: z.enum(ORG_REGIONS, { message: '지역을 선택해주세요' }),
-  languages: z.array(z.string()).min(1, '언어권을 1개 이상 입력해주세요'),
-  targets: z.array(z.string()).min(1, '사역대상을 1개 이상 입력해주세요'),
+  languages: z.array(z.string()).min(1, '언어권을 1개 이상 선택해주세요'),
+  targets: z.array(z.string()).min(1, '사역대상을 1개 이상 선택해주세요'),
   type: z.enum(ORG_TYPES).optional(),
   address: z.string().optional(),
   phone: z
@@ -50,4 +52,3 @@ export const organizationSchema = z.object({
 })
 
 export type OrganizationInput = z.infer<typeof organizationSchema>
-export { ORG_REGIONS, LANGUAGES, TARGETS, ORG_TYPES }

@@ -6,6 +6,7 @@ import { OrgEditForm } from '@/components/admin/OrgEditForm'
 import { GeocodeButton } from '@/components/admin/GeocodeButton'
 import { NormalizeAddressButton } from '@/components/admin/NormalizeAddressButton'
 import { AutoNormalizeRegions } from '@/components/admin/AutoNormalizeRegions'
+import { DeleteOrgButton } from '@/components/admin/DeleteOrgButton'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -154,6 +155,16 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
                     }`}>
                       {org.isPublic ? '공개' : '대기'}
                     </span>
+                    {(org as any).source === 'gmfsns' && (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+                        GMFSNS
+                      </span>
+                    )}
+                    {!(org as any).source && (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-600">
+                        직접등록
+                      </span>
+                    )}
                   </div>
                   <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
                     <span>지역: {org.region}</span>
@@ -182,6 +193,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
                 <div className="flex-shrink-0 flex flex-col gap-2 items-end">
                   <OrgEditForm org={org} />
                   {!org.isPublic && <OrgApproveForm orgId={org.id} orgName={org.name} />}
+                  <DeleteOrgButton orgId={org.id} orgName={org.name} />
                 </div>
               </div>
             </div>
