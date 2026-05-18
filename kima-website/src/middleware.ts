@@ -82,6 +82,16 @@ export default auth((req) => {
     }
   }
 
+  if (pathname.startsWith('/network')) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
+    // 이주민 단체 지도 — 임원(OFFICER) 이상만
+    if (pathname.startsWith('/network/mission-map') && !hasRole(userRole, 'OFFICER')) {
+      return NextResponse.redirect(`${origin}/community`)
+    }
+  }
+
   if (pathname === '/directory/register') {
     if (!isLoggedIn) {
       return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
@@ -97,6 +107,7 @@ export const config = {
     '/resources/:path*',
     '/community/:path*',
     '/member/:path*',
+    '/network/:path*',
     '/directory/register',
   ],
 }
