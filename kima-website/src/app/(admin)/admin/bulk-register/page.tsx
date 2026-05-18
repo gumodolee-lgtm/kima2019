@@ -18,7 +18,8 @@ interface Result {
 }
 
 const TEMPLATE_CSV = `이름,이메일,소속단체,전화번호,지역
-홍길동,hong@example.com,서울이주민센터,010-1234-5678,서울경기인천
+홍길동,hong@example.com,서울이주민센터,010-1234-5678,서울
+이영희,lee@example.com,경기다문화센터,010-5678-1234,경기
 김영희,kim@example.com,부산다문화교회,,부산경남`
 
 function parseCsv(text: string): MemberRow[] {
@@ -201,7 +202,7 @@ export default function BulkRegisterPage() {
           value={csvText}
           onChange={(e) => handleCsvChange(e.target.value)}
           rows={10}
-          placeholder={`이름,이메일,소속단체,전화번호,지역\n홍길동,hong@example.com,서울이주민센터,010-1234-5678,서울경기인천`}
+          placeholder={`이름,이메일,소속단체,전화번호,지역\n홍길동,hong@example.com,서울이주민센터,010-1234-5678,서울`}
           className="w-full px-4 py-3 border border-gray-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30 resize-y"
         />
         {parseError && <p className="mt-1 text-xs text-red-500">{parseError}</p>}

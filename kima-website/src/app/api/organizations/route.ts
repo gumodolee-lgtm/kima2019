@@ -12,10 +12,19 @@ export async function GET(request: NextRequest) {
     const target = searchParams.get('target')
     const type = searchParams.get('type')
 
+    // 서울/경기/인천 필터 시 레거시 '서울경기인천' 데이터도 함께 조회
+    const LEGACY_SEOUL_METRO = '서울경기인천'
+    const seoulMetroSet = new Set(['서울', '경기', '인천'])
+    const regionFilter = region
+      ? seoulMetroSet.has(region)
+        ? { region: { in: [region, LEGACY_SEOUL_METRO] } }
+        : { region }
+      : {}
+
     const orgs = await prisma.organization.findMany({
       where: {
         isPublic: true,
-        ...(region ? { region } : {}),
+        ...regionFilter,
         ...(language ? { languages: { has: language } } : {}),
         ...(target ? { targets: { has: target } } : {}),
         ...(type ? { type } : {}),

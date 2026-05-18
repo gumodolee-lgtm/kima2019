@@ -6,7 +6,9 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
 const REGIONS = [
-  '서울경기인천',
+  '서울',
+  '경기',
+  '인천',
   '부산경남',
   '대구경북',
   '광주전라',

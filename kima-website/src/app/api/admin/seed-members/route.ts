@@ -6,9 +6,9 @@ import fs from 'fs'
 
 // Province → KIMA region label
 const PROVINCE_TO_REGION: Record<string, string> = {
-  서울: '서울경기인천',
-  경기: '서울경기인천',
-  인천: '서울경기인천',
+  서울: '서울',
+  경기: '경기',
+  인천: '인천',
   부산: '부산경남',
   경남: '부산경남',
   대구: '대구경북',
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
       if (!name) { skipped++; continue }
 
       const province = extractProvince(address)
-      const region = province ? (PROVINCE_TO_REGION[province] ?? '서울경기인천') : '서울경기인천'
+      const region = province ? (PROVINCE_TO_REGION[province] ?? '기타') : '기타'
       const languages = parseLanguages(nationRaw)
       const targets = parseTargets(missionRaw)
 
