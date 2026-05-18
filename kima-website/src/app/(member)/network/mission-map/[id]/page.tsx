@@ -23,6 +23,7 @@ async function getOrgWithOverride(org: Org, id: string): Promise<Org> {
       phone: data.phone ?? org.phone,
       email: data.email ?? org.email,
       website: data.website ?? org.website,
+      image: data.image_url ?? org.image,
       introLines: data.intro_lines?.length ? data.intro_lines : org.introLines,
       contactItems: data.contact_items?.length ? data.contact_items : org.contactItems,
     }

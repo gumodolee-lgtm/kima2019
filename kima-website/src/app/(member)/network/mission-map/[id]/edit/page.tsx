@@ -48,6 +48,9 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
     contactItems: override?.contact_items ?? org.contactItems ?? [],
   }
 
+  // 현재 이미지: Supabase 저장 이미지 우선, 없으면 로컬 JSON 이미지
+  const currentImage: string | null = override?.image_url ?? org.image ?? null
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -67,7 +70,7 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
           <p className="text-sm text-gray-500 mt-1">단체 정보를 수정하고 저장해주세요. 수정한 내용은 즉시 반영됩니다.</p>
         </div>
 
-        <OrgEditClient orgId={org.id} initial={initial} />
+        <OrgEditClient orgId={org.id} initial={initial} currentImage={currentImage} />
       </div>
     </div>
   )
