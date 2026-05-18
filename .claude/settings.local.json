@@ -125,14 +125,17 @@
       "Bash(New-Item -ItemType Directory -Force \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\\\(member\\)\\\\story\\\\event-promo\\\\write\")",
       "Bash(mkdir -p \"d:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(public\\)/story/event-promo/[id]\" && mkdir -p \"d:/AI_PROJECT/kima_homepage/kima-website/src/app/\\(member\\)/story/event-promo/write\" && echo \"done\")",
       "Bash(Get-ChildItem -Recurse -Filter \"route.ts\" \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\")",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(mkdir -p \"d:\\\\AI_PROJECT\\\\kima_homepage\\\\kima-website\\\\src\\\\app\\\\api\\\\admin\\\\forum-archives\\\\[id]\")",
+      "Bash(node --env-file=.env.local node_modules/.bin/prisma generate)"
     ],
     "additionalDirectories": [
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\auth",
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\media",
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\write",
       "D:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\community\\[type]\\[slug]\\posts",
-      "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\event-promo"
+      "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(public)\\story\\event-promo",
+      "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\forum-archives"
     ]
   },
   "_projectAccount": "kima20191227@gmail.com",

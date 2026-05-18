@@ -1,15 +1,53 @@
 import Link from 'next/link'
 import { getEventType } from '@/lib/eventTypes'
+import { prisma } from '@/lib/prisma'
 import { ARCHIVE_RECORDS } from '../archive/data'
 import type { Metadata } from 'next'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: '리스닝콜 | KIMA',
   description: '전국 이주민 사역자들이 함께 모이는 KIMA 리스닝콜을 소개합니다.',
 }
 
-export default function ListeningCallPage() {
-  const records = ARCHIVE_RECORDS.filter((r) => r.type === 'LISTENING_CALL')
+type RecordItem = {
+  id: string
+  seq: string
+  date: string
+  title: string
+  description: string
+  hasContent: boolean
+}
+
+export default async function ListeningCallPage() {
+  // DB records (LISTENING_CALL, published)
+  const dbRecords = await prisma.forumArchive.findMany({
+    where: { type: 'LISTENING_CALL', isPublished: true },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true, seq: true, date: true, title: true, description: true,
+      photos: true, videoUrls: true,
+      _count: { select: { schedules: true, materials: true } },
+    },
+  }).catch(() => [])
+
+  const dbIds = new Set(dbRecords.map((r) => r.id))
+
+  const fromDB: RecordItem[] = dbRecords.map((r) => ({
+    id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description ?? '',
+    hasContent: r._count.schedules > 0 || r._count.materials > 0 || r.photos.length > 0 || r.videoUrls.length > 0,
+  }))
+
+  const fromStatic: RecordItem[] = ARCHIVE_RECORDS
+    .filter((r) => r.type === 'LISTENING_CALL' && !dbIds.has(r.id))
+    .map((r) => ({
+      id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description,
+      hasContent: !!(r.scheduleItems?.length || r.materials?.length || r.photos?.length || r.videoUrl),
+    }))
+
+  const records = [...fromDB, ...fromStatic]
+  const typeInfo = getEventType('LISTENING_CALL')
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
@@ -62,10 +100,13 @@ export default function ListeningCallPage() {
         {/* 역대 리스닝콜 목록 */}
         <section>
           <h2 className="text-lg font-bold text-[#1B3A6B] mb-4">역대 리스닝콜 기록</h2>
-          <div className="space-y-3">
-            {records.map((record) => {
-              const typeInfo = getEventType(record.type)
-              return (
+          {records.length === 0 ? (
+            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-sm text-gray-400">
+              등록된 기록이 없습니다.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {records.map((record) => (
                 <Link
                   key={record.id}
                   href={`/network/archive/${record.id}`}
@@ -77,15 +118,18 @@ export default function ListeningCallPage() {
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="text-xs text-[#C8922A] font-bold">{record.seq}</span>
                       <span className="text-xs text-gray-400">{record.date}</span>
+                      {record.hasContent && (
+                        <span className="text-xs bg-green-50 text-green-600 px-1.5 py-0.5 rounded">자료 있음</span>
+                      )}
                     </div>
                     <h3 className="font-semibold text-gray-800 text-sm group-hover:text-[#1B3A6B] transition-colors">
                       {record.title}
                     </h3>
                     {record.description && (
-                      <p className="text-xs text-gray-500 mt-0.5">{record.description}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{record.description}</p>
                     )}
                   </div>
                   <div className="shrink-0 self-center text-gray-300 group-hover:text-[#C8922A] transition-colors">
@@ -94,9 +138,9 @@ export default function ListeningCallPage() {
                     </svg>
                   </div>
                 </Link>
-              )
-            })}
-          </div>
+              ))}
+            </div>
+          )}
           <p className="text-center text-xs text-gray-400 pt-6">
             더 이전 기록(1차~9차)은{' '}
             <a href="mailto:kima20191227@gmail.com" className="underline hover:text-gray-600">

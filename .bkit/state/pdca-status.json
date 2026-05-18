@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-05-18T01:07:03.831Z",
+  "lastUpdated": "2026-05-18T05:21:54.182Z",
   "activeFeatures": [
     "kima-website",
     "tests",
@@ -70,7 +70,11 @@
     "event-promo",
     "bulk-register",
     "constants",
-    "normalize-addresses"
+    "normalize-addresses",
+    "track",
+    "analytics",
+    "stats",
+    "forum-archives"
   ],
   "primaryFeature": "kima-website",
   "features": {
@@ -83,9 +87,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:11:41.300Z",
-        "lastUpdated": "2026-05-18T01:01:55.063Z"
+        "lastUpdated": "2026-05-18T04:24:20.870Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\page.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\layout.tsx"
     },
     "tests": {
       "phase": "do",
@@ -122,7 +126,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T03:42:46.570Z",
-        "lastUpdated": "2026-05-18T00:36:13.243Z"
+        "lastUpdated": "2026-05-18T01:26:18.133Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\schemas\\member.schema.ts"
     },
@@ -200,7 +204,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:28.586Z",
-        "lastUpdated": "2026-05-18T01:07:03.830Z"
+        "lastUpdated": "2026-05-18T01:31:44.009Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\organizations\\page.tsx"
     },
@@ -213,9 +217,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T04:38:30.906Z",
-        "lastUpdated": "2026-05-18T00:50:39.714Z"
+        "lastUpdated": "2026-05-18T05:20:27.389Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\organizations\\[id]\\route.ts"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\network\\archive\\[id]\\page.tsx"
     },
     "directory": {
       "phase": "do",
@@ -330,9 +334,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:05:46.005Z",
-        "lastUpdated": "2026-05-18T01:06:49.795Z"
+        "lastUpdated": "2026-05-18T05:21:41.492Z"
       },
-      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\AutoNormalizeRegions.tsx"
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\admin\\AdminSidebar.tsx"
     },
     "members": {
       "phase": "do",
@@ -538,7 +542,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:40:25.643Z",
-        "lastUpdated": "2026-05-11T06:40:25.643Z"
+        "lastUpdated": "2026-05-18T05:21:54.182Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\network\\schedule\\page.tsx"
     },
@@ -551,7 +555,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T06:40:48.407Z",
-        "lastUpdated": "2026-05-16T07:45:53.576Z"
+        "lastUpdated": "2026-05-18T05:18:18.664Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\network\\archive\\page.tsx"
     },
@@ -642,7 +646,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-11T09:52:14.021Z",
-        "lastUpdated": "2026-05-18T00:36:15.047Z"
+        "lastUpdated": "2026-05-18T01:15:40.209Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\auth\\complete-profile\\page.tsx"
     },
@@ -759,7 +763,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T07:59:15.046Z",
-        "lastUpdated": "2026-05-16T07:59:15.046Z"
+        "lastUpdated": "2026-05-18T05:21:03.442Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\network\\listening\\page.tsx"
     },
@@ -772,7 +776,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-16T07:59:39.912Z",
-        "lastUpdated": "2026-05-16T07:59:39.912Z"
+        "lastUpdated": "2026-05-18T05:21:34.805Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(member)\\network\\forum\\page.tsx"
     },
@@ -954,7 +958,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-18T00:45:00.625Z",
-        "lastUpdated": "2026-05-18T01:06:39.395Z"
+        "lastUpdated": "2026-05-18T01:15:36.171Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\constants\\koreaRegions.ts"
     },
@@ -967,9 +971,61 @@
       "documents": {},
       "timestamps": {
         "started": "2026-05-18T00:50:50.863Z",
-        "lastUpdated": "2026-05-18T00:56:54.207Z"
+        "lastUpdated": "2026-05-18T01:26:35.065Z"
       },
       "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\admin\\normalize-addresses\\route.ts"
+    },
+    "track": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T04:24:12.134Z",
+        "lastUpdated": "2026-05-18T04:24:12.134Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\api\\track\\route.ts"
+    },
+    "analytics": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T04:24:13.467Z",
+        "lastUpdated": "2026-05-18T04:24:13.467Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\components\\analytics\\PageTracker.tsx"
+    },
+    "stats": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T04:25:09.482Z",
+        "lastUpdated": "2026-05-18T04:25:09.482Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\stats\\page.tsx"
+    },
+    "forum-archives": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-05-18T05:12:37.886Z",
+        "lastUpdated": "2026-05-18T05:15:31.163Z"
+      },
+      "lastFile": "d:\\AI_PROJECT\\kima_homepage\\kima-website\\src\\app\\(admin)\\admin\\forum-archives\\page.tsx"
     }
   },
   "pipeline": {
@@ -980,7 +1036,7 @@
   "session": {
     "startedAt": "2026-05-11T02:29:16.885Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-05-18T01:07:03.831Z"
+    "lastActivity": "2026-05-18T05:21:54.182Z"
   },
   "history": [
     {
@@ -4532,6 +4588,282 @@
     {
       "timestamp": "2026-05-18T01:07:03.830Z",
       "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:36.171Z",
+      "feature": "constants",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:37.578Z",
+      "feature": "schemas",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:38.900Z",
+      "feature": "schemas",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:40.209Z",
+      "feature": "complete-profile",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:41.492Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:42.830Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:49.738Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:15:51.607Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:16:20.650Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:18.133Z",
+      "feature": "schemas",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:19.868Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:26.147Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:32.143Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:35.065Z",
+      "feature": "normalize-addresses",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:26:48.251Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:31:36.105Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:31:44.009Z",
+      "feature": "organizations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T01:31:57.530Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:24:12.134Z",
+      "feature": "track",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:24:13.467Z",
+      "feature": "analytics",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:24:19.467Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:24:20.870Z",
+      "feature": "kima-website",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:24:46.508Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:25:09.482Z",
+      "feature": "stats",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:25:16.650Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:25:38.547Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:26:11.918Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:26:14.317Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T04:26:30.296Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:12:11.961Z",
+      "feature": "forum",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:12:37.886Z",
+      "feature": "forum-archives",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:12:54.427Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:14:20.076Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:14:49.048Z",
+      "feature": "forum-archives",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:15:31.163Z",
+      "feature": "forum-archives",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:16:09.598Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:16:16.404Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:17:10.391Z",
+      "feature": "schedule",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:18:18.664Z",
+      "feature": "archive",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:19:33.534Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:19:40.575Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:20:27.389Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:21:03.442Z",
+      "feature": "listening",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:21:34.805Z",
+      "feature": "forum",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:21:41.492Z",
+      "feature": "admin",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-05-18T05:21:54.182Z",
+      "feature": "schedule",
       "phase": "do",
       "action": "updated"
     }

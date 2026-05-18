@@ -1,15 +1,57 @@
 import Link from 'next/link'
 import { getEventType } from '@/lib/eventTypes'
+import { prisma } from '@/lib/prisma'
 import { ARCHIVE_RECORDS } from '../archive/data'
 import type { Metadata } from 'next'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'KIMA 포럼 | KIMA',
   description: 'KIMA 이주민 선교 포럼을 소개합니다.',
 }
 
-export default function ForumPage() {
-  const records = ARCHIVE_RECORDS.filter((r) => r.type === 'FORUM')
+type RecordItem = {
+  id: string
+  seq: string
+  date: string
+  title: string
+  description: string
+  location?: string | null
+  theme?: string | null
+  hasContent: boolean
+}
+
+export default async function ForumPage() {
+  // DB records (FORUM, published)
+  const dbRecords = await prisma.forumArchive.findMany({
+    where: { type: 'FORUM', isPublished: true },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true, seq: true, date: true, title: true, description: true, location: true, theme: true,
+      photos: true, videoUrls: true,
+      _count: { select: { schedules: true, materials: true } },
+    },
+  }).catch(() => [])
+
+  const dbIds = new Set(dbRecords.map((r) => r.id))
+
+  const fromDB: RecordItem[] = dbRecords.map((r) => ({
+    id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description ?? '',
+    location: r.location, theme: r.theme,
+    hasContent: r._count.schedules > 0 || r._count.materials > 0 || r.photos.length > 0 || r.videoUrls.length > 0,
+  }))
+
+  const fromStatic: RecordItem[] = ARCHIVE_RECORDS
+    .filter((r) => r.type === 'FORUM' && !dbIds.has(r.id))
+    .map((r) => ({
+      id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description,
+      location: r.location, theme: r.theme,
+      hasContent: !!(r.scheduleItems?.length || r.materials?.length || r.photos?.length || r.videoUrl),
+    }))
+
+  const records = [...fromDB, ...fromStatic]
+  const typeInfo = getEventType('FORUM')
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
@@ -63,10 +105,13 @@ export default function ForumPage() {
         {/* 역대 포럼 목록 */}
         <section>
           <h2 className="text-lg font-bold text-[#1B3A6B] mb-4">역대 포럼 기록</h2>
-          <div className="space-y-3">
-            {records.map((record) => {
-              const typeInfo = getEventType(record.type)
-              return (
+          {records.length === 0 ? (
+            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-sm text-gray-400">
+              등록된 기록이 없습니다.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {records.map((record) => (
                 <Link
                   key={record.id}
                   href={`/network/archive/${record.id}`}
@@ -84,6 +129,9 @@ export default function ForumPage() {
                       {record.location && (
                         <span className="text-xs text-gray-400">📍 {record.location}</span>
                       )}
+                      {record.hasContent && (
+                        <span className="text-xs bg-green-50 text-green-600 px-1.5 py-0.5 rounded">자료 있음</span>
+                      )}
                     </div>
                     <h3 className="font-semibold text-gray-800 text-sm group-hover:text-[#1B3A6B] transition-colors">
                       {record.title}
@@ -92,7 +140,7 @@ export default function ForumPage() {
                       <p className="text-xs text-[#1B3A6B]/70 mt-0.5 font-medium">{record.theme}</p>
                     )}
                     {!record.theme && record.description && (
-                      <p className="text-xs text-gray-500 mt-0.5">{record.description}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{record.description}</p>
                     )}
                   </div>
                   <div className="shrink-0 self-center text-gray-300 group-hover:text-[#C8922A] transition-colors">
@@ -101,9 +149,9 @@ export default function ForumPage() {
                     </svg>
                   </div>
                 </Link>
-              )
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
       </div>

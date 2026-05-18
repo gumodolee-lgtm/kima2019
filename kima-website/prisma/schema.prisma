@@ -227,6 +227,55 @@ enum PrayerUrgency {
   NORMAL
 }
 
+model ForumArchive {
+  id          String          @id @default(cuid())
+  seq         String
+  type        ForumType       @default(FORUM)
+  title       String
+  date        String
+  location    String?
+  theme       String?
+  description String?
+  videoUrls   String[]
+  photos      String[]
+  isPublished Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  materials   ForumMaterial[]
+  schedules   ForumSchedule[]
+}
+
+model ForumMaterial {
+  id        String       @id @default(cuid())
+  archiveId String
+  archive   ForumArchive @relation(fields: [archiveId], references: [id], onDelete: Cascade)
+  title     String
+  fileType  String
+  url       String
+  order     Int          @default(0)
+  createdAt DateTime     @default(now())
+
+  @@index([archiveId])
+}
+
+model ForumSchedule {
+  id        String       @id @default(cuid())
+  archiveId String
+  archive   ForumArchive @relation(fields: [archiveId], references: [id], onDelete: Cascade)
+  time      String
+  title     String
+  speaker   String?
+  order     Int          @default(0)
+
+  @@index([archiveId])
+}
+
+enum ForumType {
+  FORUM
+  LISTENING_CALL
+}
+
 model PageView {
   id         BigInt   @id @default(autoincrement())
   path       String
