@@ -19,7 +19,8 @@ interface PageProps {
 
 export default async function AdminOrganizationsPage({ searchParams }: PageProps) {
   const session = await auth()
-  if (session?.user?.role !== 'ADMIN') redirect('/')
+  const role = session?.user?.role
+  if (role !== 'ADMIN' && role !== 'OFFICER') redirect('/')
 
   const { tab, q, sort } = await searchParams
   const showAll = tab === 'all'
