@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { MissionMapClient } from './MissionMapClient'
 import type { GmfsnsOrg } from './MissionMapClient'
@@ -42,11 +40,6 @@ async function getAllOrgs(): Promise<GmfsnsOrg[]> {
 }
 
 export default async function MissionMapPage() {
-  const session = await auth()
-  if (!session?.user) {
-    redirect('/auth/login?callbackUrl=/network/mission-map')
-  }
-
   const orgs = await getAllOrgs()
   return <MissionMapClient orgs={orgs} />
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -27,10 +27,6 @@ async function findOrg(id: string) {
 
 export default async function OrgDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
-  if (!session?.user) {
-    redirect('/auth/login?callbackUrl=/network/mission-map')
-  }
-
   const { id } = await params
   const org = await findOrg(id)
   if (!org) notFound()

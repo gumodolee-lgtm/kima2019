@@ -83,10 +83,10 @@ export default auth((req) => {
   }
 
   if (pathname.startsWith('/network')) {
-    if (!isLoggedIn) {
+    // edit 페이지만 로그인 필요, 나머지는 비회원도 접근 가능
+    if (pathname.endsWith('/edit') && !isLoggedIn) {
       return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
     }
-    // 이주민 단체 지도 — 일반 회원(MEMBER) 이상 접근 허용
   }
 
   if (pathname === '/directory/register') {
