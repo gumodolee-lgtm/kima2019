@@ -214,18 +214,6 @@ export function MissionMapKakao({ orgs, selectedId, onSelect, onHover }: Props) 
       wrap.appendChild(a)
     }
 
-    // Footer link to GMFSNS detail page
-    const footer = document.createElement('div')
-    footer.style.cssText = 'margin-top:12px;text-align:right'
-    const detailLink = document.createElement('a')
-    detailLink.href = `https://gmfsns.org/mapview/${org.id}`
-    detailLink.target = '_blank'
-    detailLink.rel = 'noopener noreferrer'
-    detailLink.style.cssText = 'font-size:12px;font-weight:700;color:#1B3A6B;text-decoration:none;padding:5px 10px;background:#eff6ff;border-radius:7px'
-    detailLink.textContent = 'GMFSNS 상세 →'
-    detailLink.addEventListener('click', (e) => e.stopPropagation())
-    footer.appendChild(detailLink)
-    wrap.appendChild(footer)
 
     // Tail
     const tail = document.createElement('div')
