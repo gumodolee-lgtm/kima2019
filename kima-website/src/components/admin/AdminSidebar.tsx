@@ -23,6 +23,7 @@ const NAV = [
   { href: '/admin/email',         label: '메일 발송',    icon: '✉️', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/bulk-register', label: '회원 일괄등록', icon: '👤', exact: false, minRole: 'ADMIN'   as const },
   { href: '/admin/popups',        label: '팝업 관리',    icon: '🪟', exact: false, minRole: 'OFFICER' as const },
+  { href: '/admin/stats',         label: '접속 통계',    icon: '📊', exact: false, minRole: 'OFFICER' as const },
 ]
 
 interface Props {
