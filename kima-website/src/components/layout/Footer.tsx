@@ -10,7 +10,7 @@ export function Footer() {
             <h3 className="text-lg font-bold mb-3">KIMA</h3>
             <p className="text-sm text-blue-200 leading-relaxed">
               한국이주민선교연합회<br />
-              Korean Immigrant Mission Association
+              Korea Immigrants Missions Association
             </p>
             <div className="mt-4 space-y-1 text-sm text-blue-200">
               <p>이메일: kima20191227@gmail.com</p>

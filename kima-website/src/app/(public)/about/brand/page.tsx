@@ -69,7 +69,7 @@ export default function BrandPage() {
             </div>
             <div>
               <p className="text-xs text-gray-400 mb-2">영어 — Inter</p>
-              <p className="text-2xl font-bold text-[#1B3A6B] font-sans">Korea Immigrant Mission Alliance</p>
+              <p className="text-2xl font-bold text-[#1B3A6B] font-sans">Korea Immigrants Missions Association</p>
               <p className="text-base text-gray-700 mt-1 font-sans">Connect · Record · Show · Fund</p>
             </div>
           </div>

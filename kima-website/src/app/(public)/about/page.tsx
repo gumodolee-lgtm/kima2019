@@ -37,7 +37,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-[#1B3A6B] mb-6">단체 소개</h2>
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 space-y-4 text-gray-700 leading-relaxed">
             <p>
-              한국이주민선교연합회(KIMA, Korea Immigrant Mission Alliance)는 한국 내 다문화사역을 감당하는
+              한국이주민선교연합회(KIMA, Korea Immigrants Missions Association)는 한국 내 다문화사역을 감당하는
               교회, NGO, 법률·복지 기관들이 모인 전국 연합 플랫폼입니다.
             </p>
             <p>
@@ -49,6 +49,27 @@ export default function AboutPage() {
               현재 전국 6개 지역, 9개 언어권, 6개 사역대상 카테고리로 구성되어 있으며,
               정기적인 리스닝콜·포럼을 통해 현장의 목소리를 듣고 연대합니다.
             </p>
+          </div>
+        </section>
+
+        {/* 정관 다운로드 */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-[#1B3A6B] mb-6">정관</h2>
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl">📋</span>
+              <div>
+                <p className="font-semibold text-gray-900">KIMA 정관</p>
+                <p className="text-sm text-gray-500 mt-0.5">개정일: 2026년 3월 19일 · DOCX</p>
+              </div>
+            </div>
+            <a
+              href="/KIMA%EC%A0%95%EA%B4%80_20260319.docx"
+              download="KIMA정관_20260319.docx"
+              className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-[#1B3A6B] text-white text-sm font-semibold rounded-lg hover:bg-[#142d54] transition-colors"
+            >
+              ⬇ 다운로드
+            </a>
           </div>
         </section>
 
