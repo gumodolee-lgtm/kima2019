@@ -7,6 +7,7 @@ import { GeocodeButton } from '@/components/admin/GeocodeButton'
 import { NormalizeAddressButton } from '@/components/admin/NormalizeAddressButton'
 import { AutoNormalizeRegions } from '@/components/admin/AutoNormalizeRegions'
 import { DeleteOrgButton } from '@/components/admin/DeleteOrgButton'
+import { ImportGmfsnsButton } from '@/components/admin/ImportGmfsnsButton'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -55,6 +56,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
         <div className="flex flex-col gap-2">
           <NormalizeAddressButton />
           <GeocodeButton />
+          <ImportGmfsnsButton />
         </div>
       </div>
 
