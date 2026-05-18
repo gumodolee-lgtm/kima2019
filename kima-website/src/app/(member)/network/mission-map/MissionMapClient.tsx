@@ -14,7 +14,8 @@ export interface GmfsnsOrg {
   email: string
   website: string
   description: string
-  fullDescription?: string
+  introLines?: string[]
+  contactItems?: string[]
   image: string | null
   date: string | null
   lat: number | null
@@ -175,7 +176,9 @@ export function MissionMapClient({ orgs }: Props) {
 }
 
 function OrgCard({ org }: { org: GmfsnsOrg }) {
-  const excerpt = (org.fullDescription || org.description || '').replace(/\n/g, ' ').slice(0, 100)
+  const excerpt = org.introLines?.length
+    ? org.introLines.slice(0, 2).join(' / ')
+    : org.description?.slice(0, 100) || ''
 
   return (
     <Link
@@ -235,7 +238,7 @@ function OrgCard({ org }: { org: GmfsnsOrg }) {
         )}
 
         {excerpt && (
-          <p className="mt-2 text-xs text-gray-500 leading-relaxed line-clamp-3 flex-1">{excerpt}...</p>
+          <p className="mt-2 text-xs text-gray-500 leading-relaxed line-clamp-3 flex-1">{excerpt}</p>
         )}
 
         <p className="mt-3 text-xs font-semibold text-[#C8922A] group-hover:underline">
