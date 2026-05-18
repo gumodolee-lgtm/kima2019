@@ -8,21 +8,18 @@ import { addressToKimaRegion } from '@/lib/normalizeKoreanAddress'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const region = searchParams.get('region')
-    const language = searchParams.get('language')
-    const target = searchParams.get('target')
-    const type = searchParams.get('type')
-
-    // 정확한 region 값으로 필터링 (레거시 '서울경기인천' 값은 관리자 정규화 후 사라짐)
-    const regionFilter = region ? { region } : {}
+    const regions  = searchParams.get('region')?.split(',').filter(Boolean) ?? []
+    const languages = searchParams.get('language')?.split(',').filter(Boolean) ?? []
+    const targets   = searchParams.get('target')?.split(',').filter(Boolean) ?? []
+    const types     = searchParams.get('type')?.split(',').filter(Boolean) ?? []
 
     const orgs = await prisma.organization.findMany({
       where: {
         isPublic: true,
-        ...regionFilter,
-        ...(language ? { languages: { has: language } } : {}),
-        ...(target ? { targets: { has: target } } : {}),
-        ...(type ? { type } : {}),
+        ...(regions.length > 0 ? { region: { in: regions } } : {}),
+        ...(languages.length > 0 ? { languages: { hasSome: languages } } : {}),
+        ...(targets.length > 0 ? { targets: { hasSome: targets } } : {}),
+        ...(types.length > 0 ? { type: { in: types } } : {}),
       },
       orderBy: { createdAt: 'desc' },
     })
