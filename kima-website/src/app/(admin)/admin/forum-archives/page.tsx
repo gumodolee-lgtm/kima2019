@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = { title: '포럼 아카이브 관리 | KIMA 관리자' }
+export const metadata: Metadata = { title: '포럼&리스닝콜 아카이브 관리 | KIMA 관리자' }
 
 const TYPE_LABELS: Record<string, string> = {
   FORUM:          '🏛 포럼',
@@ -32,7 +32,7 @@ export default async function AdminForumArchivesPage() {
     <div>
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-[#1B3A6B]">포럼 아카이브 관리</h1>
+          <h1 className="text-xl font-bold text-[#1B3A6B]">포럼&amp;리스닝콜 아카이브 관리</h1>
           <p className="text-sm text-gray-500 mt-1">포럼·리스닝콜 자료, 사진, 영상을 등록하고 관리합니다.</p>
         </div>
         <ForumArchiveForm mode="create" />
