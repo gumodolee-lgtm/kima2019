@@ -140,8 +140,8 @@ export function MissionMapClient({ orgs }: Props) {
       <div className="bg-[#1B3A6B] text-white py-10 px-4">
         <div className="max-w-6xl mx-auto">
           <p className="text-[#C8922A] text-xs font-semibold tracking-widest uppercase mb-1">Network</p>
-          <h1 className="text-2xl font-bold">이주민 단체 지도</h1>
-          <p className="text-blue-200 text-sm mt-1">국내 이주민 사역지도 · {orgs.length}개 단체</p>
+          <h1 className="text-2xl font-bold">유형별 단체 현황</h1>
+          <p className="text-blue-200 text-sm mt-1">사역단체 전국지도 · {orgs.length}개 단체</p>
         </div>
       </div>
 
