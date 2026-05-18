@@ -5,6 +5,7 @@ import { OrgApproveForm } from '@/components/admin/OrgApproveForm'
 import { OrgEditForm } from '@/components/admin/OrgEditForm'
 import { GeocodeButton } from '@/components/admin/GeocodeButton'
 import { NormalizeAddressButton } from '@/components/admin/NormalizeAddressButton'
+import { AutoNormalizeRegions } from '@/components/admin/AutoNormalizeRegions'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -38,8 +39,12 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
     prisma.organization.count({ where: { isPublic: false } }),
   ])
 
+  // 레거시 region 값(서울경기인천 등)이 남은 경우 클라이언트에서 자동 정규화
+  const allRegions = orgs.map((o) => o.region)
+
   return (
     <div>
+      <AutoNormalizeRegions regions={allRegions} />
       <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold text-[#1B3A6B]">단체 관리</h1>
