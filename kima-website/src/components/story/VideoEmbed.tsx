@@ -5,24 +5,33 @@ import { parseVideoUrl } from '@/lib/videoUtils'
 interface Props {
   url: string
   title?: string
+  index?: number
 }
 
-export function VideoEmbed({ url, title }: Props) {
+export function VideoEmbed({ url, title, index }: Props) {
   const info = parseVideoUrl(url)
 
   if (!info) {
     return (
-      <div className="flex items-center justify-center bg-gray-100 rounded-xl h-64 text-sm text-gray-400">
-        영상 URL을 인식할 수 없습니다.
-      </div>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 px-4 py-3 bg-gray-100 rounded-xl text-sm text-gray-700 hover:bg-gray-200 transition-colors"
+      >
+        <span className="text-red-600 text-lg leading-none">▶</span>
+        <span className="truncate">{url}</span>
+      </a>
     )
   }
 
+  const label = title ?? (index !== undefined ? `영상 ${index + 1}` : '영상')
+
   return (
-    <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingTop: '56.25%' }}>
+    <div className="relative w-full rounded-xl overflow-hidden bg-black shadow-md" style={{ paddingTop: '56.25%' }}>
       <iframe
         src={info.embedUrl}
-        title={title ?? '영상'}
+        title={label}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
         className="absolute inset-0 w-full h-full border-0"

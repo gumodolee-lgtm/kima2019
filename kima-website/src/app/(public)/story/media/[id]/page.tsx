@@ -2,12 +2,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { MediaGallery } from '@/components/story/MediaGallery'
+import { VideoEmbed } from '@/components/story/VideoEmbed'
 import type { Metadata } from 'next'
-
-function extractYoutubeId(url: string): string | null {
-  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/)
-  return m ? m[1] : null
-}
 
 export const dynamic = 'force-dynamic'
 
@@ -87,39 +83,14 @@ export default async function MediaDetailPage({ params }: Props) {
           <section>
             <h2 className="text-base font-bold text-[#1B3A6B] mb-4">행사 영상</h2>
             <div className="space-y-6">
-              {event.videoUrls.map((url, i) => {
-                const ytId = extractYoutubeId(url)
-                if (ytId) {
-                  return (
-                    <div key={i}>
-                      {event.videoUrls.length > 1 && (
-                        <p className="text-xs text-gray-400 mb-2">영상 {i + 1}</p>
-                      )}
-                      <div className="aspect-video w-full rounded-xl overflow-hidden shadow-md">
-                        <iframe
-                          src={`https://www.youtube.com/embed/${ytId}`}
-                          title={`${event.title} 영상 ${i + 1}`}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                          className="w-full h-full"
-                        />
-                      </div>
-                    </div>
-                  )
-                }
-                return (
-                  <a
-                    key={i}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-4 py-3 bg-gray-100 rounded-xl text-sm text-gray-700 hover:bg-gray-200 transition-colors"
-                  >
-                    <span className="text-red-600 text-lg">▶</span>
-                    <span className="truncate">{url}</span>
-                  </a>
-                )
-              })}
+              {event.videoUrls.map((url, i) => (
+                <div key={i}>
+                  {event.videoUrls.length > 1 && (
+                    <p className="text-xs text-gray-400 mb-2">영상 {i + 1}</p>
+                  )}
+                  <VideoEmbed url={url} title={`${event.title} 영상 ${i + 1}`} index={i} />
+                </div>
+              ))}
             </div>
           </section>
         )}

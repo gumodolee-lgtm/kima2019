@@ -1,25 +1,12 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { VideoEmbed } from '@/components/story/VideoEmbed'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
 type Props = { params: Promise<{ id: string }> }
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params
-  const story = await prisma.story.findUnique({ where: { id } }).catch(() => null)
-  if (!story) return { title: '행사 홍보 | KIMA' }
-  return { title: `${story.title} | KIMA` }
-}
-
-function extractYoutubeId(url: string): string | null {
-  const match = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
-  )
-  return match ? match[1] : null
-}
 
 export default async function EventPromoDetailPage({ params }: Props) {
   const { id } = await params
@@ -101,34 +88,9 @@ export default async function EventPromoDetailPage({ params }: Props) {
           <section>
             <h2 className="text-base font-semibold text-gray-700 mb-3">관련 영상</h2>
             <div className="space-y-4">
-              {story.videoUrls.map((url, i) => {
-                const ytId = extractYoutubeId(url)
-                if (ytId) {
-                  return (
-                    <div key={i} className="aspect-video rounded-xl overflow-hidden shadow">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${ytId}`}
-                        title={`영상 ${i + 1}`}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
-                    </div>
-                  )
-                }
-                return (
-                  <a
-                    key={i}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-3 bg-gray-100 rounded-lg text-sm text-gray-700 hover:bg-gray-200 transition-colors"
-                  >
-                    <span>▶</span>
-                    <span className="truncate">{url}</span>
-                  </a>
-                )
-              })}
+              {story.videoUrls.map((url, i) => (
+                <VideoEmbed key={i} url={url} title={`${story.title} 영상 ${i + 1}`} index={i} />
+              ))}
             </div>
           </section>
         )}
