@@ -38,11 +38,6 @@ export default async function AdminForumArchivesPage() {
         <ForumArchiveForm mode="create" />
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6 text-xs text-amber-700">
-        <strong>안내:</strong> Supabase Storage에 <code className="bg-amber-100 px-1 rounded">forum-files</code> 버킷(공개)이 필요합니다.
-        미생성 시 사진·자료 업로드가 실패합니다.
-      </div>
-
       {archives.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-100 p-10 text-center text-sm text-gray-400">
           <p className="text-3xl mb-3">📂</p>
