@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default async function MissionMapPage() {
   const session = await auth()
-  if (!session?.user || !(['OFFICER', 'ADMIN'] as string[]).includes(session.user.role)) {
-    redirect('/community')
+  if (!session?.user) {
+    redirect('/auth/login?callbackUrl=/network/mission-map')
   }
 
   return <MissionMapClient orgs={orgsData as any} />

@@ -27,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
     label: '네트워크 사역',
     children: [
       { href: '/directory',                label: '국내 이주민 사역지도', desc: '전국 이주민 사역 단체 지도' },
-      { href: '/network/mission-map',     label: '이주민 단체 지도',     desc: '전국 이주민 선교 단체 통합 지도', requiresOfficer: true },
+      { href: '/network/mission-map',     label: '이주민 단체 지도',     desc: '전국 이주민 선교 단체 통합 지도' },
       { href: '/network/listening',        label: '리스닝콜',             desc: '리스닝콜 안내 및 역대 기록' },
       { href: '/network/forum',            label: '포럼',                 desc: 'KIMA 이주민 선교 포럼 소개 및 기록' },
       { href: '/network/schedule',         label: 'KIMA 행사 일정',       desc: '리스닝콜·포럼 일정 및 참석 신청' },
@@ -206,7 +206,7 @@ export function Header() {
                       onMouseLeave={closeMenu}
                     >
                       <div className="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[220px]">
-                        {item.children.filter((child) => !(child.requiresOfficer && roleWeight < 3)).map((child) => (
+                        {item.children.filter((child) => !(child.requiresPremium && roleWeight < 2)).map((child) => (
                           <button
                             key={child.href + child.label}
                             type="button"
@@ -351,7 +351,7 @@ export function Header() {
 
                     {hasChildren && expanded && (
                       <div className="bg-gray-50 rounded-lg mx-3 mb-1">
-                        {item.children!.filter((child) => !(child.requiresOfficer && roleWeight < 3)).map((child) => (
+                        {item.children!.filter((child) => !(child.requiresPremium && roleWeight < 2)).map((child) => (
                           <button
                             key={child.href + child.label}
                             type="button"

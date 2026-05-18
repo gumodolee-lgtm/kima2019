@@ -6,11 +6,37 @@ import Link from 'next/link'
 import orgsData from '@/data/gmfsns_orgs.json'
 import { OrgDetailMap } from './OrgDetailMap'
 
+// Supabase에 저장된 편집 내용을 가져와 기본 JSON과 병합
+async function getOrgWithOverride(org: Org, id: string): Promise<Org> {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/member/gmfsns-orgs/${id}`, { cache: 'no-store' })
+    if (!res.ok) return org
+    const { data } = await res.json()
+    if (!data) return org
+    return {
+      ...org,
+      type: data.type ?? org.type,
+      targets: data.targets?.length ? data.targets : (org as any).targets ?? [],
+      languages: data.languages?.length ? data.languages : org.languages,
+      address: data.address ?? org.address,
+      phone: data.phone ?? org.phone,
+      email: data.email ?? org.email,
+      website: data.website ?? org.website,
+      introLines: data.intro_lines?.length ? data.intro_lines : org.introLines,
+      contactItems: data.contact_items?.length ? data.contact_items : org.contactItems,
+    }
+  } catch {
+    return org
+  }
+}
+
 interface Org {
   id: number
   name: string
   type: string
   languages: string[]
+  targets?: string[]
   address: string
   phone: string
   email: string
@@ -37,13 +63,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function OrgDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
-  if (!session?.user || !(['OFFICER', 'ADMIN'] as string[]).includes(session.user.role)) {
-    redirect('/community')
+  if (!session?.user) {
+    redirect('/auth/login?callbackUrl=/network/mission-map')
   }
 
   const { id } = await params
-  const org = orgs.find((o) => String(o.id) === id)
-  if (!org) notFound()
+  const baseOrg = orgs.find((o) => String(o.id) === id)
+  if (!baseOrg) notFound()
+
+  const org = await getOrgWithOverride(baseOrg, id)
 
   const introLines = org.introLines?.length ? org.introLines : []
   const contactItems = org.contactItems?.length ? org.contactItems : []
@@ -63,17 +91,28 @@ export default async function OrgDetailPage({ params }: { params: Promise<{ id: 
 
       <div className="max-w-3xl mx-auto px-4 py-6">
 
-        {/* Type badge + Title */}
-        <div className="mb-4">
-          {org.type && (
-            <span className="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700 mb-2">
-              {org.type}
-            </span>
-          )}
-          <h1 className="text-xl font-bold text-gray-900 leading-snug">{org.name}</h1>
-          {org.date && (
-            <p className="mt-1 text-xs text-gray-400">{org.date}</p>
-          )}
+        {/* Type badge + Title + Edit button */}
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div>
+            {org.type && (
+              <span className="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700 mb-2">
+                {org.type}
+              </span>
+            )}
+            <h1 className="text-xl font-bold text-gray-900 leading-snug">{org.name}</h1>
+            {org.date && (
+              <p className="mt-1 text-xs text-gray-400">{org.date}</p>
+            )}
+          </div>
+          <Link
+            href={`/network/mission-map/${org.id}/edit`}
+            className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 hover:border-[#1B3A6B] hover:text-[#1B3A6B] transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            정보 수정
+          </Link>
         </div>
 
         {/* Main image — full content width */}
@@ -102,6 +141,18 @@ export default async function OrgDetailPage({ params }: { params: Promise<{ id: 
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* 사역대상 */}
+        {(org.targets || []).length > 0 && (
+          <div className="mb-6">
+            <p className="font-bold text-gray-800 mb-2">사역대상:</p>
+            <div className="flex flex-wrap gap-2">
+              {(org.targets || []).map((t: string) => (
+                <span key={t} className="px-3 py-1 rounded-full text-sm bg-green-50 text-green-700 font-medium">{t}</span>
+              ))}
+            </div>
           </div>
         )}
 

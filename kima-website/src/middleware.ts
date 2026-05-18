@@ -86,10 +86,7 @@ export default auth((req) => {
     if (!isLoggedIn) {
       return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
     }
-    // 이주민 단체 지도 — 임원(OFFICER) 이상만
-    if (pathname.startsWith('/network/mission-map') && !hasRole(userRole, 'OFFICER')) {
-      return NextResponse.redirect(`${origin}/community`)
-    }
+    // 이주민 단체 지도 — 일반 회원(MEMBER) 이상 접근 허용
   }
 
   if (pathname === '/directory/register') {

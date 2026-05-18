@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,6 +9,7 @@ export interface GmfsnsOrg {
   name: string
   type: string
   languages: string[]
+  targets: string[]
   address: string
   phone: string
   email: string
@@ -26,51 +27,124 @@ interface Props {
   orgs: GmfsnsOrg[]
 }
 
-const TYPE_OPTIONS = ['교회', '선교단체', '센터', '복지기관', 'NGO', '공공기관', '의료기관', '교육기관', '기타']
-const LANG_OPTIONS = ['네팔', '베트남', '태국', '라오', '몽족', '몽골', '러시아', '중국', '동포', '필리핀', '인도네시아', '캄보디아', '미얀마', '영어', '일본', '스리랑카', '아랍', '우즈벡', '힌두', '이슬람', '인도']
+// 유형 필터 옵션 (사이트 기준)
+const TYPE_OPTIONS = ['교회', 'NGO', '법률', '의료', '교육', '다문화센터', '선교단체', '부설기관', '기타']
+
+// 사역대상 필터 옵션
+const TARGET_OPTIONS = ['이주노동자', '유학생', '결혼이민자', '다문화자녀', '난민미등록', '귀국이주민']
+
+// 언어 표시 라벨 (JSON 값 → 화면 표시)
+const LANG_TO_DISPLAY: Record<string, string> = {
+  '네팔': '네팔어', '베트남': '베트남어', '태국': '태국어',
+  '라오': '라오스어', '라오스': '라오스어',
+  '몽족': '몽골어', '몽골': '몽골어',
+  '러시아': '러시아어',
+  '중국': '중국&동포', '동포': '중국&동포',
+  '필리핀': '필리핀어', '인도네시아': '인도네시아어',
+  '캄보디아': '캄보디아어', '미얀마': '미얀마어',
+  '영어': '영어', '일본': '일본어',
+  '스리랑카': '스리랑카어', '아랍': '아랍어',
+  '힌두': '인도어', '이슬람': '인도어', '인도': '인도어',
+  '우즈벡': '우즈벡어', '다문화': '다문화', '한국어': '한국어', '이주민': '이주민',
+}
+
+const LANG_DISPLAY_OPTIONS = [
+  '네팔어', '베트남어', '태국어', '라오스어', '몽골어', '러시아어',
+  '중국&동포', '필리핀어', '캄보디아어', '미얀마어', '영어', '일본어',
+  '스리랑카어', '아랍어', '인도어',
+]
+
+// 표시 라벨 → JSON 값들 (역매핑, 필터용)
+const DISPLAY_TO_LANG_VALUES: Record<string, string[]> = {}
+Object.entries(LANG_TO_DISPLAY).forEach(([raw, label]) => {
+  if (!DISPLAY_TO_LANG_VALUES[label]) DISPLAY_TO_LANG_VALUES[label] = []
+  DISPLAY_TO_LANG_VALUES[label].push(raw)
+})
+
+function orgDisplayLangs(org: GmfsnsOrg): string[] {
+  const set = new Set(org.languages.map((l) => LANG_TO_DISPLAY[l] ?? l))
+  return [...set]
+}
+
+// 정렬: 한국어 이름 먼저, 영어/숫자 다음
+function sortOrgs(orgs: GmfsnsOrg[], sortKey: string): GmfsnsOrg[] {
+  return [...orgs].sort((a, b) => {
+    const aKo = /^[가-힣]/.test(a.name)
+    const bKo = /^[가-힣]/.test(b.name)
+    if (sortKey === 'default' || sortKey === 'name-ko') {
+      if (aKo && !bKo) return -1
+      if (!aKo && bKo) return 1
+    }
+    if (sortKey === 'name-en') {
+      if (!aKo && bKo) return -1
+      if (aKo && !bKo) return 1
+    }
+    return a.name.localeCompare(b.name, 'ko')
+  })
+}
 
 export function MissionMapClient({ orgs }: Props) {
   const [typeFilters, setTypeFilters]     = useState<Set<string>>(new Set())
+  const [targetFilters, setTargetFilters] = useState<Set<string>>(new Set())
   const [langFilters, setLangFilters]     = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery]     = useState('')
   const [searchApplied, setSearchApplied] = useState('')
+  const [sortKey, setSortKey]             = useState('default')
 
-  // Derive available options from actual data
+  // Derive available language display labels from actual data
+  const availableLangDisplays = useMemo(() => {
+    const s = new Set(orgs.flatMap((o) => orgDisplayLangs(o)))
+    return LANG_DISPLAY_OPTIONS.filter((l) => s.has(l))
+  }, [orgs])
+
+  // Derive available types from actual data
   const availableTypes = useMemo(() => {
     const s = new Set(orgs.map((o) => o.type).filter(Boolean))
     return TYPE_OPTIONS.filter((t) => s.has(t))
   }, [orgs])
 
-  const availableLangs = useMemo(() => {
-    const s = new Set(orgs.flatMap((o) => o.languages))
-    return LANG_OPTIONS.filter((l) => s.has(l))
+  // Derive available targets from actual data
+  const availableTargets = useMemo(() => {
+    const s = new Set(orgs.flatMap((o) => o.targets || []))
+    return TARGET_OPTIONS.filter((t) => s.has(t))
   }, [orgs])
 
-  const toggleType = (t: string) =>
-    setTypeFilters((prev) => { const n = new Set(prev); n.has(t) ? n.delete(t) : n.add(t); return n })
+  const toggle = (_set: Set<string>, val: string, setter: React.Dispatch<React.SetStateAction<Set<string>>>) => {
+    setter((prev: Set<string>) => { const n = new Set(prev); n.has(val) ? n.delete(val) : n.add(val); return n })
+  }
 
-  const toggleLang = (l: string) =>
-    setLangFilters((prev) => { const n = new Set(prev); n.has(l) ? n.delete(l) : n.add(l); return n })
-
-  const clearAll = () => { setTypeFilters(new Set()); setLangFilters(new Set()); setSearchQuery(''); setSearchApplied('') }
+  const clearAll = () => {
+    setTypeFilters(new Set()); setTargetFilters(new Set())
+    setLangFilters(new Set()); setSearchQuery(''); setSearchApplied('')
+  }
 
   const filtered = useMemo(() => {
-    return orgs.filter((org) => {
+    let result = orgs.filter((org) => {
       if (typeFilters.size > 0 && !typeFilters.has(org.type)) return false
-      if (langFilters.size > 0 && !org.languages.some((l) => langFilters.has(l))) return false
+      if (targetFilters.size > 0) {
+        const targets = org.targets || []
+        if (!targets.some((t) => targetFilters.has(t))) return false
+      }
+      if (langFilters.size > 0) {
+        const orgLangs = orgDisplayLangs(org)
+        if (!orgLangs.some((l) => langFilters.has(l))) return false
+      }
       if (searchApplied) {
         const q = searchApplied.toLowerCase()
-        const hit = org.name.toLowerCase().includes(q)
-          || org.description.toLowerCase().includes(q)
-          || org.address.toLowerCase().includes(q)
-          || org.languages.some((l) => l.includes(q))
+        const hit =
+          org.name.toLowerCase().includes(q) ||
+          (org.description || '').toLowerCase().includes(q) ||
+          (org.address || '').toLowerCase().includes(q) ||
+          org.languages.some((l) => l.includes(q)) ||
+          (org.targets || []).some((t) => t.includes(q))
         if (!hit) return false
       }
       return true
     })
-  }, [orgs, typeFilters, langFilters, searchApplied])
+    return sortOrgs(result, sortKey)
+  }, [orgs, typeFilters, targetFilters, langFilters, searchApplied, sortKey])
 
-  const hasFilter = typeFilters.size > 0 || langFilters.size > 0 || searchApplied
+  const hasFilter = typeFilters.size > 0 || targetFilters.size > 0 || langFilters.size > 0 || searchApplied
 
   return (
     <div className="min-h-screen bg-white">
@@ -79,55 +153,77 @@ export function MissionMapClient({ orgs }: Props) {
         <div className="max-w-6xl mx-auto">
           <p className="text-[#C8922A] text-xs font-semibold tracking-widest uppercase mb-1">Network</p>
           <h1 className="text-2xl font-bold">이주민 단체 지도</h1>
-          <p className="text-blue-200 text-sm mt-1">전국 이주민 선교 단체 현황</p>
+          <p className="text-blue-200 text-sm mt-1">국내 이주민 사역지도 · {orgs.length}개 단체</p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* ── Filters ───────────────────────────────────── */}
-        <div className="bg-gray-50 rounded-xl border border-gray-100 px-5 py-5 mb-8 space-y-4">
+        {/* ── Filters ─────────────────────────────────── */}
+        <div className="bg-gray-50 rounded-xl border border-gray-100 px-5 py-5 mb-6 space-y-4">
 
-          {/* Type filters */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-12 shrink-0">유형</span>
-            {availableTypes.map((t) => (
-              <label key={t} className="flex items-center gap-1.5 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={typeFilters.has(t)}
-                  onChange={() => toggleType(t)}
-                  className="w-3.5 h-3.5 accent-[#1B3A6B]"
-                />
-                <span className="text-sm text-gray-700">{t}</span>
-              </label>
-            ))}
+          {/* 유형 */}
+          <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-14 pt-0.5 shrink-0">유형</span>
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {(availableTypes.length > 0 ? availableTypes : TYPE_OPTIONS).map((t) => (
+                <label key={t} className="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={typeFilters.has(t)}
+                    onChange={() => toggle(typeFilters, t, setTypeFilters)}
+                    className="w-3.5 h-3.5 accent-[#1B3A6B]"
+                  />
+                  <span className="text-sm text-gray-700">{t}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
-          {/* Language filters */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-12 shrink-0">언어</span>
-            {availableLangs.map((l) => (
-              <label key={l} className="flex items-center gap-1.5 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={langFilters.has(l)}
-                  onChange={() => toggleLang(l)}
-                  className="w-3.5 h-3.5 accent-[#1B3A6B]"
-                />
-                <span className="text-sm text-gray-700">{l}</span>
-              </label>
-            ))}
+          {/* 사역대상 */}
+          <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-14 pt-0.5 shrink-0">사역<br/>대상</span>
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {TARGET_OPTIONS.map((t) => (
+                <label key={t} className="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={targetFilters.has(t)}
+                    onChange={() => toggle(targetFilters, t, setTargetFilters)}
+                    className="w-3.5 h-3.5 accent-[#1B3A6B]"
+                  />
+                  <span className="text-sm text-gray-700">{t}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
-          {/* Search */}
-          <div className="flex gap-2 pt-1">
+          {/* 언어 */}
+          <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider w-14 pt-0.5 shrink-0">언어</span>
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {(availableLangDisplays.length > 0 ? availableLangDisplays : LANG_DISPLAY_OPTIONS).map((l) => (
+                <label key={l} className="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={langFilters.has(l)}
+                    onChange={() => toggle(langFilters, l, setLangFilters)}
+                    className="w-3.5 h-3.5 accent-[#1B3A6B]"
+                  />
+                  <span className="text-sm text-gray-700">{l}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* 검색 + 정렬 */}
+          <div className="flex flex-wrap gap-2 pt-1">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') setSearchApplied(searchQuery) }}
               placeholder="단체명, 지역, 언어 검색..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+              className="flex-1 min-w-[200px] border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
             />
             <button
               type="button"
@@ -148,14 +244,23 @@ export function MissionMapClient({ orgs }: Props) {
           </div>
         </div>
 
-        {/* ── Result count ─────────────────────────────── */}
+        {/* ── Result count + Sort ─────────────────────── */}
         <div className="flex items-center justify-between mb-5">
           <p className="text-sm text-gray-500">
             총 <span className="font-bold text-[#1B3A6B]">{filtered.length}</span>개 단체
           </p>
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value)}
+            title="정렬 기준"
+            className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+          >
+            <option value="default">정렬: 한국어 우선</option>
+            <option value="name-en">정렬: 영어 우선</option>
+          </select>
         </div>
 
-        {/* ── Card grid ─────────────────────────────────── */}
+        {/* ── Card grid ───────────────────────────────── */}
         {filtered.length === 0 ? (
           <div className="py-24 text-center text-gray-400">
             <p className="text-base font-medium">검색 결과가 없습니다</p>
@@ -178,7 +283,9 @@ export function MissionMapClient({ orgs }: Props) {
 function OrgCard({ org }: { org: GmfsnsOrg }) {
   const excerpt = org.introLines?.length
     ? org.introLines.slice(0, 2).join(' / ')
-    : org.description?.slice(0, 100) || ''
+    : (org.description || '').slice(0, 80)
+
+  const displayLangs = orgDisplayLangs(org)
 
   return (
     <Link
@@ -203,7 +310,6 @@ function OrgCard({ org }: { org: GmfsnsOrg }) {
             </svg>
           </div>
         )}
-        {/* Type badge */}
         {org.type && (
           <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-white/90 text-[#1B3A6B] shadow-sm">
             {org.type}
@@ -218,22 +324,25 @@ function OrgCard({ org }: { org: GmfsnsOrg }) {
         </h3>
 
         {org.date && (
-          <p className="mt-1 text-xs text-gray-400 flex items-center gap-1">
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            {org.date}
-          </p>
+          <p className="mt-1 text-xs text-gray-400">{org.date}</p>
         )}
 
-        {org.languages.length > 0 && (
+        {displayLangs.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
-            {org.languages.slice(0, 3).map((l) => (
+            {displayLangs.slice(0, 3).map((l) => (
               <span key={l} className="px-1.5 py-0.5 rounded text-[10px] bg-blue-50 text-blue-600 font-medium">{l}</span>
             ))}
-            {org.languages.length > 3 && (
-              <span className="px-1.5 py-0.5 rounded text-[10px] bg-gray-100 text-gray-400">+{org.languages.length - 3}</span>
+            {displayLangs.length > 3 && (
+              <span className="px-1.5 py-0.5 rounded text-[10px] bg-gray-100 text-gray-400">+{displayLangs.length - 3}</span>
             )}
+          </div>
+        )}
+
+        {(org.targets || []).length > 0 && (
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {(org.targets || []).slice(0, 2).map((t) => (
+              <span key={t} className="px-1.5 py-0.5 rounded text-[10px] bg-green-50 text-green-700 font-medium">{t}</span>
+            ))}
           </div>
         )}
 
