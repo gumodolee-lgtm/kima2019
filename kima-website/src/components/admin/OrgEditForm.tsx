@@ -133,7 +133,7 @@ export function OrgEditForm({ org }: { org: Org }) {
         <label className="block text-xs text-gray-500 mb-2">언어권 * (복수 선택 가능)</label>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {LANGUAGES.map((l) => (
-            <label key={l} className="flex items-center gap-1.5 text-xs cursor-pointer">
+            <label key={l} className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer">
               <input type="checkbox" checked={form.languages.includes(l)} onChange={() => toggleArray('languages', l)} disabled={isPending} />
               {l}
             </label>
@@ -145,7 +145,7 @@ export function OrgEditForm({ org }: { org: Org }) {
         <label className="block text-xs text-gray-500 mb-2">사역대상 * (복수 선택 가능)</label>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {TARGETS.map((t) => (
-            <label key={t} className="flex items-center gap-1.5 text-xs cursor-pointer">
+            <label key={t} className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer">
               <input type="checkbox" checked={form.targets.includes(t)} onChange={() => toggleArray('targets', t)} disabled={isPending} />
               {t}
             </label>
@@ -178,7 +178,7 @@ export function OrgEditForm({ org }: { org: Org }) {
         </div>
       </div>
 
-      <label className="flex items-center gap-2 text-sm cursor-pointer">
+      <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
         <input type="checkbox" checked={form.isPublic} onChange={(e) => set('isPublic', e.target.checked)} disabled={isPending} />
         공개 (지도에 표시)
       </label>

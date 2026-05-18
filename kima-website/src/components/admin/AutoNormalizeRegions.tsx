@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 const VALID_REGIONS = new Set([
   '서울', '경기', '인천',
-  '부산경남', '대구경북', '광주전라', '대전충청', '강원제주', '기타',
+  '부산경남', '대구경북', '광주전라', '대전충청', '강원', '제주', '기타',
 ])
 
 interface Props {

@@ -13,7 +13,8 @@ const REGIONS = [
   '대구경북',
   '광주전라',
   '대전충청',
-  '강원제주',
+  '강원',
+  '제주',
 ]
 
 export default function CompleteProfilePage() {

@@ -67,8 +67,8 @@ export const PROVINCE_TO_KIMA_REGION: Record<Province, string> = {
   충청남도: '대전충청',
   충청북도: '대전충청',
   세종특별자치시: '대전충청',
-  강원특별자치도: '강원제주',
-  제주특별자치도: '강원제주',
+  강원특별자치도: '강원',
+  제주특별자치도: '제주',
 }
 
 export const ALL_PROVINCES: Province[] = [
