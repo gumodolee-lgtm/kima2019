@@ -5,50 +5,55 @@ import { HeroCarousel } from '@/components/home/HeroCarousel'
 import { PopupBanner } from '@/components/home/PopupBanner'
 import { CounterSection } from '@/components/home/CounterSection'
 import { prisma } from '@/lib/prisma'
+import type { StoryType } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
-const VISIONS = [
-  { icon: '🔗', title: '연결',    desc: '전국 다문화 사역 단체를 하나의 네트워크로 연결합니다.' },
-  { icon: '📝', title: '기록',    desc: '현장의 이야기와 데이터를 체계적으로 기록하고 보존합니다.' },
-  { icon: '👁',  title: '가시화', desc: '이주민 선교 현장을 세상에 보이게 합니다.' },
-  { icon: '🤝', title: '후원 연결', desc: '필요한 곳에 자원이 흐르도록 후원자와 사역자를 잇습니다.' },
+const STORY_CATEGORIES: { type: StoryType; label: string; barCls: string; topCls: string }[] = [
+  { type: 'NEWS',            label: 'KIMA 뉴스',       barCls: 'bg-[#1B3A6B]', topCls: 'bg-[#1B3A6B]' },
+  { type: 'FIELD_STORY',    label: '사역현장 이야기',   barCls: 'bg-[#2E7D32]', topCls: 'bg-[#2E7D32]' },
+  { type: 'EVENT_MEDIA',    label: '행사 사진·영상',    barCls: 'bg-[#6A1B9A]', topCls: 'bg-[#6A1B9A]' },
+  { type: 'PRAYER_REQUEST', label: '중보기도 요청',     barCls: 'bg-[#C8922A]', topCls: 'bg-[#C8922A]' },
+  { type: 'EVENT_PROMO',    label: '행사 홍보',         barCls: 'bg-[#0277BD]', topCls: 'bg-[#0277BD]' },
 ]
 
-// 협력 기관 목록 — 로고 이미지 준비 시 logoSrc 경로를 추가하면 자동으로 이미지로 전환됨
-const PARTNER_LOGOS: { name: string; logoSrc?: string }[] = [
-  { name: '한국선교연구원' },
-  { name: '한국이주민건강협회' },
-  { name: '다문화교육진흥원' },
-  { name: '이주민복지연합' },
-  { name: '글로벌케어' },
-  { name: '다일공동체' },
-]
+function storyHref(id: string, type: StoryType) {
+  return type === 'EVENT_PROMO' ? `/story/event-promo/${id}` : `/story/${id}`
+}
 
 export default async function HomePage() {
   const session = await auth()
 
-  const [dbStories, dbEvents, orgCount, memberCount, resourceCount] = await Promise.all([
-    prisma.story.findMany({
-      where: { isPublished: true, status: 'APPROVED' },
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-    }).catch(() => []),
-    prisma.event.findMany({
-      where: { scheduledAt: { gte: new Date() } },
-      orderBy: { scheduledAt: 'asc' },
-      take: 4,
-    }).catch(() => []),
+  const [
+    newsStories, fieldStories, eventMediaStories, prayerStories, eventPromoStories,
+    dbEvents, orgCount, memberCount, resourceCount,
+  ] = await Promise.all([
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'NEWS'           }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'FIELD_STORY'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_MEDIA'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'PRAYER_REQUEST'}, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
+    prisma.story.findMany({ where: { isPublished: true, status: 'APPROVED', type: 'EVENT_PROMO'   }, orderBy: { createdAt: 'desc' }, take: 2 }).catch(() => []),
+    prisma.event.findMany({ where: { scheduledAt: { gte: new Date() } }, orderBy: { scheduledAt: 'asc' }, take: 4 }).catch(() => []),
     prisma.organization.count({ where: { isPublic: true } }).catch(() => 0),
     prisma.user.count().catch(() => 0),
     prisma.resource.count().catch(() => 0),
   ])
 
+  const storyGroups = [
+    { ...STORY_CATEGORIES[0], stories: newsStories },
+    { ...STORY_CATEGORIES[1], stories: fieldStories },
+    { ...STORY_CATEGORIES[2], stories: eventMediaStories },
+    { ...STORY_CATEGORIES[3], stories: prayerStories },
+    { ...STORY_CATEGORIES[4], stories: eventPromoStories },
+  ].filter((g) => g.stories.length > 0)
+
+  const hasAnyStory = storyGroups.length > 0
+
   const stats = [
-    { label: '가입 단체',     value: orgCount > 0     ? `${orgCount}+`     : '120+',   unit: '개' },
-    { label: '이주민 대상국', value: '30+',                                              unit: '개국' },
-    { label: '활동 회원',     value: memberCount > 0  ? `${memberCount}+`  : '500+',   unit: '명' },
-    { label: '등록 자료',     value: resourceCount > 0 ? `${resourceCount}+` : '1200+', unit: '건' },
+    { label: '가입 단체',     value: orgCount > 0      ? `${orgCount}+`      : '120+',   unit: '개' },
+    { label: '이주민 대상국', value: '30+',                                               unit: '개국' },
+    { label: '활동 회원',     value: memberCount > 0   ? `${memberCount}+`   : '500+',   unit: '명' },
+    { label: '등록 자료',     value: resourceCount > 0 ? `${resourceCount}+` : '1200+',  unit: '건' },
   ]
 
   return (
@@ -59,73 +64,73 @@ export default async function HomePage() {
       {/* 1. 히어로 슬라이드 */}
       <HeroCarousel isLoggedIn={!!session} />
 
-      {/* 2. 숫자 카운터 (뷰포트 진입 시 애니메이션, DB 실수치 반영) */}
+      {/* 2. 숫자 카운터 */}
       <CounterSection stats={stats} />
 
-      {/* 3. 4대 비전 */}
-      <section className="bg-[#F8F9FA] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#1B3A6B]">KIMA의 4대 비전</h2>
-            <p className="mt-3 text-gray-500 text-sm">연결·기록·가시화·후원 연결을 통해 이주민 선교를 섬깁니다</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {VISIONS.map((v) => (
-              <Card key={v.title} className="text-center p-6">
-                <div className="text-4xl mb-4">{v.icon}</div>
-                <h3 className="text-lg font-bold text-[#1B3A6B] mb-2">{v.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. 최신 스토리 3개 (DB) */}
+      {/* 3. 최신 스토리 — 카테고리별 2개 */}
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex items-end justify-between mb-12">
             <div>
               <h2 className="text-3xl font-bold text-[#1B3A6B]">최신 스토리</h2>
-              <p className="mt-2 text-sm text-gray-500">현장의 이야기를 전합니다</p>
+              <p className="mt-2 text-sm text-gray-500">현장의 이야기를 카테고리별로 전합니다</p>
             </div>
             <Link href="/story" className="text-sm text-[#1B3A6B] font-medium hover:underline">
               전체 보기 →
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {dbStories.length > 0 ? dbStories.map((story) => (
-              <Link key={story.id} href={`/story/${story.id}`}>
-                <Card hover className="overflow-hidden h-full">
-                  <div className="h-2 bg-gradient-to-r from-[#1B3A6B] to-[#C8922A]" />
-                  <CardContent className="p-6">
-                    <span className="text-xs font-semibold text-[#C8922A] uppercase tracking-wide">
-                      {story.type === 'NEWS' ? 'KIMA 뉴스'
-                        : story.type === 'FIELD_STORY' ? '사역현장 이야기'
-                        : story.type === 'EVENT_MEDIA' ? '행사 사진영상'
-                        : story.type === 'PRAYER_REQUEST' ? '중보기도 요청'
-                        : '현장스토리'}
-                    </span>
-                    <h3 className="mt-2 text-base font-bold text-[#1A1A1A] leading-snug line-clamp-2">
-                      {story.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-3">
-                      {story.excerpt ?? ''}
-                    </p>
-                    <p className="mt-4 text-xs text-gray-400">
-                      {story.createdAt.toLocaleDateString('ko-KR')}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            )) : (
-              <p className="col-span-3 text-center text-gray-400 py-10">등록된 스토리가 없습니다.</p>
-            )}
-          </div>
+
+          {hasAnyStory ? (
+            <div className="space-y-12">
+              {storyGroups.map(({ type, label, barCls, topCls, stories }) => (
+                <div key={type}>
+                  {/* 카테고리 헤더 */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className={`w-1 h-6 rounded-full inline-block ${barCls}`} />
+                      <h3 className="text-lg font-bold text-[#1A1A1A]">{label}</h3>
+                    </div>
+                    <Link
+                      href={`/story?type=${type}`}
+                      className="text-xs text-gray-400 hover:text-[#1B3A6B] transition-colors"
+                    >
+                      더 보기 →
+                    </Link>
+                  </div>
+
+                  {/* 2열 카드 그리드 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {stories.map((story) => (
+                      <Link key={story.id} href={storyHref(story.id, story.type)}>
+                        <Card hover className="overflow-hidden h-full">
+                          <div className={`h-1.5 rounded-t-xl ${topCls}`} />
+                          <CardContent className="p-5">
+                            <h4 className="text-sm font-bold text-[#1A1A1A] leading-snug line-clamp-2 mb-2">
+                              {story.title}
+                            </h4>
+                            {story.excerpt && (
+                              <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">
+                                {story.excerpt}
+                              </p>
+                            )}
+                            <p className="text-xs text-gray-400">
+                              {story.createdAt.toLocaleDateString('ko-KR')}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-400 py-16">등록된 스토리가 없습니다.</p>
+          )}
         </div>
       </section>
 
-      {/* 5. 다음 일정 (DB) */}
+      {/* 4. 다가오는 일정 */}
       <section className="bg-[#F8F9FA] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
@@ -159,7 +164,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. 후원 배너 */}
+      {/* 5. 후원 배너 */}
       <section className="bg-[#C8922A] py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">이주민 선교를 함께 후원해 주세요</h2>
@@ -173,30 +178,6 @@ export default async function HomePage() {
           >
             후원하기
           </Link>
-        </div>
-      </section>
-
-      {/* 7. 협력 기관 로고 */}
-      <section className="bg-white py-16 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-sm font-semibold text-gray-400 uppercase tracking-widest mb-10">
-            협력 기관
-          </h2>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
-            {PARTNER_LOGOS.map((partner) => (
-              <div
-                key={partner.name}
-                className="flex items-center justify-center h-16 rounded-xl bg-gray-50 border border-gray-100 px-3 hover:border-gray-200 transition-colors"
-              >
-                {partner.logoSrc ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={partner.logoSrc} alt={partner.name} className="max-h-10 max-w-full object-contain" />
-                ) : (
-                  <span className="text-xs text-gray-400 font-medium text-center leading-tight">{partner.name}</span>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </>
