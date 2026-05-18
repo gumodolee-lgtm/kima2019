@@ -9,6 +9,7 @@ import { AutoNormalizeRegions } from '@/components/admin/AutoNormalizeRegions'
 import { DeleteOrgButton } from '@/components/admin/DeleteOrgButton'
 import { ImportGmfsnsButton } from '@/components/admin/ImportGmfsnsButton'
 import { AssignDefaultImagesButton } from '@/components/admin/AssignDefaultImagesButton'
+import { FindDuplicatesButton } from '@/components/admin/FindDuplicatesButton'
 import type { Metadata } from 'next'
 import type { Prisma } from '@prisma/client'
 
@@ -54,11 +55,12 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
           <h1 className="text-xl font-bold text-[#1B3A6B]">단체 관리</h1>
           <p className="text-sm text-gray-500 mt-1">단체를 검색하고 수정·승인·반려합니다.</p>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-52">
           <NormalizeAddressButton />
           <GeocodeButton />
           <ImportGmfsnsButton />
           <AssignDefaultImagesButton />
+          <FindDuplicatesButton />
         </div>
       </div>
 

@@ -8,14 +8,16 @@ import { addressToKimaRegion } from '@/lib/normalizeKoreanAddress'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const regions  = searchParams.get('region')?.split(',').filter(Boolean) ?? []
+    const regions   = searchParams.get('region')?.split(',').filter(Boolean) ?? []
     const languages = searchParams.get('language')?.split(',').filter(Boolean) ?? []
     const targets   = searchParams.get('target')?.split(',').filter(Boolean) ?? []
     const types     = searchParams.get('type')?.split(',').filter(Boolean) ?? []
+    const q         = searchParams.get('q')?.trim() ?? ''
 
     const orgs = await prisma.organization.findMany({
       where: {
         isPublic: true,
+        ...(q ? { name: { contains: q, mode: 'insensitive' } } : {}),
         ...(regions.length > 0 ? { region: { in: regions } } : {}),
         ...(languages.length > 0 ? { languages: { hasSome: languages } } : {}),
         ...(targets.length > 0 ? { targets: { hasSome: targets } } : {}),
