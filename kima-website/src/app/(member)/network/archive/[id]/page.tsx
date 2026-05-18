@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getEventType } from '@/lib/eventTypes'
 import { prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth'
 import { ARCHIVE_RECORDS } from '../data'
+import { ForumArchiveForm } from '@/components/admin/ForumArchiveForm'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -20,6 +22,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ArchiveDetailPage({ params }: Props) {
   const { id } = await params
 
+  const session = await auth()
+  const role = session?.user?.role
+  const isAdmin = role === 'ADMIN' || role === 'OFFICER'
+
   // Try DB first
   const dbRecord = await prisma.forumArchive.findUnique({
     where: { id },
@@ -30,12 +36,28 @@ export default async function ArchiveDetailPage({ params }: Props) {
   }).catch(() => null)
 
   if (dbRecord) {
-    if (!dbRecord.isPublished) notFound()
+    if (!dbRecord.isPublished && !isAdmin) notFound()
 
     const typeInfo = getEventType(dbRecord.type)
     const hasContent =
       !!(dbRecord.theme || dbRecord.location || dbRecord.schedules.length > 0 ||
       dbRecord.materials.length > 0 || dbRecord.photos.length > 0 || dbRecord.videoUrls.length > 0)
+
+    const editData = isAdmin ? {
+      id: dbRecord.id,
+      seq: dbRecord.seq,
+      type: dbRecord.type,
+      title: dbRecord.title,
+      date: dbRecord.date,
+      location: dbRecord.location,
+      theme: dbRecord.theme,
+      description: dbRecord.description,
+      videoUrls: dbRecord.videoUrls,
+      photos: dbRecord.photos,
+      isPublished: dbRecord.isPublished,
+      schedules: dbRecord.schedules,
+      materials: dbRecord.materials,
+    } : null
 
     return (
       <ArchiveDetailView
@@ -52,6 +74,8 @@ export default async function ArchiveDetailPage({ params }: Props) {
         photos={dbRecord.photos}
         videoUrls={dbRecord.videoUrls}
         hasContent={hasContent}
+        isAdmin={isAdmin}
+        editData={editData}
       />
     )
   }
@@ -80,6 +104,9 @@ export default async function ArchiveDetailPage({ params }: Props) {
       photos={record.photos}
       videoUrls={record.videoUrl ? [record.videoUrl] : []}
       hasContent={hasContent}
+      isAdmin={isAdmin}
+      editData={null}
+      staticId={record.id}
     />
   )
 }
@@ -98,17 +125,67 @@ interface ViewProps {
   photos?: string[]
   videoUrls?: string[]
   hasContent: boolean
+  isAdmin: boolean
+  editData: {
+    id: string
+    seq: string
+    type: 'FORUM' | 'LISTENING_CALL'
+    title: string
+    date: string
+    location: string | null
+    theme: string | null
+    description: string | null
+    videoUrls: string[]
+    photos: string[]
+    isPublished: boolean
+    schedules: { time: string; title: string; speaker: string | null }[]
+    materials: { title: string; fileType: string; url: string }[]
+  } | null
+  staticId?: string
 }
 
 function ArchiveDetailView({
   recordType, typeInfo, seq, title, date, location, theme, description,
   scheduleItems, materials, photos, videoUrls, hasContent,
+  isAdmin, editData, staticId,
 }: ViewProps) {
   const backHref = recordType === 'LISTENING_CALL' ? '/network/listening' : '/network/forum'
   const backLabel = recordType === 'LISTENING_CALL' ? '리스닝콜 목록으로' : '포럼 목록으로'
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
+      {/* 관리자 편집 바 */}
+      {isAdmin && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5">
+          <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
+            <p className="text-xs text-amber-700 font-medium">
+              {editData
+                ? '관리자 모드 — 이 페이지의 자료를 편집할 수 있습니다.'
+                : '이 항목은 정적 데이터입니다. 관리자 패널에서 새로 등록하면 자료를 올릴 수 있습니다.'}
+            </p>
+            <div className="shrink-0">
+              {editData ? (
+                <ForumArchiveForm
+                  mode="edit"
+                  initialData={{
+                    ...editData,
+                    schedules: editData.schedules.map((s) => ({ ...s, speaker: s.speaker ?? null })),
+                    materials: editData.materials.map((m) => ({ title: m.title, fileType: m.fileType, url: m.url })),
+                  }}
+                />
+              ) : (
+                <Link
+                  href={`/admin/forum-archives`}
+                  className="px-3 py-1.5 bg-[#1B3A6B] text-white text-xs font-medium rounded-lg hover:bg-[#15306b] transition-colors"
+                >
+                  관리자 패널에서 등록 →
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 헤더 */}
       <div className="bg-[#1B3A6B] text-white py-12 px-4">
         <div className="max-w-3xl mx-auto">
@@ -187,12 +264,8 @@ function ArchiveDetailView({
                     {mat.type}
                   </span>
                   {mat.url ? (
-                    <a
-                      href={mat.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-[#1B3A6B] hover:underline"
-                    >
+                    <a href={mat.url} target="_blank" rel="noopener noreferrer"
+                      className="text-sm text-[#1B3A6B] hover:underline">
                       {mat.title}
                     </a>
                   ) : (
@@ -211,12 +284,7 @@ function ArchiveDetailView({
             <div className="space-y-4">
               {videoUrls.map((url, i) => (
                 <div key={i} className="aspect-video rounded-lg overflow-hidden bg-gray-100">
-                  <iframe
-                    src={url}
-                    className="w-full h-full"
-                    allowFullScreen
-                    title={`영상 ${i + 1}`}
-                  />
+                  <iframe src={url} className="w-full h-full" allowFullScreen title={`영상 ${i + 1}`} />
                 </div>
               ))}
             </div>
@@ -231,11 +299,8 @@ function ArchiveDetailView({
               {photos.map((url, i) => (
                 <a key={i} href={url} target="_blank" rel="noopener noreferrer">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={url}
-                    alt={`사진 ${i + 1}`}
-                    className="w-full aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity"
-                  />
+                  <img src={url} alt={`사진 ${i + 1}`}
+                    className="w-full aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity" />
                 </a>
               ))}
             </div>
