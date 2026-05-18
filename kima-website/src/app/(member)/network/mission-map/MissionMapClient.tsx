@@ -5,16 +5,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export interface GmfsnsOrg {
-  id: number
+  key?: string
+  id: number | string
+  source?: 'json' | 'db'
   name: string
   type: string
   languages: string[]
   targets: string[]
-  address: string
-  phone: string
-  email: string
-  website: string
-  description: string
+  address: string | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  description: string | null
   introLines?: string[]
   contactItems?: string[]
   image: string | null
@@ -27,13 +29,9 @@ interface Props {
   orgs: GmfsnsOrg[]
 }
 
-// 유형 필터 옵션 (사이트 기준)
 const TYPE_OPTIONS = ['교회', 'NGO', '법률', '의료', '교육', '센터', '선교단체', '부설기관', '기타']
-
-// 사역대상 필터 옵션
 const TARGET_OPTIONS = ['이주노동자', '유학생', '결혼이민자', '다문화자녀', '난민미등록', '귀국이주민', '중보사역', '기타']
 
-// 언어 표시 라벨 (JSON 값 → 화면 표시)
 const LANG_TO_DISPLAY: Record<string, string> = {
   '네팔': '네팔어', '베트남': '베트남어', '태국': '태국어',
   '라오': '라오스어', '라오스': '라오스어',
@@ -54,19 +52,11 @@ const LANG_DISPLAY_OPTIONS = [
   '스리랑카어', '아랍어', '인도어',
 ]
 
-// 표시 라벨 → JSON 값들 (역매핑, 필터용)
-const DISPLAY_TO_LANG_VALUES: Record<string, string[]> = {}
-Object.entries(LANG_TO_DISPLAY).forEach(([raw, label]) => {
-  if (!DISPLAY_TO_LANG_VALUES[label]) DISPLAY_TO_LANG_VALUES[label] = []
-  DISPLAY_TO_LANG_VALUES[label].push(raw)
-})
-
 function orgDisplayLangs(org: GmfsnsOrg): string[] {
   const set = new Set(org.languages.map((l) => LANG_TO_DISPLAY[l] ?? l))
   return [...set]
 }
 
-// 정렬: 한국어 이름 먼저, 영어/숫자 다음
 function sortOrgs(orgs: GmfsnsOrg[], sortKey: string): GmfsnsOrg[] {
   return [...orgs].sort((a, b) => {
     const aKo = /^[가-힣]/.test(a.name)
@@ -91,7 +81,6 @@ export function MissionMapClient({ orgs }: Props) {
   const [searchApplied, setSearchApplied] = useState('')
   const [sortKey, setSortKey]             = useState('default')
 
-  // Derive available language display labels from actual data
   const availableLangDisplays = useMemo(() => {
     const s = new Set(orgs.flatMap((o) => orgDisplayLangs(o)))
     return LANG_DISPLAY_OPTIONS.filter((l) => s.has(l))
@@ -107,7 +96,7 @@ export function MissionMapClient({ orgs }: Props) {
   }
 
   const filtered = useMemo(() => {
-    let result = orgs.filter((org) => {
+    const result = orgs.filter((org) => {
       if (typeFilters.size > 0 && !typeFilters.has(org.type)) return false
       if (targetFilters.size > 0) {
         const targets = org.targets || []
@@ -132,7 +121,19 @@ export function MissionMapClient({ orgs }: Props) {
     return sortOrgs(result, sortKey)
   }, [orgs, typeFilters, targetFilters, langFilters, searchApplied, sortKey])
 
-  const hasFilter = typeFilters.size > 0 || targetFilters.size > 0 || langFilters.size > 0 || searchApplied
+  const hasFilter = typeFilters.size > 0 || targetFilters.size > 0 || langFilters.size > 0 || !!searchApplied
+
+  const knownTypes = new Set(TYPE_OPTIONS)
+
+  const groupedByType = useMemo(() => {
+    const groups = TYPE_OPTIONS.map((type) => ({
+      type,
+      orgs: filtered.filter((o) => o.type === type),
+    }))
+    const unclassified = filtered.filter((o) => !knownTypes.has(o.type))
+    if (unclassified.length > 0) groups.push({ type: '미분류', orgs: unclassified })
+    return groups.filter((g) => g.orgs.length > 0)
+  }, [filtered])
 
   return (
     <div className="min-h-screen bg-white">
@@ -203,7 +204,7 @@ export function MissionMapClient({ orgs }: Props) {
             </div>
           </div>
 
-          {/* 검색 + 정렬 */}
+          {/* 검색 */}
           <div className="flex flex-wrap gap-2 pt-1">
             <input
               type="text"
@@ -233,7 +234,7 @@ export function MissionMapClient({ orgs }: Props) {
         </div>
 
         {/* ── Result count + Sort ─────────────────────── */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-8">
           <p className="text-sm text-gray-500">
             총 <span className="font-bold text-[#1B3A6B]">{filtered.length}</span>개 단체
           </p>
@@ -248,7 +249,7 @@ export function MissionMapClient({ orgs }: Props) {
           </select>
         </div>
 
-        {/* ── Card grid ───────────────────────────────── */}
+        {/* ── 유형별 섹션 ─────────────────────────────── */}
         {filtered.length === 0 ? (
           <div className="py-24 text-center text-gray-400">
             <p className="text-base font-medium">검색 결과가 없습니다</p>
@@ -257,9 +258,20 @@ export function MissionMapClient({ orgs }: Props) {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((org) => (
-              <OrgCard key={org.id} org={org} />
+          <div className="space-y-12">
+            {groupedByType.map(({ type, orgs: typeOrgs }) => (
+              <section key={type}>
+                <div className="flex items-center gap-3 mb-5">
+                  <h2 className="text-lg font-bold text-[#1B3A6B] whitespace-nowrap">{type}</h2>
+                  <span className="text-sm text-gray-400 whitespace-nowrap">{typeOrgs.length}개</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {typeOrgs.map((org) => (
+                    <OrgCard key={org.key ?? String(org.id)} org={org} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}
@@ -274,10 +286,13 @@ function OrgCard({ org }: { org: GmfsnsOrg }) {
     : (org.description || '').slice(0, 80)
 
   const displayLangs = orgDisplayLangs(org)
+  const href = org.source === 'db'
+    ? `/directory/${org.id}`
+    : `/network/mission-map/${org.id}`
 
   return (
     <Link
-      href={`/network/mission-map/${org.id}`}
+      href={href}
       className="group flex flex-col bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-gray-200 transition-all"
     >
       {/* Image */}
@@ -297,11 +312,6 @@ function OrgCard({ org }: { org: GmfsnsOrg }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 22V12h6v10" />
             </svg>
           </div>
-        )}
-        {org.type && (
-          <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-white/90 text-[#1B3A6B] shadow-sm">
-            {org.type}
-          </span>
         )}
       </div>
 
