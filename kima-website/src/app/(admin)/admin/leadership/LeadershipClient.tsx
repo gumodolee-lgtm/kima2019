@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export const GROUP_LABELS: Record<string, string> = {
   ADVISOR:          '고문 · 자문위원',
@@ -65,6 +65,15 @@ function leaderToForm(l: Leader): FormState {
 
 const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]'
 
+type MemberResult = {
+  id: string
+  name: string | null
+  email: string
+  organization: string | null
+  position: string | null
+  phone: string | null
+}
+
 export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] }) {
   const [items, setItems]       = useState<Leader[]>(initialLeaders)
   const [showModal, setShowModal] = useState(false)
@@ -75,10 +84,58 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
   const [activeGroup, setActiveGroup] = useState<string>('ALL')
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
+  // 회원 검색 상태
+  const [memberQuery, setMemberQuery] = useState('')
+  const [memberResults, setMemberResults] = useState<MemberResult[]>([])
+  const [searchingMembers, setSearchingMembers] = useState(false)
+  const [showMemberPicker, setShowMemberPicker] = useState(false)
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  async function searchMembers(q: string) {
+    if (!q.trim()) { setMemberResults([]); return }
+    setSearchingMembers(true)
+    try {
+      const res = await fetch(`/api/admin/members?q=${encodeURIComponent(q)}`)
+      if (res.ok) {
+        const data = await res.json()
+        setMemberResults(data.users ?? [])
+      }
+    } finally {
+      setSearchingMembers(false)
+    }
+  }
+
+  function onMemberQueryChange(q: string) {
+    setMemberQuery(q)
+    if (searchTimer.current) clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => searchMembers(q), 300)
+  }
+
+  function applyMember(m: MemberResult) {
+    setForm((f) => ({
+      ...f,
+      name:     m.name     ?? f.name,
+      email:    m.email    ?? f.email,
+      phone:    m.phone    ?? f.phone,
+      org:      m.organization ?? f.org,
+      position: m.position ?? f.position,
+    }))
+    setMemberQuery('')
+    setMemberResults([])
+    setShowMemberPicker(false)
+  }
+
+  function resetSearch() {
+    setMemberQuery('')
+    setMemberResults([])
+    setShowMemberPicker(false)
+  }
+
   function openAdd() {
     setEditing(null)
     setForm(EMPTY_FORM)
     setError('')
+    resetSearch()
     setShowModal(true)
   }
 
@@ -86,6 +143,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
     setEditing(leader)
     setForm(leaderToForm(leader))
     setError('')
+    resetSearch()
     setShowModal(true)
   }
 
@@ -93,6 +151,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
     setShowModal(false)
     setEditing(null)
     setError('')
+    resetSearch()
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -272,6 +331,57 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
             </div>
 
             <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+              {/* 회원 검색으로 자동 입력 */}
+              <div className="border border-blue-100 rounded-lg bg-blue-50 p-3">
+                <button
+                  type="button"
+                  onClick={() => setShowMemberPicker((v) => !v)}
+                  className="w-full flex items-center justify-between text-xs font-semibold text-[#1B3A6B]"
+                >
+                  <span>회원에서 불러오기 (선택사항)</span>
+                  <span className="text-gray-400">{showMemberPicker ? '▲' : '▼'}</span>
+                </button>
+                {showMemberPicker && (
+                  <div className="mt-2 relative">
+                    <input
+                      type="text"
+                      value={memberQuery}
+                      onChange={(e) => onMemberQueryChange(e.target.value)}
+                      placeholder="이름 · 이메일 · 소속으로 검색"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B] bg-white"
+                    />
+                    {searchingMembers && (
+                      <p className="text-xs text-gray-400 mt-1">검색 중...</p>
+                    )}
+                    {memberResults.length > 0 && (
+                      <ul className="mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto divide-y divide-gray-50">
+                        {memberResults.map((m) => (
+                          <li key={m.id}>
+                            <button
+                              type="button"
+                              onClick={() => applyMember(m)}
+                              className="w-full text-left px-3 py-2 hover:bg-blue-50 transition-colors"
+                            >
+                              <p className="text-sm font-medium text-gray-800">
+                                {m.name ?? '(이름 없음)'}
+                                {m.position && <span className="ml-1 text-xs text-gray-400">{m.position}</span>}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {m.email}{m.organization ? ` · ${m.organization}` : ''}
+                              </p>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {!searchingMembers && memberQuery && memberResults.length === 0 && (
+                      <p className="text-xs text-gray-400 mt-1">검색 결과가 없습니다.</p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1.5">선택하면 이름·연락처·이메일·소속·직분이 자동으로 입력됩니다.</p>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">구분 *</label>

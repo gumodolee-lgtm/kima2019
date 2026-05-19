@@ -27,8 +27,18 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 }
 
 const patchSchema = z.object({
-  role: z.enum(['MEMBER', 'PREMIUM', 'OFFICER', 'ADMIN']).optional(),
-  premiumNote: z.string().max(500).nullable().optional(),
+  // 등급·메모 (기존)
+  role:         z.enum(['MEMBER', 'PREMIUM', 'OFFICER', 'ADMIN']).optional(),
+  premiumNote:  z.string().max(500).nullable().optional(),
+  // 프로필 편집 (신규)
+  name:         z.string().min(1).max(50).optional(),
+  organization: z.string().max(100).nullable().optional(),
+  position:     z.string().max(50).nullable().optional(),
+  phone:        z.string().max(30).nullable().optional(),
+  address:      z.string().max(200).nullable().optional(),
+  denomination: z.string().max(100).nullable().optional(),
+  region:       z.string().max(50).nullable().optional(),
+  expiresAt:    z.string().datetime().nullable().optional(),
 })
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -48,6 +58,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const current = await prisma.user.findUnique({ where: { id }, select: { premiumNote: true } })
 
     const updateData: Record<string, unknown> = {}
+
+    // 등급 변경
     if (parsed.data.role !== undefined) {
       updateData.role = parsed.data.role as UserRole
       if (parsed.data.role === 'PREMIUM') {
@@ -55,14 +67,20 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         const expires = new Date()
         expires.setFullYear(expires.getFullYear() + 1)
         updateData.expiresAt = expires
-        // [신청] 접수 내역을 [승인됨]으로 변경해 이력 보존
         if (current?.premiumNote?.startsWith('[신청]')) {
           updateData.premiumNote = current.premiumNote.replace('[신청]', '[승인됨]')
         }
       }
     }
-    if ('premiumNote' in parsed.data) {
-      updateData.premiumNote = parsed.data.premiumNote
+    if ('premiumNote' in parsed.data) updateData.premiumNote = parsed.data.premiumNote
+
+    // 프로필 필드
+    const profileFields = ['name', 'organization', 'position', 'phone', 'address', 'denomination', 'region'] as const
+    for (const f of profileFields) {
+      if (f in parsed.data) updateData[f] = (parsed.data as Record<string, unknown>)[f] ?? null
+    }
+    if ('expiresAt' in parsed.data) {
+      updateData.expiresAt = parsed.data.expiresAt ? new Date(parsed.data.expiresAt) : null
     }
 
     const user = await prisma.user.update({ where: { id }, data: updateData })
