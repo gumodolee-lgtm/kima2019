@@ -5,12 +5,19 @@ import { useRouter } from 'next/navigation'
 import type { CategoryType } from '@prisma/client'
 
 interface Props {
-  type: 'LANGUAGE' | 'TARGET'
+  type: CategoryType
 }
 
-const TYPE_LABELS: Record<'LANGUAGE' | 'TARGET', string> = {
+const TYPE_LABELS: Record<CategoryType, string> = {
+  REGION:   '지역',
   LANGUAGE: '언어권',
-  TARGET: '사역대상',
+  TARGET:   '사역대상',
+}
+
+const PLACEHOLDERS: Record<CategoryType, { name: string; slug: string }> = {
+  REGION:   { name: '예) 제주', slug: 'jeju' },
+  LANGUAGE: { name: '예) 베트남', slug: 'vietnam' },
+  TARGET:   { name: '예) 이주노동자', slug: 'worker' },
 }
 
 function toSlug(text: string): string {
@@ -91,7 +98,7 @@ export function CategoryAddForm({ type }: Props) {
           type="text"
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          placeholder={type === 'LANGUAGE' ? '예) 베트남' : '예) 이주노동자'}
+          placeholder={PLACEHOLDERS[type].name}
           disabled={isPending}
           className="w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B] bg-white"
         />
@@ -107,7 +114,7 @@ export function CategoryAddForm({ type }: Props) {
             type="text"
             value={slug}
             onChange={(e) => handleSlugChange(e.target.value)}
-            placeholder={type === 'LANGUAGE' ? 'vietnam' : 'worker'}
+            placeholder={PLACEHOLDERS[type].slug}
             disabled={isPending}
             className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B] bg-white"
           />
@@ -137,6 +144,127 @@ export function CategoryAddForm({ type }: Props) {
   )
 }
 
+// ── Rename (name/slug edit) ────────────────────────────────────
+
+interface RenameProps {
+  categoryId: string
+  name: string
+  slug: string
+  type: CategoryType
+}
+
+export function CategoryRenameForm({ categoryId, name, slug, type }: RenameProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [open, setOpen] = useState(false)
+  const [newName, setNewName] = useState(name)
+  const [newSlug, setNewSlug] = useState(slug)
+  const [slugTouched, setSlugTouched] = useState(false)
+  const [error, setError] = useState('')
+
+  function handleNameChange(v: string) {
+    setNewName(v)
+    if (!slugTouched) setNewSlug(toSlug(v))
+  }
+
+  function handleOpen() {
+    setNewName(name)
+    setNewSlug(slug)
+    setSlugTouched(false)
+    setError('')
+    setOpen(true)
+  }
+
+  function handleSave() {
+    if (!newName.trim()) { setError('이름을 입력해주세요.'); return }
+    if (!newSlug.trim()) { setError('slug를 입력해주세요.'); return }
+    if (!/^[a-z0-9-]+$/.test(newSlug)) { setError('slug는 소문자, 숫자, 하이픈(-)만 사용 가능합니다.'); return }
+    setError('')
+
+    startTransition(async () => {
+      const res = await fetch(`/api/admin/categories/${categoryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName.trim(), slug: newSlug.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? '수정에 실패했습니다.')
+        return
+      }
+      setOpen(false)
+      router.refresh()
+    })
+  }
+
+  if (!open) {
+    return (
+      <div className="flex items-center gap-1.5 group">
+        <div>
+          <p className="text-sm font-medium text-gray-900">{name}</p>
+          <p className="text-xs text-gray-400">/{slug}</p>
+        </div>
+        <button
+          type="button"
+          onClick={handleOpen}
+          title="이름 수정"
+          className="opacity-0 group-hover:opacity-100 p-1 rounded text-gray-400 hover:text-[#1B3A6B] hover:bg-gray-100 transition-all"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2 min-w-[160px]">
+      <div>
+        <input
+          type="text"
+          value={newName}
+          onChange={(e) => handleNameChange(e.target.value)}
+          disabled={isPending}
+          placeholder="이름"
+          className="w-full text-sm border border-[#1B3A6B] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B]"
+        />
+      </div>
+      <div>
+        <div className="flex items-center gap-1">
+          <span className="text-xs text-gray-400 flex-shrink-0">{type.toLowerCase()}/</span>
+          <input
+            type="text"
+            value={newSlug}
+            onChange={(e) => { setNewSlug(e.target.value); setSlugTouched(true) }}
+            disabled={isPending}
+            placeholder="slug"
+            className="flex-1 text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1B3A6B] min-w-0"
+          />
+        </div>
+      </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={isPending}
+          className="px-3 py-1 rounded bg-[#1B3A6B] text-white text-xs hover:bg-[#142d54] disabled:opacity-50"
+        >
+          {isPending ? '…' : '저장'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="px-3 py-1 rounded border border-gray-200 text-gray-500 text-xs hover:bg-gray-50"
+        >
+          취소
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── Delete button ──────────────────────────────────────────────
 
 interface DeleteProps {
@@ -145,12 +273,10 @@ interface DeleteProps {
   categoryType: CategoryType
 }
 
-export function CategoryDeleteButton({ categoryId, categoryName, categoryType }: DeleteProps) {
+export function CategoryDeleteButton({ categoryId, categoryName, categoryType: _categoryType }: DeleteProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
-
-  if (categoryType === 'REGION') return null
 
   const handleDelete = () => {
     if (!confirm(`"${categoryName}" 카테고리를 삭제하시겠습니까?\n연결된 게시글이나 자료가 있으면 삭제되지 않습니다.`)) return

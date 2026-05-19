@@ -15,10 +15,6 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
     if (!category) {
       return NextResponse.json({ error: '카테고리를 찾을 수 없습니다.' }, { status: 404 })
     }
-    if (category.type === 'REGION') {
-      return NextResponse.json({ error: '지역별 카테고리는 삭제할 수 없습니다.' }, { status: 400 })
-    }
-
     const [postCount, resourceCount] = await Promise.all([
       prisma.post.count({ where: { categoryId: id } }),
       prisma.resource.count({ where: { categoryId: id } }),
@@ -38,11 +34,13 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 }
 
 const patchSchema = z.object({
-  officerName: z.string().max(100).nullable().optional(),
+  name:         z.string().min(1).max(50).optional(),
+  slug:         z.string().min(1).max(50).regex(/^[a-z0-9-]+$/, 'slug는 소문자, 숫자, 하이픈만 가능합니다').optional(),
+  officerName:  z.string().max(100).nullable().optional(),
   officerPhone: z.string().max(20).nullable().optional(),
   officerEmail: z.string().max(200).nullable().optional(),
-  officerSns: z.string().max(200).nullable().optional(),
-  officerQr: z.string().max(500).nullable().optional(),
+  officerSns:   z.string().max(200).nullable().optional(),
+  officerQr:    z.string().max(500).nullable().optional(),
 })
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -57,6 +55,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const parsed = patchSchema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json({ error: '입력값이 올바르지 않습니다.' }, { status: 400 })
+    }
+
+    if (parsed.data.slug) {
+      const dup = await prisma.category.findFirst({ where: { slug: parsed.data.slug, NOT: { id } } })
+      if (dup) return NextResponse.json({ error: '이미 사용 중인 slug입니다.' }, { status: 409 })
     }
 
     const category = await prisma.category.update({

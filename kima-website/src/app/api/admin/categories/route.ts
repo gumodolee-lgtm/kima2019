@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod/v4'
 
 const createSchema = z.object({
-  type: z.enum(['LANGUAGE', 'TARGET']),
+  type: z.enum(['REGION', 'LANGUAGE', 'TARGET']),
   name: z.string().min(1, '이름을 입력해주세요').max(50),
   slug: z
     .string()

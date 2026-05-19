@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { CategoryOfficerForm } from '@/components/admin/CategoryOfficerForm'
-import { CategoryAddForm, CategoryDeleteButton } from '@/components/admin/CategoryAddForm'
+import { CategoryAddForm, CategoryDeleteButton, CategoryRenameForm } from '@/components/admin/CategoryAddForm'
 import { SeedCategoryOfficersButton } from '@/components/admin/SeedCategoryOfficersButton'
 import type { Metadata } from 'next'
 import type { CategoryType } from '@prisma/client'
@@ -72,12 +72,7 @@ export default async function AdminCategoriesPage() {
                   ({grouped[type].length}개)
                 </span>
               </h2>
-              {(type === 'LANGUAGE' || type === 'TARGET') && (
-                <CategoryAddForm type={type} />
-              )}
-              {type === 'REGION' && (
-                <span className="text-xs text-gray-400">지역별은 고정값입니다</span>
-              )}
+              <CategoryAddForm type={type} />
             </div>
 
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
@@ -89,10 +84,14 @@ export default async function AdminCategoriesPage() {
                 grouped[type].map((cat) => (
                   <div key={cat.id} className="px-5 py-4">
                     <div className="flex items-start gap-4">
-                      {/* 이름 + slug */}
-                      <div className="w-24 flex-shrink-0">
-                        <p className="text-sm font-medium text-gray-900">{cat.name}</p>
-                        <p className="text-xs text-gray-400">/{cat.slug}</p>
+                      {/* 이름 + slug (수정 가능) */}
+                      <div className="w-36 flex-shrink-0">
+                        <CategoryRenameForm
+                          categoryId={cat.id}
+                          name={cat.name}
+                          slug={cat.slug}
+                          type={cat.type}
+                        />
                       </div>
 
                       {/* 담당자 편집 폼 */}
