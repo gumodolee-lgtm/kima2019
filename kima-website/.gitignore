@@ -51,3 +51,6 @@ next-env.d.ts
 public/members_data.json
 public/*.xlsx
 public/*.xls
+
+.claude/settings.local.json
+.bkit/state/
