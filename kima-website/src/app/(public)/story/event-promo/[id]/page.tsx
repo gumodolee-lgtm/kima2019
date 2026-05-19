@@ -77,11 +77,14 @@ export default async function EventPromoDetailPage({ params }: Props) {
       <div className="max-w-3xl mx-auto px-4 py-10 space-y-10">
         {/* 대표 이미지 */}
         {story.thumbnail && (
-          <img
-            src={story.thumbnail}
-            alt={story.title}
-            className="w-full rounded-xl object-cover max-h-80"
-          />
+          <div className="rounded-xl overflow-hidden bg-gray-50 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={story.thumbnail}
+              alt={story.title}
+              className="max-w-full object-contain"
+            />
+          </div>
         )}
 
         {/* 본문 */}

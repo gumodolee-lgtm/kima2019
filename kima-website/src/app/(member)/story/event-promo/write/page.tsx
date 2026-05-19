@@ -169,9 +169,9 @@ export default function EventPromoWritePage() {
             />
             <p className="text-xs text-gray-400 mt-1">목록과 상세 페이지 상단에 표시될 대표 이미지입니다. 비워두면 첫 번째 이미지가 자동 사용됩니다.</p>
             {form.thumbnailUrl && (
-              <div className="mt-2 w-32 h-20 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+              <div className="mt-2 max-w-xs rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={form.thumbnailUrl} alt="미리보기" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                <img src={form.thumbnailUrl} alt="미리보기" className="max-w-full object-contain max-h-48" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
               </div>
             )}
           </div>
