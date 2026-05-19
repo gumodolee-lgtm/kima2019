@@ -318,3 +318,29 @@ model Popup {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Leader {
+  id        String      @id @default(cuid())
+  group     LeaderGroup
+  title     String      // 직책 (고문, 상임대표, ...)
+  name      String
+  org       String?     // 소속 단체
+  position  String?     // 직분 (목사, 선교사, ...)
+  phone     String?
+  email     String?
+  nations   String?     // 사역대상국가
+  mission   String?     // 사역구분
+  order     Int         @default(0)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+enum LeaderGroup {
+  ADVISOR          // 고문·자문위원
+  EXECUTIVE        // 운영위원회
+  LANGUAGE_CHAIR   // 언어권 위원장
+  REGION_CHAIR     // 지역 위원장
+  DENOMINATION_REP // 교단 대표
+  NETWORK_CHAIR    // 네트워크 위원장
+}
