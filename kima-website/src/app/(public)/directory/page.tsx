@@ -47,21 +47,21 @@ function DirectoryContent() {
   const isLoggedIn = !!session?.user
 
   return (
-    <div className="flex h-[calc(100vh-80px)]">
+    <div className="flex min-h-[calc(100dvh-80px)] flex-col lg:h-[calc(100vh-80px)] lg:flex-row">
 
       {/* ── 왼쪽 2/3: 필터 + 지도 ──────────────────────── */}
-      <div className="flex flex-col flex-[2] min-w-0 border-r border-gray-100">
+      <div className="flex min-w-0 flex-col border-b border-gray-100 lg:flex-[2] lg:border-r lg:border-b-0">
 
         {/* 제목 + 필터 */}
-        <div className="shrink-0 bg-white border-b border-gray-100 px-5 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div>
+        <div className="shrink-0 bg-white border-b border-gray-100 px-4 py-4 sm:px-5">
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <h1 className="text-lg font-bold text-[#1B3A6B]">사역단체 전국지도</h1>
               <p className="text-xs text-gray-400 mt-0.5">전국 다문화 사역 단체를 찾아보세요</p>
             </div>
             <Link
               href="/directory/register"
-              className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#1B3A6B] text-white text-xs font-medium hover:bg-[#15305a] shrink-0"
+              className="inline-flex shrink-0 items-center justify-center rounded-lg bg-[#1B3A6B] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#15305a]"
             >
               + 단체 등록
             </Link>
@@ -70,7 +70,7 @@ function DirectoryContent() {
         </div>
 
         {/* 지도 */}
-        <div className="flex-1 min-h-0 relative">
+        <div className="relative h-[42dvh] min-h-[300px] lg:h-auto lg:min-h-0 lg:flex-1">
           <MapComponent
             organizations={orgs}
             selectedId={selectedId}
@@ -82,7 +82,7 @@ function DirectoryContent() {
       </div>
 
       {/* ── 오른쪽 1/3: 전체 높이 목록 패널 ─────────────── */}
-      <div className="w-[320px] xl:w-[380px] shrink-0 flex flex-col bg-white shadow-xl">
+      <div className="flex w-full flex-col bg-white shadow-xl lg:w-[320px] lg:shrink-0 xl:w-[380px]">
 
         {/* 패널 헤더 */}
         <div className="px-5 py-3 bg-[#1B3A6B] shrink-0">
@@ -93,7 +93,7 @@ function DirectoryContent() {
         </div>
 
         {/* 목록 */}
-        <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-3 lg:flex-1 lg:overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <LoadingSpinner />
@@ -138,7 +138,7 @@ function DirectoryContent() {
 
 export default function DirectoryPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-[calc(100vh-80px)]"><LoadingSpinner /></div>}>
+    <Suspense fallback={<div className="flex min-h-[calc(100dvh-80px)] items-center justify-center"><LoadingSpinner /></div>}>
       <DirectoryContent />
     </Suspense>
   )

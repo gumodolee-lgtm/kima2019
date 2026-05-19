@@ -7,7 +7,7 @@ declare global {
   interface Window { kakao: any }
 }
 
-const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? 'c3db9b11452db7f5a8e2587ced3ab66e'
+const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c3db9b11452db7f5a8e2587ced3ab66e'
 
 function loadKakaoScript(): Promise<void> {
   return new Promise((resolve, reject) => {
