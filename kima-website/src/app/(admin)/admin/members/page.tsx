@@ -5,6 +5,7 @@ import { MemberRoleForm } from '@/components/admin/MemberRoleForm'
 import { MemberSearchInput } from '@/components/admin/MemberSearchInput'
 import { DeleteMemberButton } from '@/components/admin/DeleteMemberButton'
 import { MemberEditButton } from '@/components/admin/MemberEditButton'
+import { MemberCreateButton } from '@/components/admin/MemberCreateButton'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import type { UserRole, Prisma } from '@prisma/client'
@@ -134,9 +135,12 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#1B3A6B]">회원 관리</h1>
-        <p className="text-sm text-gray-500 mt-1">회원 등급 변경 및 납부 메모를 관리합니다.</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-[#1B3A6B]">회원 관리</h1>
+          <p className="text-sm text-gray-500 mt-1">회원 등급 변경 및 납부 메모를 관리합니다.</p>
+        </div>
+        <MemberCreateButton />
       </div>
 
       {/* 탭 */}
@@ -203,17 +207,17 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-xs text-gray-400 font-medium">
-                <th scope="col" className="px-4 py-3 text-left">
+                <th scope="col" aria-label="이름 / 이메일" className="px-4 py-3 text-left">
                   <SortHeader label="이름 / 이메일" field="name" currentSort={sort} currentOrder={order} params={urlParams} />
                 </th>
                 <th scope="col" className="px-4 py-3 text-left">소속</th>
-                <th scope="col" className="px-4 py-3 text-left">
+                <th scope="col" aria-label="가입일" className="px-4 py-3 text-left">
                   <SortHeader label="가입일" field="createdAt" currentSort={sort} currentOrder={order} params={urlParams} />
                 </th>
-                <th scope="col" className="px-4 py-3 text-left">
+                <th scope="col" aria-label="만료일" className="px-4 py-3 text-left">
                   <SortHeader label="만료일" field="expiresAt" currentSort={sort} currentOrder={order} params={urlParams} />
                 </th>
-                <th scope="col" className="px-4 py-3 text-left">
+                <th scope="col" aria-label="등급 / 메모" className="px-4 py-3 text-left">
                   <SortHeader label="등급 / 메모" field="role" currentSort={sort} currentOrder={order} params={urlParams} />
                 </th>
                 <th scope="col" className="px-4 py-3 text-right text-xs text-gray-400 font-medium">관리</th>
