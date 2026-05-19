@@ -16,7 +16,7 @@ const NAV = [
   { href: '/admin',               label: '대시보드',     icon: '🏠', exact: true,  minRole: 'OFFICER' as const },
   { href: '/admin/members',       label: '회원 관리',    icon: '👥', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/organizations', label: '전체 단체관리', icon: '🏢', exact: false, minRole: 'OFFICER' as const },
-  { href: '/admin/categories',    label: '카테고리 관리', icon: '📂', exact: false, minRole: 'OFFICER' as const },
+  { href: '/admin/categories',    label: '커뮤니티별 담당자 관리', icon: '📂', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/resources',     label: '자료 관리',    icon: '📄', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/events',        label: '일정 관리',    icon: '📅', exact: false, minRole: 'OFFICER' as const },
   { href: '/admin/leadership',     label: '임원단 관리',  icon: '👤', exact: false, minRole: 'OFFICER' as const },
