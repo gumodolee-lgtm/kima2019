@@ -89,6 +89,13 @@ export default auth((req) => {
     }
   }
 
+  // story 작성·수정은 로그인 필요
+  if (pathname.startsWith('/story/') && (pathname.endsWith('/write') || pathname.endsWith('/edit'))) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
+    }
+  }
+
   if (pathname === '/directory/register') {
     if (!isLoggedIn) {
       return NextResponse.redirect(`${origin}/auth/login?callbackUrl=${encodeURIComponent(pathname)}`)
@@ -105,6 +112,7 @@ export const config = {
     '/community/:path*',
     '/member/:path*',
     '/network/:path*',
+    '/story/:path*',
     '/directory/register',
   ],
 }

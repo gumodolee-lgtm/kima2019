@@ -14,6 +14,7 @@ const LANG_OPTIONS = [
 
 interface EditData {
   type: string
+  representative: string
   targets: string[]
   languages: string[]
   address: string
@@ -271,6 +272,18 @@ export function OrgEditClient({ orgId, initial, currentImage }: Props) {
             </label>
           ))}
         </div>
+      </div>
+
+      {/* ── 대표/담임목사 ─────────────────────────── */}
+      <div>
+        <label className="block text-sm font-bold text-gray-700 mb-1">대표 / 담임목사</label>
+        <input
+          type="text"
+          value={form.representative}
+          onChange={(e) => setForm((p) => ({ ...p, representative: e.target.value }))}
+          placeholder="예: 홍길동 목사"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+        />
       </div>
 
       {/* ── 연락처 ─────────────────────────────────── */}

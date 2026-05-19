@@ -18,13 +18,14 @@ export async function PATCH(
 
   const { id } = await params
   const body = await req.json()
-  const { type, targets, languages, address, phone, email, website, introLines, contactItems } = body
+  const { type, representative, targets, languages, address, phone, email, website, introLines, contactItems } = body
 
   try {
     const org = await prisma.organization.update({
       where: whereClause(id),
       data: {
         ...(type !== undefined ? { type: type || null } : {}),
+        ...(representative !== undefined ? { representative: representative || null } : {}),
         ...(targets !== undefined ? { targets } : {}),
         ...(languages !== undefined ? { languages } : {}),
         ...(address !== undefined ? { address: address || null } : {}),

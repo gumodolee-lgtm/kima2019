@@ -31,7 +31,7 @@ const SECTIONS = [
   {
     href: '/story/event-promo',
     icon: '📣',
-    label: '이주민사역 행사 홍보',
+    label: '이주민사역&행사 홍보',
     desc: '이주민 사역 관련 행사를 소개하고 알립니다',
     color: 'bg-rose-50 border-rose-200 text-rose-800',
   },

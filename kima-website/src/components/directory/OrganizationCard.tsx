@@ -27,6 +27,11 @@ export function OrganizationCard({ org, isSelected, isHovered, onSelect, showCon
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="text-sm font-bold text-[#1B3A6B] truncate">{org.name}</h3>
+          {org.representative && (
+            <p className="text-xs text-gray-500 mt-0.5 truncate">
+              <span className="text-gray-400">대표</span> {org.representative}
+            </p>
+          )}
           {org.nameEn && (
             <p className="text-xs text-gray-400 mt-0.5 truncate">{org.nameEn}</p>
           )}

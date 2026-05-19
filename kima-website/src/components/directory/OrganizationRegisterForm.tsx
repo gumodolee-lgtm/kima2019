@@ -180,6 +180,17 @@ export function OrganizationRegisterForm() {
         <FieldError message={errors.name?.message} />
       </div>
 
+      {/* 대표/담임목사 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">대표 / 담임목사 (선택)</label>
+        <input
+          {...register('representative')}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/30"
+          placeholder="예: 홍길동 목사"
+        />
+        <FieldError message={errors.representative?.message} />
+      </div>
+
       {/* 영문 단체명 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">영문 단체명 (선택)</label>

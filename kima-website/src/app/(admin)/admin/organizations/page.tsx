@@ -174,6 +174,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
                   </div>
                   <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
                     <span>지역: {org.region}</span>
+                    {org.representative && <span>대표: {org.representative}</span>}
                     {org.languages.length > 0 && <span>언어권: {org.languages.join(', ')}</span>}
                     {org.targets.length > 0 && <span>대상: {org.targets.join(', ')}</span>}
                     {org.type && <span>유형: {org.type}</span>}

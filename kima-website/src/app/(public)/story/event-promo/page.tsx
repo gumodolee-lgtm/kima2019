@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = { title: '이주민사역 행사 홍보 | KIMA' }
+export const metadata: Metadata = { title: '이주민사역&행사 홍보 | KIMA' }
 
 export default async function EventPromoPage() {
   const session = await auth()
@@ -22,7 +22,7 @@ export default async function EventPromoPage() {
         <div className="max-w-4xl mx-auto flex items-end justify-between">
           <div>
             <p className="text-[#C8922A] text-sm font-semibold tracking-widest uppercase mb-2">Event Promo</p>
-            <h1 className="text-2xl font-bold">이주민사역 행사 홍보</h1>
+            <h1 className="text-2xl font-bold">이주민사역&amp;행사 홍보</h1>
             <p className="mt-2 text-blue-200 text-sm">이주민 사역 관련 행사를 소개하고 알립니다. 회원이라면 누구나 행사를 등록할 수 있습니다.</p>
           </div>
           {session && (
@@ -30,7 +30,7 @@ export default async function EventPromoPage() {
               href="/story/event-promo/write"
               className="shrink-0 px-4 py-2 bg-[#C8922A] text-white text-sm font-semibold rounded-lg hover:bg-[#b07d22] transition-colors"
             >
-              행사 등록하기
+              사역홍보&amp;행사등록하기
             </Link>
           )}
         </div>

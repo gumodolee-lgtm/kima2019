@@ -3,11 +3,11 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod/v4'
 
-function canWrite(role?: string) {
+function isAdmin(role?: string) {
   return role === 'ADMIN' || role === 'OFFICER'
 }
 
-const patchSchema = z.object({
+const adminPatchSchema = z.object({
   type: z.enum(['NEWS', 'FIELD_STORY', 'EVENT_MEDIA', 'EVENT_PROMO', 'PRAYER_REQUEST']).optional(),
   status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional(),
   isPublished: z.boolean().optional(),
@@ -15,9 +15,27 @@ const patchSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   content: z.string().min(1).optional(),
   excerpt: z.string().max(300).nullable().optional(),
+  thumbnail: z.string().nullable().optional(),
+  images: z.array(z.string()).optional(),
   linkUrl: z.string().nullable().optional(),
   source: z.string().max(100).nullable().optional(),
   publishedAt: z.string().nullable().optional(),
+  authorName: z.string().max(50).nullable().optional(),
+  eventLocation: z.string().max(100).nullable().optional(),
+  ministryLocation: z.string().max(100).nullable().optional(),
+  videoUrls: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
+})
+
+// 작성자 본인이 수정할 수 있는 필드만 허용
+const authorPatchSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().min(1).optional(),
+  excerpt: z.string().max(300).nullable().optional(),
+  thumbnail: z.string().nullable().optional(),
+  images: z.array(z.string()).optional(),
+  linkUrl: z.string().nullable().optional(),
+  authorName: z.string().max(50).nullable().optional(),
   eventLocation: z.string().max(100).nullable().optional(),
   ministryLocation: z.string().max(100).nullable().optional(),
   videoUrls: z.array(z.string()).optional(),
@@ -27,16 +45,29 @@ const patchSchema = z.object({
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
-    if (!canWrite(session?.user?.role)) {
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
+    }
+
+    const { id } = await params
+    const existing = await prisma.story.findUnique({ where: { id }, select: { authorId: true } })
+    if (!existing) {
+      return NextResponse.json({ error: '스토리를 찾을 수 없습니다.' }, { status: 404 })
+    }
+
+    const isOwner = existing.authorId === session.user.id
+    const isAdminUser = isAdmin(session.user.role)
+    if (!isOwner && !isAdminUser) {
       return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
     }
-    const { id } = await params
+
     const body = await req.json()
-    const parsed = patchSchema.safeParse(body)
+    const schema = isAdminUser ? adminPatchSchema : authorPatchSchema
+    const parsed = schema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json({ error: '입력값이 올바르지 않습니다.' }, { status: 400 })
     }
-    const d = parsed.data
+    const d = parsed.data as z.infer<typeof adminPatchSchema>
     const story = await prisma.story.update({
       where: { id },
       data: {
@@ -47,9 +78,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         ...(d.title !== undefined ? { title: d.title } : {}),
         ...(d.content !== undefined ? { content: d.content } : {}),
         ...(d.excerpt !== undefined ? { excerpt: d.excerpt } : {}),
+        ...(d.thumbnail !== undefined ? { thumbnail: d.thumbnail } : {}),
+        ...(d.images !== undefined ? { images: d.images } : {}),
         ...(d.linkUrl !== undefined ? { linkUrl: d.linkUrl } : {}),
         ...(d.source !== undefined ? { source: d.source } : {}),
         ...(d.publishedAt !== undefined ? { publishedAt: d.publishedAt ? new Date(d.publishedAt) : null } : {}),
+        ...(d.authorName !== undefined ? { authorName: d.authorName } : {}),
         ...(d.eventLocation !== undefined ? { eventLocation: d.eventLocation } : {}),
         ...(d.ministryLocation !== undefined ? { ministryLocation: d.ministryLocation } : {}),
         ...(d.videoUrls !== undefined ? { videoUrls: d.videoUrls } : {}),

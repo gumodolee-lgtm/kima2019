@@ -11,6 +11,7 @@ export default function EventPromoWritePage() {
     excerpt: '',
     authorName: '',
     eventLocation: '',
+    websiteUrl: '',
     imageUrls: '',
     videoUrls: '',
     tags: '',
@@ -41,6 +42,7 @@ export default function EventPromoWritePage() {
           excerpt: form.excerpt || null,
           authorName: form.authorName || null,
           eventLocation: form.eventLocation || null,
+          linkUrl: form.websiteUrl || null,
           thumbnail,
           images,
           videoUrls,
@@ -62,7 +64,7 @@ export default function EventPromoWritePage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-10">
       <div className="max-w-2xl mx-auto px-4">
-        <h1 className="text-2xl font-bold text-[#1B3A6B] mb-1">이주민사역 행사 홍보 등록</h1>
+        <h1 className="text-2xl font-bold text-[#1B3A6B] mb-1">이주민사역&amp;행사 홍보 등록</h1>
         <p className="text-sm text-gray-500 mb-8">이주민 사역과 관련된 행사를 소개하고 홍보할 수 있습니다.</p>
 
         <div className="bg-rose-50 rounded-xl p-4 mb-6 text-sm leading-relaxed">
@@ -137,6 +139,20 @@ export default function EventPromoWritePage() {
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
               />
             </div>
+          </div>
+
+          {/* 웹사이트 URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">웹페이지 주소 (선택)</label>
+            <input
+              type="url"
+              maxLength={500}
+              value={form.websiteUrl}
+              onChange={(e) => setForm({ ...form, websiteUrl: e.target.value })}
+              placeholder="예: https://event.example.com"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]"
+            />
+            <p className="text-xs text-gray-400 mt-1">행사 공식 홈페이지, 신청 폼, SNS 링크 등을 입력하세요.</p>
           </div>
 
           {/* 이미지 URL */}

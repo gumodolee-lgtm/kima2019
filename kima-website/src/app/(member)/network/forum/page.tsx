@@ -20,6 +20,7 @@ type RecordItem = {
   location?: string | null
   theme?: string | null
   hasContent: boolean
+  photo?: string | null
 }
 
 export default async function ForumPage() {
@@ -40,6 +41,7 @@ export default async function ForumPage() {
     id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description ?? '',
     location: r.location, theme: r.theme,
     hasContent: r._count.schedules > 0 || r._count.materials > 0 || r.photos.length > 0 || r.videoUrls.length > 0,
+    photo: r.photos[0] ?? null,
   }))
 
   const fromStatic: RecordItem[] = ARCHIVE_RECORDS
@@ -48,6 +50,7 @@ export default async function ForumPage() {
       id: r.id, seq: r.seq, date: r.date, title: r.title, description: r.description,
       location: r.location, theme: r.theme,
       hasContent: !!(r.scheduleItems?.length || r.materials?.length || r.photos?.length || r.videoUrl),
+      photo: r.photos?.[0] ?? null,
     }))
 
   const records = [...fromDB, ...fromStatic]
@@ -115,38 +118,55 @@ export default async function ForumPage() {
                 <Link
                   key={record.id}
                   href={`/network/archive/${record.id}`}
-                  className="flex items-start gap-4 bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-[#C8922A] transition-all group"
+                  className="flex items-stretch gap-0 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#C8922A] transition-all group overflow-hidden"
                 >
-                  <div className="shrink-0 pt-0.5">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${typeInfo.color}`}>
-                      {typeInfo.label}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="text-xs text-[#C8922A] font-bold">{record.seq}</span>
-                      <span className="text-xs text-gray-400">{record.date}</span>
-                      {record.location && (
-                        <span className="text-xs text-gray-400">📍 {record.location}</span>
+                  {/* 썸네일 */}
+                  {record.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={record.photo}
+                      alt={record.title}
+                      className="w-28 sm:w-36 shrink-0 object-cover"
+                    />
+                  ) : (
+                    <div className="w-28 sm:w-36 shrink-0 bg-[#1B3A6B]/5 flex items-center justify-center">
+                      <span className="text-3xl opacity-30">🏛</span>
+                    </div>
+                  )}
+
+                  {/* 텍스트 */}
+                  <div className="flex flex-1 items-start gap-3 p-4 min-w-0">
+                    <div className="shrink-0 pt-0.5">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${typeInfo.color}`}>
+                        {typeInfo.label}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-xs text-[#C8922A] font-bold">{record.seq}</span>
+                        <span className="text-xs text-gray-400">{record.date}</span>
+                        {record.location && (
+                          <span className="text-xs text-gray-400">📍 {record.location}</span>
+                        )}
+                        {record.hasContent && (
+                          <span className="text-xs bg-green-50 text-green-600 px-1.5 py-0.5 rounded">자료 있음</span>
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-gray-800 text-sm group-hover:text-[#1B3A6B] transition-colors">
+                        {record.title}
+                      </h3>
+                      {record.theme && (
+                        <p className="text-xs text-[#1B3A6B]/70 mt-0.5 font-medium">{record.theme}</p>
                       )}
-                      {record.hasContent && (
-                        <span className="text-xs bg-green-50 text-green-600 px-1.5 py-0.5 rounded">자료 있음</span>
+                      {!record.theme && record.description && (
+                        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{record.description}</p>
                       )}
                     </div>
-                    <h3 className="font-semibold text-gray-800 text-sm group-hover:text-[#1B3A6B] transition-colors">
-                      {record.title}
-                    </h3>
-                    {record.theme && (
-                      <p className="text-xs text-[#1B3A6B]/70 mt-0.5 font-medium">{record.theme}</p>
-                    )}
-                    {!record.theme && record.description && (
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{record.description}</p>
-                    )}
-                  </div>
-                  <div className="shrink-0 self-center text-gray-300 group-hover:text-[#C8922A] transition-colors">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
+                    <div className="shrink-0 self-center text-gray-300 group-hover:text-[#C8922A] transition-colors">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
                 </Link>
               ))}

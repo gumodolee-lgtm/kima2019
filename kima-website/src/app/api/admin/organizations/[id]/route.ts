@@ -28,6 +28,7 @@ const patchSchema = z.object({
 
 const editSchema = z.object({
   name: z.string().min(1).max(100),
+  representative: z.string().max(50).nullable().optional(),
   nameEn: z.string().nullable().optional(),
   description: z.string().max(500).nullable().optional(),
   region: z.string(),
@@ -117,6 +118,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       where: { id },
       data: {
         name: d.name,
+        representative: d.representative ?? null,
         nameEn: d.nameEn ?? null,
         description: d.description ?? null,
         region,

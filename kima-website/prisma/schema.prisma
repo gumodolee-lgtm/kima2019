@@ -82,6 +82,7 @@ model Organization {
   phone        String?
   email        String?
   website      String?
+  representative String?                         // 대표/담임목사
   image        String?                          // 대표 이미지 URL
   introLines   String[]                         // 사역소개 줄 목록
   contactItems String[]                         // 연결정보 줄 목록

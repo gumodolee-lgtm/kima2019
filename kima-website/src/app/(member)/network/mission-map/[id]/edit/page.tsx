@@ -32,6 +32,7 @@ export default async function OrgEditPage({ params }: { params: Promise<{ id: st
 
   const initial = {
     type: org.type ?? '',
+    representative: org.representative ?? '',
     targets: org.targets ?? [],
     languages: org.languages ?? [],
     address: org.address ?? '',

@@ -31,6 +31,7 @@ export const ORG_TYPES = [
 
 export const organizationSchema = z.object({
   name: z.string().min(1, '단체명을 입력해주세요').max(100, '단체명은 100자 이하로 입력해주세요'),
+  representative: z.string().max(50, '대표자명은 50자 이하로 입력해주세요').optional().or(z.literal('')),
   nameEn: z
     .string()
     .regex(/^[a-zA-Z0-9\s\-\.]*$/, '영문, 숫자, 공백, 하이픈만 입력 가능합니다')

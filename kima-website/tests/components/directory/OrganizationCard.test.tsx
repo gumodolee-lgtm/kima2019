@@ -25,6 +25,7 @@ const mockOrg: Organization = {
   id: 'test-org-id',
   gmfsnsId: null,
   name: '테스트 선교단체',
+  representative: null,
   nameEn: 'Test Mission',
   description: '테스트용 단체 소개입니다.',
   region: '서울경기인천',

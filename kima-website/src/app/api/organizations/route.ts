@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
     const org = await prisma.organization.create({
       data: {
         name: data.name,
+        representative: data.representative || null,
         nameEn: data.nameEn || null,
         description: data.description || null,
         region,

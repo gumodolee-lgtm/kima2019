@@ -58,6 +58,11 @@ export default async function OrgDetailPage({ params }: { params: Promise<{ id: 
               </span>
             )}
             <h1 className="text-xl font-bold text-gray-900 leading-snug">{org.name}</h1>
+            {org.representative && (
+              <p className="text-sm text-gray-600 mt-1">
+                <span className="text-gray-400">대표</span> {org.representative}
+              </p>
+            )}
           </div>
           <Link
             href={`/network/mission-map/${id}/edit`}

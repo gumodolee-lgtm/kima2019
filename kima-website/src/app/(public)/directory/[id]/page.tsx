@@ -64,8 +64,13 @@ export default async function OrganizationDetailPage({ params }: Props) {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-[#1B3A6B]">{org.name}</h1>
+                {org.representative && (
+                  <p className="text-sm text-gray-600 mt-1 font-medium">
+                    <span className="text-gray-400 font-normal">대표</span> {org.representative}
+                  </p>
+                )}
                 {org.nameEn && (
-                  <p className="text-sm text-gray-400 mt-1">{org.nameEn}</p>
+                  <p className="text-sm text-gray-400 mt-0.5">{org.nameEn}</p>
                 )}
               </div>
               <div className="flex flex-wrap gap-2 shrink-0 items-start">
