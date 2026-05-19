@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { convertDriveUrl, convertDriveUrls } from '@/lib/utils'
 
 interface StoryData {
   id: string
@@ -161,10 +162,11 @@ export function EventPromoEditForm({ story }: { story: StoryData }) {
           maxLength={500}
           value={form.thumbnailUrl}
           onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
-          placeholder="예: https://i.imgur.com/abc123.jpg"
+          onBlur={(e) => setForm((f) => ({ ...f, thumbnailUrl: convertDriveUrl(e.target.value) }))}
+          placeholder="예: https://i.imgur.com/abc123.jpg 또는 구글 드라이브 공유 링크"
           className={inputCls}
         />
-        <p className="text-xs text-gray-400 mt-1">목록과 상세 페이지 상단에 표시될 대표 이미지입니다. 비워두면 첫 번째 이미지가 자동 사용됩니다.</p>
+        <p className="text-xs text-gray-400 mt-1">구글 드라이브 공유 링크를 붙여넣으면 자동으로 표시 가능한 주소로 변환됩니다.</p>
         {form.thumbnailUrl && (
           <div className="mt-2 max-w-xs rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -180,10 +182,11 @@ export function EventPromoEditForm({ story }: { story: StoryData }) {
           rows={3}
           value={form.imageUrls}
           onChange={(e) => setForm({ ...form, imageUrls: e.target.value })}
+          onBlur={(e) => setForm((f) => ({ ...f, imageUrls: convertDriveUrls(e.target.value) }))}
           placeholder={`이미지 URL을 한 줄씩 입력하세요\n첫 번째 이미지가 대표 이미지로 사용됩니다`}
           className={`${inputCls} resize-none font-mono`}
         />
-        <p className="text-xs text-gray-400 mt-1">구글 드라이브 공개 링크, imgur, 기타 이미지 호스팅 URL을 사용할 수 있습니다.</p>
+        <p className="text-xs text-gray-400 mt-1">구글 드라이브 공유 링크를 그대로 붙여넣으면 자동으로 변환됩니다.</p>
       </div>
 
       {/* 동영상 링크 */}

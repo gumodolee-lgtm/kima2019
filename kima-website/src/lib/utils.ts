@@ -46,6 +46,36 @@ const MIME_TO_EXT: Record<string, string> = {
   'video/quicktime': 'mov',
 }
 
+/**
+ * Google Drive 공유 링크를 <img>에서 바로 표시 가능한 thumbnail URL로 변환.
+ * - /file/d/{ID}/view  →  thumbnail?id={ID}&sz=w1200
+ * - /file/d/{ID}/preview  →  thumbnail?id={ID}&sz=w1200
+ * - open?id={ID}  →  thumbnail?id={ID}&sz=w1200
+ * 이미 변환된 URL 또는 다른 호스트 URL은 그대로 반환.
+ */
+export function convertDriveUrl(url: string): string {
+  const trimmed = url.trim()
+  if (!trimmed) return trimmed
+
+  const fileMatch = trimmed.match(/drive\.google\.com\/file\/d\/([^/?#]+)/)
+  if (fileMatch) {
+    return `https://drive.google.com/thumbnail?id=${fileMatch[1]}&sz=w1200`
+  }
+  const openMatch = trimmed.match(/drive\.google\.com\/open\?id=([^&]+)/)
+  if (openMatch) {
+    return `https://drive.google.com/thumbnail?id=${openMatch[1]}&sz=w1200`
+  }
+  return trimmed
+}
+
+/** 줄바꿈으로 구분된 여러 URL을 각각 convertDriveUrl 처리 후 반환 */
+export function convertDriveUrls(text: string): string {
+  return text
+    .split('\n')
+    .map((line) => convertDriveUrl(line))
+    .join('\n')
+}
+
 export function safeStorageKey(file: { name: string; type: string }, folder: string): string {
   const ext = MIME_TO_EXT[file.type]
     ?? file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toLowerCase()
