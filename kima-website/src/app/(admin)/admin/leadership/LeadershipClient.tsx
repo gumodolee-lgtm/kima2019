@@ -154,7 +154,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
   const grouped = GROUP_ORDER.reduce<Record<string, Leader[]>>((acc, g) => {
     acc[g] = items
       .filter((l) => l.group === g)
-      .sort((a, b) => a.order - b.order || a.createdAt?.localeCompare?.(b.createdAt ?? '') ?? 0)
+      .sort((a, b) => a.order - b.order)
     return acc
   }, {})
 
@@ -166,6 +166,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-1.5">
           <button
+            type="button"
             onClick={() => setActiveGroup('ALL')}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeGroup === 'ALL' ? 'bg-[#1B3A6B] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
           >
@@ -174,6 +175,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
           {GROUP_ORDER.map((g) => (
             <button
               key={g}
+              type="button"
               onClick={() => setActiveGroup(g)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeGroup === g ? 'bg-[#1B3A6B] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
             >
@@ -182,6 +184,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
           ))}
         </div>
         <button
+          type="button"
           onClick={openAdd}
           className="px-4 py-2 bg-[#C8922A] text-white text-sm font-semibold rounded-lg hover:bg-[#b07d22] transition-colors"
         >
@@ -231,12 +234,14 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
                         <td className="px-3 py-2.5 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <button
+                              type="button"
                               onClick={() => openEdit(leader)}
                               className="text-xs text-[#1B3A6B] hover:underline font-medium"
                             >
                               수정
                             </button>
                             <button
+                              type="button"
                               onClick={() => handleDelete(leader.id)}
                               disabled={deletingId === leader.id}
                               className="text-xs text-red-500 hover:underline font-medium disabled:opacity-40"
@@ -263,7 +268,7 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
               <h3 className="text-base font-bold text-[#1B3A6B]">
                 {editing ? '임원 정보 수정' : '새 임원 추가'}
               </h3>
-              <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+              <button type="button" onClick={closeModal} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
             </div>
 
             <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
@@ -382,6 +387,8 @@ export function LeadershipClient({ initialLeaders }: { initialLeaders: Leader[] 
                   <input
                     type="number"
                     min={0}
+                    title="순서"
+                    placeholder="0"
                     value={form.order}
                     onChange={(e) => setForm((f) => ({ ...f, order: e.target.value }))}
                     className={inputCls}
