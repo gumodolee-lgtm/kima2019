@@ -54,11 +54,14 @@ export default async function EventPromoPage() {
                 <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                   <div className="flex flex-col md:flex-row">
                     {(story.thumbnail || story.images[0]) && (
-                      <img
-                        src={story.thumbnail || story.images[0]}
-                        alt={story.title}
-                        className="md:w-52 md:h-40 w-full h-48 object-cover shrink-0"
-                      />
+                      <div className="md:w-52 md:h-40 w-full h-48 shrink-0 bg-gray-50 flex items-center justify-center overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={story.thumbnail || story.images[0]}
+                          alt={story.title}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
                     )}
                     <div className="p-5 flex flex-col justify-between">
                       <div>
