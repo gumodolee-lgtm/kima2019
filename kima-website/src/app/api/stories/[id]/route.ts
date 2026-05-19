@@ -117,10 +117,22 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
-    if (!canWrite(session?.user?.role)) {
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
+    }
+
+    const { id } = await params
+    const existing = await prisma.story.findUnique({ where: { id }, select: { authorId: true } })
+    if (!existing) {
+      return NextResponse.json({ error: '스토리를 찾을 수 없습니다.' }, { status: 404 })
+    }
+
+    const isOwner = existing.authorId === session.user.id
+    const isAdminUser = isAdmin(session.user.role)
+    if (!isOwner && !isAdminUser) {
       return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
     }
-    const { id } = await params
+
     await prisma.story.delete({ where: { id } })
     return NextResponse.json({ ok: true })
   } catch (err) {
