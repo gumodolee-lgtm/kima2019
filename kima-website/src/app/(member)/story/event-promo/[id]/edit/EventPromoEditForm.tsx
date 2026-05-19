@@ -8,6 +8,7 @@ interface StoryData {
   title: string
   content: string
   excerpt: string | null
+  thumbnail: string | null
   authorName: string | null
   eventLocation: string | null
   linkUrl: string | null
@@ -25,6 +26,7 @@ export function EventPromoEditForm({ story }: { story: StoryData }) {
     authorName: story.authorName ?? '',
     eventLocation: story.eventLocation ?? '',
     websiteUrl: story.linkUrl ?? '',
+    thumbnailUrl: story.thumbnail ?? '',
     imageUrls: story.images.join('\n'),
     videoUrls: story.videoUrls.join('\n'),
     tags: story.tags.join(', '),
@@ -40,7 +42,7 @@ export function EventPromoEditForm({ story }: { story: StoryData }) {
     const images = form.imageUrls.split('\n').map((v) => v.trim()).filter(Boolean)
     const videoUrls = form.videoUrls.split('\n').map((v) => v.trim()).filter(Boolean)
     const tags = form.tags.split(',').map((t) => t.trim()).filter(Boolean)
-    const thumbnail = images[0] ?? null
+    const thumbnail = form.thumbnailUrl.trim() || images[0] || null
 
     try {
       const res = await fetch(`/api/stories/${story.id}`, {
@@ -149,6 +151,26 @@ export function EventPromoEditForm({ story }: { story: StoryData }) {
           className={inputCls}
         />
         <p className="text-xs text-gray-400 mt-1">행사 공식 홈페이지, 신청 폼, SNS 링크 등을 입력하세요.</p>
+      </div>
+
+      {/* 대표 이미지 URL */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">대표 이미지 URL (선택)</label>
+        <input
+          type="url"
+          maxLength={500}
+          value={form.thumbnailUrl}
+          onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
+          placeholder="예: https://i.imgur.com/abc123.jpg"
+          className={inputCls}
+        />
+        <p className="text-xs text-gray-400 mt-1">목록과 상세 페이지 상단에 표시될 대표 이미지입니다. 비워두면 첫 번째 이미지가 자동 사용됩니다.</p>
+        {form.thumbnailUrl && (
+          <div className="mt-2 w-32 h-20 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={form.thumbnailUrl} alt="미리보기" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+          </div>
+        )}
       </div>
 
       {/* 이미지 URL */}

@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 카카오 지도 JS키 - 공개키이므로 코드에 직접 포함 (브라우저에 노출되는 값)
+  // 카카오 지도 JS키 - NEXT_PUBLIC_KAKAO_MAP_KEY 환경변수에서 읽음 (Cloudflare Pages 환경변수에 설정)
   env: {
-    NEXT_PUBLIC_KAKAO_MAP_KEY: process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? 'c3db9b11452db7f5a8e2587ced3ab66e',
+    NEXT_PUBLIC_KAKAO_MAP_KEY: process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? '',
   },
   typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: true },
@@ -45,6 +45,10 @@ const nextConfig: NextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          // HSTS: 1년간 HTTPS 강제, 서브도메인 포함
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+          // CSP: frame-ancestors로 클릭재킹 방지 (X-Frame-Options보다 현대적)
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
         ],
       },
       {

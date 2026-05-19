@@ -14,8 +14,8 @@ const bodySchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
-    if (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'OFFICER') {
-      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '최고 관리자만 전체 메일을 발송할 수 있습니다.' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -68,17 +68,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// 수신자 이름 치환: 본문 안의 {{이름}} → 실제 이름
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
+// 수신자 이름 치환: 본문 안의 {{이름}} → 실제 이름 (XSS 방지를 위해 이스케이프)
 function personalizeHtml(html: string, name: string | null): string {
-  return html.replace(/\{\{이름\}\}/g, name ?? '회원')
+  return html.replace(/\{\{이름\}\}/g, escapeHtml(name ?? '회원'))
 }
 
 // 발송 대상 회원 수 미리보기 (GET)
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    if (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'OFFICER') {
-      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '최고 관리자만 접근할 수 있습니다.' }, { status: 403 })
     }
 
     const { searchParams } = new URL(request.url)

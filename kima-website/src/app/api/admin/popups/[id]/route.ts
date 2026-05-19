@@ -18,7 +18,7 @@ const patchSchema = z.object({
 
 async function requireAdmin() {
   const session = await auth()
-  return session?.user?.role === 'ADMIN' || session?.user?.role === 'OFFICER'
+  return session?.user?.role === 'ADMIN'
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

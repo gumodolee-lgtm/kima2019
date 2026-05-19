@@ -53,9 +53,9 @@ export default async function EventPromoPage() {
               <Link key={story.id} href={`/story/event-promo/${story.id}`}>
                 <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                   <div className="flex flex-col md:flex-row">
-                    {story.thumbnail && (
+                    {(story.thumbnail || story.images[0]) && (
                       <img
-                        src={story.thumbnail}
+                        src={story.thumbnail || story.images[0]}
                         alt={story.title}
                         className="md:w-52 md:h-40 w-full h-48 object-cover shrink-0"
                       />

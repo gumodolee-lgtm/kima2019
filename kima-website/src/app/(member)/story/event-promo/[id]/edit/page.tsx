@@ -18,7 +18,7 @@ export default async function EventPromoEditPage({ params }: Props) {
     select: {
       id: true, title: true, content: true, excerpt: true,
       authorName: true, eventLocation: true, linkUrl: true,
-      images: true, videoUrls: true, tags: true, authorId: true,
+      thumbnail: true, images: true, videoUrls: true, tags: true, authorId: true,
     },
   }).catch(() => null)
 

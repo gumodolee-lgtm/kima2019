@@ -9,9 +9,8 @@ import { z } from 'zod/v4'
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
-    const role = session?.user?.role
-    if (role !== 'ADMIN' && role !== 'OFFICER') {
-      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '최고 관리자만 단체를 삭제할 수 있습니다.' }, { status: 403 })
     }
     const { id } = await params
     await prisma.organization.delete({ where: { id } })
@@ -45,9 +44,8 @@ const editSchema = z.object({
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
-    const role = session?.user?.role
-    if (role !== 'ADMIN' && role !== 'OFFICER') {
-      return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
+    if (session?.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: '최고 관리자만 단체를 승인·반려할 수 있습니다.' }, { status: 403 })
     }
 
     const { id } = await params
